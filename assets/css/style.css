@@ -129,7 +129,44 @@ header {
     position: relative;
 }
 
-.hero-image-container img {
+/* iPad Device Styles */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(80px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ipad-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.ipad-device {
+    background: #1a1a1a;
+    border-radius: 40px;
+    padding: 20px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3),
+        0 10px 30px rgba(0, 0, 0, 0.2),
+        inset 0 0 0 2px #333;
+    max-width: 800px;
+    animation: slideUp 1s ease-out forwards;
+}
+
+.ipad-screen {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ipad-screen img {
     width: 100%;
     display: block;
 }
