@@ -4,21 +4,16 @@ include 'includes/header.php';
 ?>
 
 <div class="container">
-    <section class="hero">
-        <h1>Bienvenue sur la Plateforme de Dotation</h1>
-        <p>Gérez vos projets et demandes de financement en toute simplicité.</p>
-        <a href="#" class="btn btn-primary">Voir les projets</a>
-    </section>
-
-    <section class="status-check">
-        <h2>État du système</h2>
-        <?php
-        if (isset($pdo)) {
-            echo '<p style="color: green; font-weight: bold;">✔ Connexion à la base de données établie avec succès.</p>';
-        } else {
-            echo '<p style="color: red; font-weight: bold;">✘ Erreur de connexion à la base de données.</p>';
-        }
-        ?>
+    <section class="hero-section">
+        <h1 class="hero-title">Votre plateforme<br>solidaire</h1>
+        
+        <div class="hero-image-container">
+            <!-- Placeholder for the illustration -->
+            <img src="https://via.placeholder.com/900x500/E0E8E3/3A6B56?text=Illustration+R%C3%A9seau+Canop%C3%A9" alt="Illustration Solidaire">
+            <div style="position: absolute; top: 20%; left: 10%; text-align: left;">
+                <h2 style="color: #008080; font-size: 2rem;">Réseau<br>Canopé</h2>
+            </div>
+        </div>
     </section>
 </div>
 
