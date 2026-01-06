@@ -1,9 +1,9 @@
 <?php
 // Configuration de la base de données
 $host = 'localhost';
-$dbname = 'dotation_db';
-$username = 'root';
-$password = 'root';
+$dbname = 'canope-reseau';
+$username = 'user_canope';
+$password = 'Fghijkl1234*';
 $port = 3306; // Port standard MySQL (détecté)
 
 try {
