@@ -71,9 +71,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
                target="_blank"
                class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-400 hover:bg-blue-50 transition-all group">
                 <div class="w-12 h-12 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" class="w-10 h-10">
-                        <path fill="#0078D4" d="M24 7.387v10.478c0 .23-.08.424-.238.576-.158.154-.352.23-.582.23h-8.026v-6.18l1.274.96 1.124-1.478L14 9.373V7.387h2.104c1.322 0 2.104.782 2.104 2.104v1.882l1.792-1.433V7.387A4.213 4.213 0 0 0 15.787 3.2H8.213A4.213 4.213 0 0 0 4 7.387v9.426A4.213 4.213 0 0 0 8.213 21h7.574A4.213 4.213 0 0 0 20 16.813v-1.334l4 3.2V7.387zM0 7.1v9.613c0 .23.08.424.238.576.158.154.352.23.582.23h8.026V7.1H0z"/>
-                    </svg>
+                    <img src="assets/img/outlook.png" alt="Outlook" class="w-10 h-10 object-contain">
                 </div>
                 <span class="font-medium text-gray-700 group-hover:text-blue-600">Outlook</span>
             </a>
@@ -83,9 +81,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
                target="_blank"
                class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-purple-400 hover:bg-purple-50 transition-all group">
                 <div class="w-12 h-12 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" class="w-10 h-10">
-                        <path fill="#6001D2" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 4.795 2.135 5.206h-2.303l-2.07-5.206 2.07-4.795h2.138zm-7.021 0l2.07 4.795-2.07 5.206H8.57l2.135-5.206-1.97-4.795h2.138z"/>
-                    </svg>
+                    <img src="assets/img/yahoo-icon.png" alt="Yahoo" class="w-10 h-10 object-contain">
                 </div>
                 <span class="font-medium text-gray-700 group-hover:text-purple-600">Yahoo</span>
             </a>
