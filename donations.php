@@ -1,12 +1,12 @@
 <?php
-require_once 'includes/db.php';
+require_once 'includes/db.php'; // inclut le fichier db.php qui contient la connexion à la base de données via PDO.
 
 // Get selected category from URL parameter
-$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0; //On récupère l’ID de la catégorie sélectionnée depuis l’URL (?category=3).
 
 // Fetch all categories
-$categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
-$categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
+$categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name"); // exécute une requête SQL simple pour récupérer toutes les catégories. 
+$categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);// Transforme le résultat en tableau associatif PHP : chaque catégorie devient un tableau avec id et name.
 
 // Fetch products (filtered by category if selected)
 if ($selectedCategory > 0) {
