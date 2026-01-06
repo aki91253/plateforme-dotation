@@ -18,7 +18,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </p>
             
             <!-- Button to open modal -->
-            <button onclick="openEmailModal()" class="bg-canope-olive text-white px-6 py-3 rounded-full text-sm cursor-pointer border-none hover:opacity-90 transition-opacity flex items-center gap-2">
+            <button onclick="openEmailModal()" class="bg-canope-green text-white px-6 py-3 rounded-full text-sm cursor-pointer border-2 border-canope-green font-semibold hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] transition-all duration-300 flex items-center gap-2 shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
