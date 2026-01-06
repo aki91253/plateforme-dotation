@@ -4,7 +4,7 @@ $host = 'localhost';
 $dbname = 'dotation_db';
 $username = 'root';
 $password = 'root';
-$port = 8889; // Port par défaut pour MAMP MySQL
+$port = 3306; // Port standard MySQL (détecté)
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $username, $password);
