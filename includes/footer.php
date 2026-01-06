@@ -22,19 +22,29 @@
                     <!-- Facebook -->
                     <a href="https://www.facebook.com/canopecorse/?_rdr" target="_blank"
                        class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-all hover:scale-110">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-4 text-white" viewBox="0 0 24 24">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5 text-white" viewBox="0 0 24 24">
                             <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99h-2.54V12h2.54v-1.54c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.19 2.23.19v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.12 22 16.99 22 12z"/>
                         </svg>
                     </a>
 
-                    <!-- YouTube -->
-                    <a href="https://www.youtube.com/@crdpcorse" target="_blank"
-                       class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center hover:bg-red-700 transition-all hover:scale-110">
-                        <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                        </svg>
-                    </a>
-                </div>
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/@crdpcorse" target="_blank">
+      <div
+        style="clip-path: url(#squircleClip)"
+        class="w-8 h-8 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex flex-col items-center justify-center shadow-lg border border-red-500/50 cursor-pointer transform transition-all duration-300 ease-out hover:scale-110 hover:-translate-y-2 hover:shadow-2xl"
+      >
+        <!-- Logo triangle -->
+        <svg viewBox="0 0 24 22" fill="currentColor" class="w-5 h-5 text-white mb-1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+</div>
+
             </div>
         </div>
     </footer>
