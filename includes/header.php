@@ -42,6 +42,23 @@
     <!-- Custom CSS (loaded after Tailwind to allow overrides) -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+<div id="loader" class="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
+  <div class="relative">
+      <div class="w-20 h-20 border-lime-200 border-2 rounded-full"></div>
+      <div class="w-20 h-20 border-lime-700 border-t-2 animate-spin rounded-full absolute left-0 top-0"></div>
+  </div>
+</div>
+ <script>
+    // Cacher le loader après le chargement complet de la page
+    window.addEventListener('load', () => {
+        document.getElementById('loader').style.display = 'none';
+    });
+
+    // Afficher le loader (ex: bouton ou action)
+    function showLoader() {
+        document.getElementById('loader').style.display = 'flex';
+    }
+  </script>
 <body class="min-h-screen flex flex-col bg-white text-gray-800">
     <header class="bg-white py-4">
         <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
