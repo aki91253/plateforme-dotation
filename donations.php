@@ -82,9 +82,16 @@ include 'includes/header.php';
                             <span class="text-canope-green font-bold">
                                 <?php echo $product['list_price'] > 0 ? number_format($product['list_price'], 2, ',', ' ') . ' €' : 'Gratuit'; ?>
                             </span>
-                            <a href="#" class="text-sm text-canope-olive hover:underline font-medium">
-                                Demander →
-                            </a>
+                            <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')"
+                                    class="add-to-cart-btn group cursor-pointer outline-none hover:rotate-90 duration-300"
+                                    title="Ajouter à ma sélection">
+                                <svg class="stroke-canope-green fill-none group-hover:fill-canope-light group-hover:stroke-[#2d5443] group-active:stroke-white group-active:fill-canope-green group-active:duration-0 duration-300"
+                                     viewBox="0 0 24 24" height="40px" width="40px" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-width="1.5" d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"></path>
+                                    <path stroke-width="1.5" d="M8 12H16"></path>
+                                    <path stroke-width="1.5" d="M12 16V8"></path>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
