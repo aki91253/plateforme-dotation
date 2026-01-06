@@ -31,7 +31,35 @@ include 'includes/header.php';
 ?>
 
 <div class="max-w-6xl mx-auto px-5 py-8">
+    <!-- Loader compact en Tailwind -->
+<div class="flex items-center justify-center w-fit h-fit [--book-color:#f1775b] [--book-cover-color:#506c86]">
+  <div class="relative flex justify-end items-start w-[100px] h-[8px] bg-[var(--book-color)] border-b-2 border-[var(--book-cover-color)]">
+    <!-- Page 1 -->
+    <div class="w-1/2 h-[1px] bg-[var(--book-color)] origin-left animate-page1"></div>
+    <!-- Page 2 -->
+    <div class="absolute w-1/2 h-[1px] bg-[var(--book-color)] origin-left animate-page2"></div>
+  </div>
+</div>
+
+<style>
+  @keyframes page1 {
+    10% { transform: rotateZ(0deg); }
+    100% { transform: rotateZ(-180deg); }
+  }
+  @keyframes page2 {
+    10% { transform: rotateZ(0deg); }
+    100% { transform: rotateZ(-180deg); }
+  }
+  .animate-page1 {
+    animation: page1 0.7s ease-out infinite;
+  }
+  .animate-page2 {
+    animation: page2 0.8s ease-out infinite;
+  }
+</style>
+
     <h1 class="text-4xl font-normal mb-8 text-gray-900">Liste des dotations</h1>
+    
     
     <!-- Category Filter -->
     <div class="flex flex-wrap gap-3 mb-8">
