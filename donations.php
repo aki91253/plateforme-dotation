@@ -3,34 +3,31 @@ require_once 'includes/db.php';
 include 'includes/header.php';
 ?>
 
-<div class="container">
+<div class="max-w-5xl mx-auto px-5 py-8">
     
-    <!-- Filter/Sort placeholder if needed -->
-    <!-- <div style="display: flex; gap: 20px; font-weight: bold; margin-bottom: 20px;">
-        <span>Tout</span> <span>Vie Quotidienne</span> <span>Santé</span>
-    </div> -->
-
-    <div class="donations-grid">
-        <!-- Static Data for Design Review -->
-        <div class="donation-card">
-            <img src="https://via.placeholder.com/400x300/5CA4F8/ffffff?text=Project+1" class="card-image" alt="Project">
-            <div class="card-info">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <!-- Project Card 1 -->
+        <div class="rounded-xl overflow-hidden">
+            <img src="https://via.placeholder.com/400x300/5CA4F8/ffffff?text=Project+1" class="w-full h-52 object-cover rounded-xl bg-gray-200" alt="Project">
+            <div class="flex justify-between py-3 text-sm font-bold text-gray-800">
                 <span>First project</span>
                 <span>2025</span>
             </div>
         </div>
 
-        <div class="donation-card">
-            <img src="https://via.placeholder.com/400x300/60D0A0/ffffff?text=Project+2" class="card-image" alt="Project">
-            <div class="card-info">
+        <!-- Project Card 2 -->
+        <div class="rounded-xl overflow-hidden">
+            <img src="https://via.placeholder.com/400x300/60D0A0/ffffff?text=Project+2" class="w-full h-52 object-cover rounded-xl bg-gray-200" alt="Project">
+            <div class="flex justify-between py-3 text-sm font-bold text-gray-800">
                 <span>Another project</span>
                 <span>2025</span>
             </div>
         </div>
 
-           <div class="donation-card">
-            <img src="https://via.placeholder.com/400x300/FFB347/ffffff?text=Project+3" class="card-image" alt="Project">
-            <div class="card-info">
+        <!-- Project Card 3 -->
+        <div class="rounded-xl overflow-hidden">
+            <img src="https://via.placeholder.com/400x300/FFB347/ffffff?text=Project+3" class="w-full h-52 object-cover rounded-xl bg-gray-200" alt="Project">
+            <div class="flex justify-between py-3 text-sm font-bold text-gray-800">
                 <span>Third project</span>
                 <span>2025</span>
             </div>
