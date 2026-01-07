@@ -32,7 +32,7 @@ include 'includes/header.php';
                     </svg>
                         </span>
                         <input type="text" id="name" id="name" required
-                               value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                               value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
                                class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-canope-green focus:ring-2 focus:ring-canope-green/20 outline-none transition-all text-gray-800 placeholder-gray-400"
                                placeholder="Votre nom ">
                     </div>
