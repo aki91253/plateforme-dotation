@@ -16,11 +16,11 @@ $emailSubject = "Contact depuis la plateforme de dotation";
 
                 Immeuble Castellani Avenue Mont Thabor Ajaccio<br>
                 +33 4 20 97 00 20<br>
-                <a href="contact.atelier2a@reseau-canope.fr">contact.atelier2a@reseau-canope.fr</a> <br>
+                <a href="mailto:contact.atelier2a@reseau-canope.fr">contact.atelier2a@reseau-canope.fr</a> <br>
 ​               <u> Atelier de BASTIA</u><br>
                 Casa di e lingue , 15 Rue Saint-Angelo, Bastia <br>
                 +33 4 20 97 00 10<br>
-                <a href="contact.atelier2b@reseau-canope.fr">contact.atelier2b@reseau-canope.fr</a><br>
+                <a href="mailto:contact.atelier2b@reseau-canope.fr">contact.atelier2b@reseau-canope.fr</a><br>
 
             </p>
             
