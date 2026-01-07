@@ -1,5 +1,12 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/auth.php';
+
+// Get logged-in user data for auto-fill
+$currentUser = getCurrentUser();
+$userEmail = $currentUser ? htmlspecialchars($currentUser['email']) : '';
+$userEtablissement = $currentUser ? htmlspecialchars($currentUser['etablissement']) : '';
+
 include 'includes/header.php';
 ?>
 
@@ -50,6 +57,7 @@ include 'includes/header.php';
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                         <input type="email" name="email" required
+                               value="<?= $userEmail ?>"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-canope-green focus:border-transparent">
                     </div>
                     <div>
@@ -66,11 +74,12 @@ include 'includes/header.php';
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'établissement *</label>
                             <input type="text" name="establishment_name" required
+                                   value="<?= $userEtablissement ?>"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-canope-green focus:border-transparent">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nom de la classe *</label>
-                            <input type="text" name="establishment_name" required
+                            <input type="text" name="class_name" required
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-canope-green focus:border-transparent">
                         </div>
                         <div class="grid grid-cols-2 gap-4">
