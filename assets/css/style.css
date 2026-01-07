@@ -1,0 +1,46 @@
+/* ========================================
+   PLATEFORME SOLIDAIRE - Custom Styles
+   Background & Global Enhancements
+======================================== */
+
+/* Subtle background with soft gradient */
+body {
+    background:
+        /* Soft radial gradient for depth */
+        radial-gradient(ellipse at top left, rgba(58, 107, 86, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(74, 93, 59, 0.03) 0%, transparent 50%),
+        /* Base gradient: soft white to light gray */
+        linear-gradient(135deg, #ffffff 0%, #f8f9fa 25%, #f5f7f6 50%, #f8f9fa 75%, #ffffff 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Optional: Subtle dot pattern overlay for extra texture */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 1px 1px, rgba(58, 107, 86, 0.015) 1px, transparent 0);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ========================================
+   Header Styling
+======================================== */
+
+header {
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(248, 249, 250, 0.9) 50%,
+            rgba(245, 247, 246, 0.85) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(58, 107, 86, 0.08);
+    box-shadow: 0 1px 3px rgba(58, 107, 86, 0.04);
+}
