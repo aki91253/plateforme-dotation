@@ -9,14 +9,14 @@ $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name"); // exéc
 $categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);// Transforme le résultat en tableau associatif PHP : chaque catégorie devient un tableau avec id et name.
 
 // Fetch products (filtered by category if selected)
-if ($selectedCategory > 0) {
+if ($selectedCategory > 0) { // Condition qui vérifie si il y a une catégorie précise ( supérieur à 0 = id d'une catégorie précise / 0 = toutes les categories )
     $productsQuery = $pdo->prepare("SELECT p.*, c.name as category_name, pi.url as image_url, pi.alt_text as image_alt
                                      FROM product p 
                                      LEFT JOIN category c ON p.category_id = c.id 
                                      LEFT JOIN product_image pi ON p.id = pi.product_id
                                      WHERE p.is_active = 1 AND p.category_id = :category
                                      ORDER BY p.name");
-    $productsQuery->execute(['category' => $selectedCategory]);
+    $productsQuery->execute(['category' => $selectedCategory]); // Execute la requête / C'est un tableau associatif / Le prepare + Execute evite les injections SQL. 
 } else {
     $productsQuery = $pdo->query("SELECT p.*, c.name as category_name, pi.url as image_url, pi.alt_text as image_alt
                                    FROM product p 
