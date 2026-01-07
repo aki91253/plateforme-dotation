@@ -12,9 +12,16 @@ $emailSubject = "Contact depuis la plateforme de dotation";
         <div>
             <h1 class="text-4xl font-normal mb-6 text-gray-900">Contactez-nous</h1>
             <p class="text-gray-600 mb-8">
-                France<br>
-                Corse 20090<br>
-                Ajaccio, 19 Avenue du Mont Thabor
+               <u> ​Atelier d'AJACCIO</u><br>
+
+                Immeuble Castellani Avenue Mont Thabor Ajaccio<br>
+                +33 4 20 97 00 20<br>
+                <a href="contact.atelier2a@reseau-canope.fr">contact.atelier2a@reseau-canope.fr</a> <br>
+​               <u> Atelier de BASTIA</u><br>
+                Casa di e lingue , 15 Rue Saint-Angelo, Bastia <br>
+                +33 4 20 97 00 10<br>
+                <a href="contact.atelier2b@reseau-canope.fr">contact.atelier2b@reseau-canope.fr</a><br>
+
             </p>
             
             <!-- Button to open modal -->
