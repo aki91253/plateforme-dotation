@@ -11,7 +11,7 @@ include 'includes/header.php';
     </div>
 
     <!-- Table of Contents -->
-    <nav class="bg-gray-50 rounded-2xl p-6 mb-12">
+    <nav id="sommaire" class="rounded-2xl p-6 mb-12">
         <h2 class="text-lg font-semibold text-gray-700 mb-4">📋 Sommaire</h2>
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
             <li><a href="#article1" class="text-canope-green hover:underline">1. Préambule</a></li>

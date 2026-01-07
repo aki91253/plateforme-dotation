@@ -1,3 +1,7 @@
+<?php
+// Include auth helper (starts session)
+require_once __DIR__ . '/auth.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -80,14 +84,45 @@
                         <span id="cart-count" class="absolute -top-2 -right-2 bg-canope-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
                     </a>
                 </li>
+                
+                <?php if (isLoggedIn()): ?>
+                <!-- Logged in: Show user menu -->
+                <li class="relative group">
+                    <button class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-canope-green transition-colors">
+                        <div class="w-8 h-8 bg-canope-green/10 rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="p-3 border-b border-gray-100">
+                            <p class="text-sm font-medium text-gray-800 truncate"><?= htmlspecialchars($_SESSION['user_email']) ?></p>
+                            <p class="text-xs text-gray-500 truncate"><?= htmlspecialchars($_SESSION['user_etablissement']) ?></p>
+                        </div>
+                        <a href="logout.php" class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-b-xl transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Déconnexion
+                        </a>
+                    </div>
+                </li>
+                <?php else: ?>
+                <!-- Not logged in: Show login button -->
                 <li>
-                    <a href="#" class="flex justify-center gap-2 items-center shadow-lg text-sm bg-canope-green backdrop-blur-md font-semibold relative z-10 px-4 py-2 overflow-hidden border-2 border-canope-green rounded-full group no-underline text-white hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] transition-all duration-300">
+                    <a href="login.php" class="flex justify-center gap-2 items-center shadow-lg text-sm bg-canope-green backdrop-blur-md font-semibold relative z-10 px-4 py-2 overflow-hidden border-2 border-canope-green rounded-full group no-underline text-white hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] transition-all duration-300">
                         Connexion
                         <svg class="w-6 h-6 justify-end group-hover:rotate-90 ease-linear duration-300 rounded-full border border-white/50 p-1 rotate-45" viewBox="0 0 16 19" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z" class="fill-white"></path>
                         </svg>
                     </a>
                 </li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>

@@ -44,3 +44,14 @@ header {
     border-bottom: 1px solid rgba(58, 107, 86, 0.08);
     box-shadow: 0 1px 3px rgba(58, 107, 86, 0.04);
 }
+
+/* ========================================
+   Content Cards & Sections (Sommaire, etc.)
+======================================== */
+
+/* Sommaire section with greenish background */
+#sommaire {
+    background-color: rgba(224, 232, 227, 0.6);
+    /* canope-light with opacity */
+    border: 1px solid rgba(58, 107, 86, 0.1);
+}
