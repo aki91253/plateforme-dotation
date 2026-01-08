@@ -25,12 +25,12 @@ if ($selectedCategory > 0) { // Condition qui vérifie si il y a une catégorie 
                                    WHERE p.is_active = 1 AND p.is_published = 1
                                    ORDER BY p.name");
 }
-$products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);
+$products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);// Query car aucune donnée utilisateur / Donc pas de risque d'injection SQL. 
 
 include 'includes/header.php';
 ?>
 
-<div class="max-w-6xl mx-auto px-5 py-8">
+<div class="max-w-6xl mx-auto px-5 py-8"> <!-- Conteneur Principal --> 
     <!-- Loader compact en Tailwind -->
 <div class="flex items-center justify-center w-fit h-fit [--book-color:#f1775b] [--book-cover-color:#506c86]">
   <div class="relative flex justify-end items-start w-[100px] h-[8px] bg-[var(--book-color)] border-b-2 border-[var(--book-cover-color)]">
@@ -76,9 +76,9 @@ include 'includes/header.php';
     </div>
 
     <!-- Products Grid -->
-    <?php if (count($products) > 0): ?>
+    <?php if (count($products) > 0): ?> <!-- Vérifie si il ya plusieurs produit dans ce cas la on parcours la liste de produits --> 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <?php foreach ($products as $product): ?>
+            <?php foreach ($products as $product): ?> <!-- parcours la liste de produit -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100">
                     <!-- Product Image -->
                     <div class="h-48 bg-gradient-to-br from-canope-light to-gray-100 flex items-center justify-center overflow-hidden">
@@ -165,20 +165,5 @@ include 'includes/header.php';
     <?php endif; ?>
 </div>
 
-<!-- Bouton Scroll To Top - Only on this page -->
-<button 
-  id="scrollToTopBtn"
-  class="fixed right-4 bottom-4 z-50 w-14 h-14 rounded-full bg-canope-green text-white flex items-center justify-center shadow-lg border-2 border-canope-green hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] active:scale-90 transition-all duration-300"
-  title="Remonter en haut">
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-  </svg>
-</button>
-
-<script>
-  document.getElementById('scrollToTopBtn').addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-</script>
 
 <?php include 'includes/footer.php'; ?>

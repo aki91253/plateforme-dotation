@@ -62,6 +62,8 @@ include 'includes/header.php';
 
             <div class="rating flex flex-row-reverse justify-center gap-1 text-3xl">
 
+            <!-- Les 5 étoiles pour noter --> 
+
   <input type="radio" id="star5" name="rate" value="5" class="peer hidden">
   <label for="star5"
          class="cursor-pointer text-gray-500
