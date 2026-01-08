@@ -1,7 +1,7 @@
 <?php
 /**
- * Handle form submission from selection.php
- * Saves request to database
+ * gérer la soumission du formulaire de selection.php
+ * Sauvegarde de la demande dans la base de données
  */
 require_once 'includes/db.php';
 require_once 'includes/auth.php';
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Get form data
+    // Get données du formulaire
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $establishmentName = trim($_POST['establishment_name'] ?? '');
@@ -25,34 +25,34 @@ try {
     $comment = trim($_POST['comment'] ?? '');
     $cartData = json_decode($_POST['cart_data'] ?? '[]', true);
     
-    // Validate required fields
+    // Validation des champs obligatoires
     if (empty($email) || empty($establishmentName) || empty($className) || empty($cartData)) {
         echo json_encode(['success' => false, 'message' => 'Veuillez remplir tous les champs obligatoires']);
         exit;
     }
     
-    // Generate unique request number
+    // Génération d'un numéro unique de demande
     $year = date('Y');
     $stmt = $pdo->query("SELECT MAX(CAST(SUBSTRING(request_number, 10) AS UNSIGNED)) as max_num FROM request WHERE request_number LIKE 'DEM-$year-%'");
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     $nextNum = ($result['max_num'] ?? 0) + 1;
     $requestNumber = sprintf("DEM-%s-%04d", $year, $nextNum);
     
-    // Start transaction
+    // Début de la transaction
     $pdo->beginTransaction();
     
-    // Insert main request (use first product_id for legacy compatibility)
+    // Insertion de la demande principale (utilisation du premier product_id pour la compatibilité avec l'historique)
     $firstProductId = $cartData[0]['id'] ?? 1;
     $stmt = $pdo->prepare('INSERT INTO request (request_number, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, request_type, status, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, "EN_COURS", ?)');
     $stmt->execute([
         $requestNumber,
         $firstProductId,
-        $className, // Using class name as last_name
-        '', // first_name empty
+        $className, // Utilisation du nom de la classe comme last_name
+        '', // first_name vide
         $email,
         $phone,
         $establishmentName,
-        '', // address
+        '', // addresse vide
         $establishmentPostal,
         $establishmentCity,
         $requestType,
@@ -61,7 +61,7 @@ try {
     
     $requestId = $pdo->lastInsertId();
     
-    // Insert request lines for each product
+    // Insertion des lignes de demande pour chaque produit
     $stmtLine = $pdo->prepare('INSERT INTO request_line (request_id, product_id, quantity, comment) VALUES (?, ?, 1, ?)');
     foreach ($cartData as $item) {
         $stmtLine->execute([$requestId, $item['id'], $item['name']]);

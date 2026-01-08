@@ -3,7 +3,7 @@ require_once 'includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/security.php';
 
-// Redirect if not logged in
+// Rédirection si non connecté/authentifié
 if (!isLoggedIn()) {
     redirect('login.php');
 }
@@ -12,35 +12,35 @@ $currentUser = getCurrentUser();
 $error = '';
 $success = '';
 
-// Handle password change form submission
+// Gestion du changement de mot de passe
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $currentPassword = $_POST['current_password'] ?? '';
     $newPassword = $_POST['new_password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
-    // Validate all fields are filled
+    // Vérification que tous les champs sont remplis
     if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
         $error = 'Veuillez remplir tous les champs.';
     } 
-    // Check for SQL injection in all fields
+    // Vérification de l'injection SQL dans tous les champs
     elseif (containsSqlInjectionChars($currentPassword)) {
         $error = getSqlInjectionErrorMessage('Mot de passe actuel');
     }
     elseif (containsSqlInjectionChars($newPassword)) {
         $error = getSqlInjectionErrorMessage('Nouveau mot de passe');
     }
-    // Validate new password strength
+    // Vérification de la force du mot de passe
     else {
         $passwordValidation = validatePassword($newPassword);
         if ($passwordValidation !== true) {
             $error = $passwordValidation;
         }
-        // Check passwords match
+        // Vérification que les nouveaux mots de passe correspondent
         elseif ($newPassword !== $confirmPassword) {
             $error = 'Les nouveaux mots de passe ne correspondent pas.';
         }
         else {
-            // Verify current password
+            // Vérification du mot de passe actuel
             $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
             $stmt->execute([$currentUser['id']]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$user || !password_verify($currentPassword, $user['password'])) {
                 $error = 'Le mot de passe actuel est incorrect.';
             } else {
-                // Update password
+                // Mise à jour du mot de passe
                 $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
                 
@@ -67,7 +67,7 @@ include 'includes/header.php';
 
 <div class="min-h-[70vh] py-12 px-4">
     <div class="max-w-2xl mx-auto">
-        <!-- Page Header -->
+        <!-- Header de la page -->
         <div class="text-center mb-8">
             <div class="w-20 h-20 bg-canope-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -78,7 +78,7 @@ include 'includes/header.php';
             <p class="text-gray-500 mt-2">Gérez vos informations personnelles</p>
         </div>
 
-        <!-- Account Information Card -->
+        <!-- cartes des infos du compte -->
         <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-6 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -112,7 +112,7 @@ include 'includes/header.php';
             </div>
         </div>
 
-        <!-- Change Password Card -->
+        <!-- carte pour chager le mot de passe -->
         <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -134,7 +134,7 @@ include 'includes/header.php';
             <?php endif; ?>
 
             <form action="profile.php" method="POST" class="space-y-4">
-                <!-- Current Password -->
+                <!-- mot de passe actuel -->
                 <div>
                     <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
                     <div class="relative">
@@ -149,7 +149,7 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- New Password -->
+                <!-- Nouveau mot de passe -->
                 <div>
                     <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
                     <div class="relative">
@@ -165,7 +165,7 @@ include 'includes/header.php';
                     <p class="text-xs text-gray-500 mt-1">Majuscule, minuscule, chiffre et caractère spécial (!@^&()[]{}|:,.<>?/~) requis.</p>
                 </div>
 
-                <!-- Confirm New Password -->
+                <!-- Confirmation du nouveau mot de passe -->
                 <div>
                     <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
                     <div class="relative">
@@ -180,7 +180,7 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Bouton de validation -->
                 <button type="submit"
                         class="w-full bg-canope-green text-white py-3 px-6 rounded-xl font-semibold hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] transition-all duration-300 shadow-lg shadow-canope-green/25 flex items-center justify-center gap-2 mt-6">
                     Changer le mot de passe
@@ -191,7 +191,7 @@ include 'includes/header.php';
             </form>
         </div>
 
-        <!-- Back to Home -->
+        <!-- Retour à l'accueil -->
         <div class="text-center mt-6">
             <a href="index.php" class="text-canope-green hover:underline text-sm">← Retour à l'accueil</a>
         </div>

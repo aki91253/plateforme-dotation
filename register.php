@@ -3,7 +3,7 @@ require_once 'includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/security.php';
 
-// Redirect if already logged in
+// Redirection si l'utilisateur est déjà connecté
 if (isLoggedIn()) {
     redirect('index.php');
 }
@@ -11,14 +11,14 @@ if (isLoggedIn()) {
 $error = '';
 $success = '';
 
-// Handle form submission
+// Gestion de l'envoi du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $etablissement = trim($_POST['etablissement'] ?? '');
     $password = $_POST['password'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
 
-    // Validation
+    // Validation des champs
     if (empty($email) || empty($etablissement) || empty($password) || empty($password_confirm)) {
         $error = 'Veuillez remplir tous les champs.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -30,19 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $password_confirm) {
         $error = 'Les mots de passe ne correspondent pas.';
     } else {
-        // Validate password strength
+        // Validation de la force du mot de passe
         $passwordValidation = validatePassword($password);
         if ($passwordValidation !== true) {
             $error = $passwordValidation;
         } else {
-            // Check if email already exists
+            // Vérification si l'email existe déjà
             $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
             $stmt->execute([$email]);
             
             if ($stmt->fetch()) {
                 $error = 'Cette adresse email est déjà utilisée.';
             } else {
-                // Insert new user
+                // Insertion du nouvel utilisateur
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO users (email, password, etablissement) VALUES (?, ?, ?)");
                 
@@ -61,7 +61,7 @@ include 'includes/header.php';
 
 <div class="min-h-[70vh] flex items-center justify-center py-12 px-4">
     <div class="w-full max-w-md">
-        <!-- Register Card -->
+        <!-- Carte d'inscription -->
         <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-8">
             <!-- Header -->
             <div class="text-center mb-8">
@@ -87,7 +87,7 @@ include 'includes/header.php';
             </div>
             <?php endif; ?>
 
-            <!-- Register Form -->
+            <!-- Formulaire d'inscription -->
             <form action="register.php" method="POST" class="space-y-5">
                 <!-- Email -->
                 <div>
@@ -121,7 +121,7 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- Password -->
+                <!-- Mot de passe -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
                     <div class="relative">
@@ -143,7 +143,7 @@ include 'includes/header.php';
                     <p class="text-xs text-gray-500 mt-2">Majuscule, minuscule, chiffre et caractère spécial requis.</p>
                 </div>
 
-                <!-- Confirm Password -->
+                <!-- Confirmation du mot de passe -->
                 <div>
                     <label for="password_confirm" class="block text-sm font-medium text-gray-700 mb-2">Confirmer le mot de passe</label>
                     <div class="relative">
@@ -164,7 +164,7 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Bouton d'envoi -->
                 <button type="submit"
                         class="w-full bg-canope-green text-white py-3 px-6 rounded-xl font-semibold hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] transition-all duration-300 shadow-lg shadow-canope-green/25 flex items-center justify-center gap-2 mt-6">
                     Créer mon compte
@@ -174,14 +174,14 @@ include 'includes/header.php';
                 </button>
             </form>
 
-            <!-- Divider -->
+            <!-- Séparateur -->
             <div class="flex items-center my-6">
                 <div class="flex-1 border-t border-gray-200"></div>
                 <span class="px-4 text-sm text-gray-400">ou</span>
                 <div class="flex-1 border-t border-gray-200"></div>
             </div>
 
-            <!-- Login Link -->
+            <!-- Lien de connexion -->
             <p class="text-center text-gray-600">
                 Déjà un compte ? 
                 <a href="login.php" class="text-canope-green font-semibold hover:underline">Se connecter</a>

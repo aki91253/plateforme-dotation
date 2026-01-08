@@ -1,5 +1,5 @@
 <?php
-// Include authentification (start session)
+// Include authentification (session initialisé)
 require_once __DIR__ . '/auth.php';
 ?>
 <!DOCTYPE html>

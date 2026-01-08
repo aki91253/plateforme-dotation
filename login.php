@@ -4,7 +4,7 @@ require_once 'includes/auth.php';
 require_once 'includes/security.php';
 require_once 'admin/includes/admin_auth.php';
 
-// Redirect if already logged in
+// Redirection si déjà connecté
 if (isLoggedIn()) {
     redirect('index.php');
 }
@@ -14,7 +14,7 @@ if (isAdminLoggedIn()) {
 
 $error = '';
 
-// Handle form submission
+// Gestion de la validation du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (containsSqlInjectionChars($password)) {
         $error = getSqlInjectionErrorMessage('Mot de passe');
     } else {
-        // First, check if it's an admin (responsible table)
+        // Vérification si c'est un admin (table responsible)
         $stmt = $pdo->prepare("SELECT id, email_pro, password, first_name, last_name, job_title FROM responsible WHERE email_pro = ?");
         $stmt->execute([$email]);
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($admin && !empty($admin['password']) && password_verify($password, $admin['password'])) {
-            // Admin login successful
+            // Connexion admin réussie
             loginAdmin(
                 $admin['id'],
                 $admin['email_pro'],
@@ -42,14 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             redirect('admin/index.php');
         } else {
-            // Check regular user in users table
+            // Vérification si c'est un utilisateur (table users)
             $stmt = $pdo->prepare("SELECT id, email, password, etablissement, is_active FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
                 if ($user['is_active']) {
-                    // User login successful
+                    // Connexion utilisateur réussie
                     loginUser($user['id'], $user['email'], $user['etablissement']);
                     redirect('index.php');
                 } else {
@@ -67,7 +67,7 @@ include 'includes/header.php';
 
 <div class="min-h-[70vh] flex items-center justify-center py-12 px-4">
     <div class="w-full max-w-md">
-        <!-- Login Card -->
+        <!-- carte de connexion -->
         <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-8">
             <!-- Header -->
             <div class="text-center mb-8">
@@ -86,7 +86,7 @@ include 'includes/header.php';
             </div>
             <?php endif; ?>
 
-            <!-- Login Form -->
+            <!-- Formulaire de connexion -->
             <form action="login.php" method="POST" class="space-y-5">
                 <!-- Email -->
                 <div>
@@ -104,7 +104,7 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- Password -->
+                <!-- Mot de passe -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
                     <div class="relative">
@@ -125,12 +125,12 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- Forgot Password Link -->
+                <!-- Mot de passe oublié -->
                 <div class="text-right">
                     <a href="#" class="text-sm text-canope-green hover:underline">Mot de passe oublié ?</a>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Bouton de validation -->
                 <button type="submit"
                         class="w-full bg-canope-green text-white py-3 px-6 rounded-xl font-semibold hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] transition-all duration-300 shadow-lg shadow-canope-green/25 flex items-center justify-center gap-2">
                     Se connecter
@@ -140,14 +140,14 @@ include 'includes/header.php';
                 </button>
             </form>
 
-            <!-- Divider -->
+            <!-- Séparateur -->
             <div class="flex items-center my-6">
                 <div class="flex-1 border-t border-gray-200"></div>
                 <span class="px-4 text-sm text-gray-400">ou</span>
                 <div class="flex-1 border-t border-gray-200"></div>
             </div>
 
-            <!-- Sign Up Link -->
+            <!-- lien vers l'inscription -->
             <p class="text-center text-gray-600">
                 Pas encore de compte ? 
                 <a href="register.php" class="text-canope-green font-semibold hover:underline">Créer un compte</a>
@@ -155,7 +155,7 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
-
+<!-- Script pour le bouton oeil (voire le mot de passe en claire) -->
 <script>
     function togglePassword() {
         const passwordInput = document.getElementById('password');
