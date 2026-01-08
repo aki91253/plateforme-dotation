@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/auth.php';
 
-// Logout user and redirect to home
+// Déconnexion de l'utilisateur et redirection vers la page d'accueil
 logoutUser();
 redirect('index.php');
 ?>
