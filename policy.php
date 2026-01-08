@@ -69,7 +69,7 @@ include 'includes/header.php';
             <h2 class="text-2xl font-normal text-gray-900">Données à caractère personnel collectées</h2>
         </div>
         <div class="pl-11 space-y-6">
-            <!-- Sub-sections as cards -->
+            <!-- sous-sections pour les usagers et les administrateurs -->
             <div class="bg-white border border-gray-200 rounded-xl p-5">
                 <h3 class="font-semibold text-gray-800 mb-3">👤 Pour les usagers</h3>
                 <ul class="text-gray-600 text-sm space-y-1">
