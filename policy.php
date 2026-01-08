@@ -3,14 +3,14 @@ include 'includes/header.php';
 ?>
 
 <div class="max-w-4xl mx-auto px-5 py-12">
-    <!-- Hero Header -->
+    <!-- Header hero -->
     <div class="text-center mb-12">
         <h1 class="text-5xl font-normal mb-4 text-gray-900">Plateforme de dotation</h1>
         <p class="text-2xl text-canope-green font-medium">Réseau Canopé</p>
         <p class="text-gray-400 mt-4">Dernière mise à jour : <?php echo date('d/m/Y'); ?></p>
     </div>
 
-    <!-- Table of Contents -->
+    <!-- Tableau du sommaire -->
     <nav id="sommaire" class="rounded-2xl p-6 mb-12">
         <h2 class="text-lg font-semibold text-gray-700 mb-4">📋 Sommaire</h2>
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
