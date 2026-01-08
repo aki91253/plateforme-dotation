@@ -2,10 +2,14 @@
 require_once 'includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/security.php';
+require_once 'admin/includes/admin_auth.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
     redirect('index.php');
+}
+if (isAdminLoggedIn()) {
+    redirect('admin/index.php');
 }
 
 $error = '';
@@ -22,21 +26,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (containsSqlInjectionChars($password)) {
         $error = getSqlInjectionErrorMessage('Mot de passe');
     } else {
-        // Check user in database
-        $stmt = $pdo->prepare("SELECT id, email, password, etablissement, is_active FROM users WHERE email = ?");
+        // First, check if it's an admin (responsible table)
+        $stmt = $pdo->prepare("SELECT id, email_pro, password, first_name, last_name, job_title FROM responsible WHERE email_pro = ?");
         $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            if ($user['is_active']) {
-                // Login successful
-                loginUser($user['id'], $user['email'], $user['etablissement']);
-                redirect('index.php');
-            } else {
-                $error = 'Votre compte est désactivé.';
-            }
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($admin && !empty($admin['password']) && password_verify($password, $admin['password'])) {
+            // Admin login successful
+            loginAdmin(
+                $admin['id'],
+                $admin['email_pro'],
+                $admin['first_name'],
+                $admin['last_name'],
+                $admin['job_title']
+            );
+            redirect('admin/index.php');
         } else {
-            $error = 'Email ou mot de passe incorrect.';
+            // Check regular user in users table
+            $stmt = $pdo->prepare("SELECT id, email, password, etablissement, is_active FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user && password_verify($password, $user['password'])) {
+                if ($user['is_active']) {
+                    // User login successful
+                    loginUser($user['id'], $user['email'], $user['etablissement']);
+                    redirect('index.php');
+                } else {
+                    $error = 'Votre compte est désactivé.';
+                }
+            } else {
+                $error = 'Email ou mot de passe incorrect.';
+            }
         }
     }
 }

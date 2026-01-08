@@ -4,17 +4,14 @@ $host = 'localhost';
 $dbname = 'canope-reseau';
 $username = 'user_canope';
 $password = 'Fghijkl1234*';
-$port = 3306; // Port standard MySQL (détecté)
+$port = 3306; // Port standard MySQL
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $username, $password);
     // Configurer PDO pour lancer des exceptions en cas d'erreur
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Optionnel : Message de succès pour le débogage (à commenter en production)
-    // echo "Connexion à la base de données réussie !";
 } catch (PDOException $e) {
-    // En cas d'erreur de connexion, on essaie de créer la base de données si elle n'existe pas
-    // Note: Cela ne fonctionnera que si l'utilisateur a les droits suffisants et si l'erreur vient de la db non trouvée
+    // Message d'erreur si la base de données n'existe pas
     if (strpos($e->getMessage(), "Unknown database") !== false) {
        echo "La base de données '$dbname' n'existe pas. Veuillez l'importer via phpMyAdmin ou exécuter le script SQL fourni.";
     } else {

@@ -1,23 +1,23 @@
 <?php
 /**
- * Authentication helper functions
- * Include this file to access session/user functions
+ * Fonctions d'authentification
+ * Important : Inclure toutes les fonctions de connexion utilisateur ici
  */
 
-// Start session if not already started
+// Lance une session si celà n'est pas déjà fait
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 /**
- * Check if user is logged in
+ * Regarde si l'utilisateur est connecté 
  */
 function isLoggedIn(): bool {
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
 /**
- * Get current logged-in user data
+ * GET les données de l'utilisateur connecté
  */
 function getCurrentUser(): ?array {
     if (!isLoggedIn()) {
@@ -31,7 +31,7 @@ function getCurrentUser(): ?array {
 }
 
 /**
- * Login user (set session variables)
+ * Login utlisateur (set les variables de session)
  */
 function loginUser(int $id, string $email, string $etablissement): void {
     $_SESSION['user_id'] = $id;
@@ -40,7 +40,7 @@ function loginUser(int $id, string $email, string $etablissement): void {
 }
 
 /**
- * Logout user (destroy session)
+ * Logout utlisateur (détruit la session)
  */
 function logoutUser(): void {
     $_SESSION = [];
@@ -55,7 +55,7 @@ function logoutUser(): void {
 }
 
 /**
- * Redirect to a URL
+ * Redirige vers une URL
  */
 function redirect(string $url): void {
     header("Location: $url");

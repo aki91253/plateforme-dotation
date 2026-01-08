@@ -194,15 +194,33 @@ function hideRequestForm() {
 function submitRequest(event) {
     event.preventDefault();
     
-    // In a real application, you would send this data to a PHP endpoint
-    // For now, we'll simulate a successful submission
+    const form = document.getElementById('request-form');
+    const formData = new FormData(form);
     
-    hideRequestForm();
-    document.getElementById('success-modal').classList.remove('hidden');
+    // Add cart data
+    formData.set('cart_data', JSON.stringify(getCart()));
     
-    // Clear the cart
-    clearCart();
-    displayCart();
+    // Submit to backend
+    fetch('submit_request.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideRequestForm();
+        if (data.success) {
+            document.getElementById('success-modal').classList.remove('hidden');
+            clearCart();
+            displayCart();
+        } else {
+            alert('Erreur: ' + data.message);
+        }
+    })
+    .catch(error => {
+        hideRequestForm();
+        alert('Erreur de connexion. Veuillez réessayer.');
+        console.error(error);
+    });
 }
 
 // Initialize cart display

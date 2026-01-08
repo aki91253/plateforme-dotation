@@ -1,39 +1,38 @@
 <?php
 /**
- * Security helper functions to prevent SQL injection and XSS attacks
- * Include this file in any PHP file that handles user input
+ * Fonctions de sécurité pour prévenir les injections SQL et les attaques XSS
+ * Important : Inclure dans ce fichier toutes les fonctions de sécurité
  */
 
-// SQL injection dangerous characters pattern
+// Patterns souvent utilisés pour les injections SQL
 // Blocks: ' " ; -- # /* */ \ % _ * =
 const SQL_INJECTION_PATTERN = '/[\'";#%_\\\\*=]|--|\\/\\*/';
 
-// List of safe special characters for passwords
+// Liste des caractères spéciaux autorisés pour les mots de passe
 const ALLOWED_PASSWORD_SPECIAL_CHARS = '!@^&()[]{}|:,.<>?/~';
 
 /**
- * Check if input contains SQL injection characters
- * @param string $input The input to check
- * @return bool True if dangerous characters are found
+ * Vérifie si l'entrée contient des caractères d'injection SQL
+ * @param string $input L'entrée à vérifier
+ * @return bool True si des caractères dangereux sont trouvés
  */
 function containsSqlInjectionChars(string $input): bool {
     return preg_match(SQL_INJECTION_PATTERN, $input) === 1;
 }
 
 /**
- * Get error message for SQL injection detection
- * @param string $fieldName The name of the field for the error message
- * @return string The error message
+ * Récupère un message d'erreur pour la détection d'injection SQL
+ * @param string $fieldName Le nom du champ pour le message d'erreur
+ * @return string Le message d'erreur
  */
 function getSqlInjectionErrorMessage(string $fieldName): string {
     return "Le champ \"$fieldName\" contient des caractères non autorisés (' \" ; -- # /* */ \\ % _ * =).";
 }
 
 /**
- * Sanitize input by removing SQL injection characters
- * Use this for optional cleanup, but validation should still be done
- * @param string $input The input to sanitize
- * @return string The sanitized input
+ * Nettoie l'entrée en supprimant les caractères d'injection SQL
+ * @param string $input L'entrée à nettoyer
+ * @return string L'entrée nettoyée
  */
 function sanitizeInput(string $input): string {
     // Remove dangerous patterns
@@ -42,9 +41,9 @@ function sanitizeInput(string $input): string {
 }
 
 /**
- * Validate email format (basic validation + SQL injection check)
- * @param string $email The email to validate
- * @return string|true Returns true if valid, or error message string
+ * Vérifie le format de l'email (validation de base + vérification d'injection SQL)
+ * @param string $email L'email à valider
+ * @return string|true Retourne true si valide, ou message d'erreur
  */
 function validateEmail(string $email): string|true {
     if (empty($email)) {
@@ -63,12 +62,12 @@ function validateEmail(string $email): string|true {
 }
 
 /**
- * Validate a text field (non-empty + SQL injection check)
- * @param string $value The value to validate
- * @param string $fieldName The name of the field for error messages
- * @param int $minLength Minimum required length (default 1)
- * @param int $maxLength Maximum allowed length (default 255)
- * @return string|true Returns true if valid, or error message string
+ * Vérifie un champ de texte (non-vide + vérification d'injection SQL)
+ * @param string $value La valeur à valider
+ * @param string $fieldName Le nom du champ pour les messages d'erreur
+ * @param int $minLength Longueur minimale requise (par défaut 1)
+ * @param int $maxLength Longueur maximale autorisée (par défaut 255)
+ * @return string|true Retourne true si valide, ou message d'erreur
  */
 function validateTextField(string $value, string $fieldName, int $minLength = 1, int $maxLength = 255): string|true {
     $value = trim($value);
@@ -89,9 +88,9 @@ function validateTextField(string $value, string $fieldName, int $minLength = 1,
 }
 
 /**
- * Validate password strength
- * @param string $password The password to validate
- * @return string|true Returns true if valid, or error message string
+ * Vérifie la force du mot de passe
+ * @param string $password Le mot de passe à valider
+ * @return string|true Retourne true si valide, ou message d'erreur
  */
 function validatePassword(string $password): string|true {
     // Minimum 12 characters
@@ -99,28 +98,28 @@ function validatePassword(string $password): string|true {
         return 'Le mot de passe doit contenir au moins 12 caractères.';
     }
     
-    // Check for uppercase
+    // Vérifie la présence d'une majuscule
     if (!preg_match('/[A-Z]/', $password)) {
         return 'Le mot de passe doit contenir au moins une majuscule.';
     }
     
-    // Check for lowercase
+    // Vérifie la présence d'une minuscule
     if (!preg_match('/[a-z]/', $password)) {
         return 'Le mot de passe doit contenir au moins une minuscule.';
     }
     
-    // Check for digit
+    // Vérifie la présence d'un chiffre
     if (!preg_match('/[0-9]/', $password)) {
         return 'Le mot de passe doit contenir au moins un chiffre.';
     }
     
-    // Check for special character from allowed list
+    // Vérifie la présence d'un caractère spécial autorisé
     $escapedChars = preg_quote(ALLOWED_PASSWORD_SPECIAL_CHARS, '/');
     if (!preg_match('/[' . $escapedChars . ']/', $password)) {
         return 'Le mot de passe doit contenir au moins un caractère spécial (!@^&()[]{}|:,.<>?/~).';
     }
     
-    // Block dangerous SQL injection characters
+    // Vérifie la présence de caractères d'injection SQL
     if (containsSqlInjectionChars($password)) {
         return getSqlInjectionErrorMessage('Mot de passe');
     }
@@ -129,10 +128,10 @@ function validatePassword(string $password): string|true {
 }
 
 /**
- * Validate that passwords match
- * @param string $password The password
- * @param string $confirmPassword The confirmation password
- * @return string|true Returns true if match, or error message string
+ * Vérifie que les mots de passe correspondent
+ * @param string $password Le mot de passe
+ * @param string $confirmPassword Le mot de passe de confirmation
+ * @return string|true Retourne true si les mots de passe correspondent, ou message d'erreur
  */
 function validatePasswordMatch(string $password, string $confirmPassword): string|true {
     if ($password !== $confirmPassword) {

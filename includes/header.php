@@ -1,5 +1,5 @@
 <?php
-// Include auth helper (starts session)
+// Include authentification (start session)
 require_once __DIR__ . '/auth.php';
 ?>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@ require_once __DIR__ . '/auth.php';
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3 { font-family: 'Playfair Display', serif; }
     </style>
-    <!-- Custom CSS (loaded after Tailwind to allow overrides) -->
+    <!-- CSS Custom (Chargé après Tailwind pour permettre des remplacements) -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <div id="loader" class="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
@@ -86,7 +86,7 @@ require_once __DIR__ . '/auth.php';
                 </li>
                 
                 <?php if (isLoggedIn()): ?>
-                <!-- Logged in: Show user menu -->
+                <!-- Logged in: Montre le menu utilisateurs -->
                 <li class="relative group">
                     <button class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-canope-green transition-colors">
                         <div class="w-8 h-8 bg-canope-green/10 rounded-full flex items-center justify-center">
@@ -98,7 +98,7 @@ require_once __DIR__ . '/auth.php';
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <!-- Dropdown menu -->
+                    <!-- Menu utilisateur (dropdown) -->
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <a href="profile.php" class="block p-3 border-b border-gray-100 hover:bg-gray-50 rounded-t-xl transition-colors">
                             <p class="text-sm font-medium text-gray-800 truncate"><?= htmlspecialchars($_SESSION['user_email']) ?></p>
@@ -119,7 +119,7 @@ require_once __DIR__ . '/auth.php';
                     </div>
                 </li>
                 <?php else: ?>
-                <!-- Not logged in: Show login button -->
+                <!-- Not logged in: Montre le bouton de connexion -->
                 <li>
                     <a href="login.php" class="flex justify-center gap-2 items-center shadow-lg text-sm bg-canope-green backdrop-blur-md font-semibold relative z-10 px-4 py-2 overflow-hidden border-2 border-canope-green rounded-full group no-underline text-white hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] transition-all duration-300">
                         Connexion

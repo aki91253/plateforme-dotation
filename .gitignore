@@ -1,0 +1,11 @@
+# SQL files containing sensitive database structure and credentials
+assets/SQL/
+
+# MAMP configuration files
+.mamp/
+
+# MAMP logs
+.mamp/logs/
+
+#admin
+admin/
