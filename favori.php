@@ -78,3 +78,6 @@ function displayFavorites() {
 
 document.addEventListener('DOMContentLoaded', displayFavorites);
 </script>
+
+<?php include 'includes/footer.php'; ?>
+

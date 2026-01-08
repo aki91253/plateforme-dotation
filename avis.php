@@ -35,7 +35,7 @@ include 'includes/header.php';
                                value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
                                class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-canope-green focus:ring-2 focus:ring-canope-green/20 outline-none transition-all text-gray-800 placeholder-gray-400"
                                placeholder="Votre nom ">
-                    </div>
+                    </div> <!-- Value sert a préremplir la ligne que l'utilisateur à rempli Nom-->
                 </div>
 
                 <!-- Commentaire -->
