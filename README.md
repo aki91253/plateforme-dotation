@@ -15,8 +15,7 @@
 1. Cloner le projet
 2. Importer la base de données
 3. Lancer le projet via un serveur local (XAMPP, WAMP)
-4. Accéder au projet via `localhost`
-
+4. Accéder au projet via localhost
 
 --- Technologies utilisées
 #Cette Application Web à été développé à partir d'un framework pour le CSS : Taliwind CSS 
@@ -37,8 +36,6 @@
 - Gestion des expositions (admin)
 - Gestion des réservations (admin)
 
-
-
 --- Structure du projet
 /  
 ├── assets/    
@@ -55,9 +52,8 @@
 ├── différentes_pages_php_utilisateurs
 └── README.md
 
-
-
 --- Rôles
 - Utilisateur : consulter et réserver, créer un compte, se connecter, se deconnecter, modifier son compte, contacter l'administrateur (par mail)
 - Administrateur : gérer expositions et réservations
 - super admin : gérer les utilisateurs et les administrateurs
+
