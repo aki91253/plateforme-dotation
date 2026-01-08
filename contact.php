@@ -43,7 +43,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
     </div>
 </div>
 
-<!-- Email Provider Modal -->
+ <!-- Interface avec les clients de messagerie qui apparaît quand on clique sur "Nous contacter" -->
 <div id="emailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
         <!-- Modal Header -->
@@ -59,7 +59,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             <p class="text-sm text-gray-500 mt-1">Sélectionnez votre client email préféré</p>
         </div>
         
-        <!-- Email Providers Grid -->
+        <!-- Les clients mail qui apparaît -->
         <div class="p-6 grid grid-cols-2 gap-4">
             <!-- Gmail -->
             <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<?php echo $contactEmail; ?>&su=<?php echo urlencode($emailSubject); ?>" 

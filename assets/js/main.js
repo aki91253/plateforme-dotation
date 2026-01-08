@@ -4,7 +4,7 @@ console.log('Dotation Platform loaded');
 //Méthode pour cart 
 
 
-function getCart() {
+function getCart() { // Méthode pour obtenir la sélection 
     const cart = localStorage.getItem('canope_cart');
     return cart ? JSON.parse(cart) : [];
 }
