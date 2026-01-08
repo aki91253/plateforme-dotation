@@ -12,7 +12,7 @@ include 'includes/header.php';
             <!-- bouton 1 - gradient hover effect -->
             <div class="relative group">
                 <a href="donations.php"
-                    class="relative inline-block p-px font-semibold leading-6 text-white bg-canope-green shadow-xl cursor-pointer rounded-xl transition-transform duration-300 ease-in-out"
+                    class="relative inline-block p-px font-semibold leading-6 text-white bg-canope-green cursor-pointer rounded-xl transition-transform duration-300 ease-in-out"
                 >
                     <span
                         class="absolute inset-0 rounded-xl bg-gradient-to-r from-canope-green via-emerald-500 to-canope-olive p-[2px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
