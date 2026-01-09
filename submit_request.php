@@ -15,10 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
     // Get données du formulaire
+    $lastName = trim($_POST['nom'] ?? '');
+    $firstName = trim($_POST['prenom'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $establishmentName = trim($_POST['establishment_name'] ?? '');
-    $className = trim($_POST['class_name'] ?? '');
     $establishmentPostal = trim($_POST['establishment_postal'] ?? '');
     $establishmentCity = trim($_POST['establishment_city'] ?? '');
     $requestType = $_POST['request_type'] ?? 'RECEVOIR';
@@ -26,7 +27,7 @@ try {
     $cartData = json_decode($_POST['cart_data'] ?? '[]', true);
     
     // Validation des champs obligatoires
-    if (empty($email) || empty($establishmentName) || empty($className) || empty($cartData)) {
+    if (empty($lastName) || empty($firstName) || empty($email) || empty($phone) || empty($establishmentName) || empty($cartData)) {
         echo json_encode(['success' => false, 'message' => 'Veuillez remplir tous les champs obligatoires']);
         exit;
     }
@@ -47,8 +48,8 @@ try {
     $stmt->execute([
         $requestNumber,
         $firstProductId,
-        $className, // Utilisation du nom de la classe comme last_name
-        '', // first_name vide
+        $lastName,
+        $firstName,
         $email,
         $phone,
         $establishmentName,
