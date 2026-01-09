@@ -64,6 +64,13 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>
+ <div class="mt-8 pt-6 border-t border-border text-center text-sm text-muted-foreground">
+              <p>
+                © 2026<br>
+                Réseau Canopé – Corse. Tous droits réservés.
+              </p>
+            </div>
+          </div>
     </footer>
     <script src="assets/js/main.js"></script>
 </body>
