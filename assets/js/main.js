@@ -23,7 +23,7 @@ function addToCart(productId, productName) {
         return;
     }
 
-    cart.push({ id: productId, name: productName });
+    cart.push({ id: productId, name: productName, quantity: 1 });
     saveCart(cart);
     showNotification(`"${productName}" ajouté à votre sélection`);
 }

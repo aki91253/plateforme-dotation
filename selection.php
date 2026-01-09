@@ -298,17 +298,35 @@ function displayCart() {
     // Affichage des éléments du panier (colonne de gauche)
     let cartHtml = '';
     cart.forEach(item => {
+        const qty = item.quantity || 1;
         cartHtml += `
             <div class="flex items-center justify-between bg-gray-50 p-4 rounded-xl border border-gray-100 group hover:border-canope-green/30 transition-all">
                 <div class="flex-1">
                     <h3 class="font-medium text-gray-800">${item.name}</h3>
                 </div>
-                <button onclick="removeFromCart(${item.id})"
-                        class="text-gray-400 hover:text-red-500 transition-colors p-2 opacity-0 group-hover:opacity-100" title="Retirer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1 bg-white border border-gray-200 rounded-lg">
+                        <button onclick="updateQuantity(${item.id}, ${qty - 1})"
+                                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-canope-green hover:bg-gray-50 rounded-l-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                            </svg>
+                        </button>
+                        <span class="w-8 text-center font-medium text-gray-800">${qty}</span>
+                        <button onclick="updateQuantity(${item.id}, ${qty + 1})"
+                                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-canope-green hover:bg-gray-50 rounded-r-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                    </div>
+                    <button onclick="removeFromCart(${item.id})"
+                            class="text-gray-400 hover:text-red-500 transition-colors p-2" title="Retirer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         `;
     });
