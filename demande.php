@@ -13,14 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['id'])) {
         try {
             $query = $pdo->prepare("
                 SELECT 
-                    o.*,
-                    u.name as demandeur_nom,
-                    u.email as demandeur_email,
-                    u.phone as demandeur_phone,
-                    u.institution as demandeur_institution
-                FROM orders o
-                LEFT JOIN users u ON o.user_id = u.id
-                WHERE o.id = :id OR o.token = :token
+                    last_namename as demandeur_nom,
+                    email as demandeur_email,
+                    phone as demandeur_phone,
+                    establishment_name as demandeur_institution
+                FROM request
+                WHERE id = :id OR token = :token
                 LIMIT 1
             ");
             $query->execute(['id' => $searchId, 'token' => $searchId]);
@@ -40,24 +38,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['id'])) {
 $historique = [];
 if ($demande) {
     $histQuery = $pdo->prepare("
-        SELECT * FROM order_status_history 
-        WHERE order_id = :order_id 
-        ORDER BY created_at DESC
+        SELECT * FROM request 
+        WHERE id = :id 
+        ORDER BY request_date DESC
     ");
-    $histQuery->execute(['order_id' => $demande['id']]);
+    $histQuery->execute(['request_id' => $demande['id']]);
     $historique = $histQuery->fetchAll(PDO::FETCH_ASSOC);
     
     $produits = [];
     $prodQuery = $pdo->prepare("
         SELECT 
-            oi.*,
+            re.*,
             p.name as product_name,
             p.reference
-        FROM order_items oi
-        LEFT JOIN product p ON oi.product_id = p.id
-        WHERE oi.order_id = :order_id
+        FROM request re
+        LEFT JOIN product p ON re.product_id = p.id
+        WHERE re.id = :id
     ");
-    $prodQuery->execute(['order_id' => $demande['id']]);
+    $prodQuery->execute(['request_id' => $demande['id']]);
     $produits = $prodQuery->fetchAll(PDO::FETCH_ASSOC);
     $demande['produits'] = $produits;
 }
@@ -88,18 +86,6 @@ include 'includes/header.php';
                 </svg>
             </button>
         </form>
-    </div>
-
-    <!-- Message d'info de démo -->
-    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8 rounded">
-        <div class="flex items-start gap-3">
-            <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-            </svg>
-            <p class="text-blue-700 text-sm">
-                <strong>Démo:</strong> Essayez avec le token "<code class="bg-blue-100 px-1 rounded">abc123def456</code>" ou "<code class="bg-blue-100 px-1 rounded">xyz789ghi012</code>"
-            </p>
-        </div>
     </div>
 
     <!-- Message d'erreur -->
