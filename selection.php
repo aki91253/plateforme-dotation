@@ -25,11 +25,11 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Main Content -->
+<!--Contenu principal -->
 <div class="max-w-6xl mx-auto px-5 py-8">
     <div class="flex flex-col lg:flex-row gap-8">
         
-        <!-- Left Column - Form -->
+        <!-- Colonne de gauche - Formulaire -->
         <div class="flex-1 space-y-6">
             
             <!-- Vos informations -->
@@ -76,7 +76,7 @@ include 'includes/header.php';
                         </div>
                     </div>
                     
-                    <!-- Hidden fields -->
+                    <!-- champs cachés -->
                     <input type="hidden" name="cart_data" id="cart-data-input">
                     <input type="hidden" name="request_type" id="request-type-input" value="RECEVOIR">
                 </form>
@@ -115,7 +115,7 @@ include 'includes/header.php';
                 </div>
                 
                 <div id="cart-items" class="space-y-3">
-                    <!-- Cart items will be dynamically inserted here -->
+                <!-- Les items du panier seront insérés ici -->
                 </div>
                 
                 <div id="cart-empty" class="text-center py-8 hidden">
@@ -141,7 +141,7 @@ include 'includes/header.php';
             
         </div>
         
-        <!-- Right Column - Récapitulatif -->
+        <!-- Colonne de droite - Récapitulatif -->
         <div class="lg:w-80">
             <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm sticky top-8">
                 <h2 class="text-lg font-semibold text-gray-800 mb-6">Récapitulatif</h2>
@@ -169,18 +169,41 @@ include 'includes/header.php';
                             </svg>
                         </div>
                         <span class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
-                            J'accepte la <a href="#" class="text-canope-green hover:underline">politique de confidentialité</a> et le traitement de mes données personnelles. <span class="text-red-500">*</span>
+                            J'accepte la <a href="policy.php" class="text-canope-green hover:underline">politique de confidentialité</a> et le traitement de mes données personnelles. <span class="text-red-500">*</span>
                         </span>
                     </label>
                 </div>
-                
-                <button type="button" onclick="submitFormFromSidebar()" id="submit-btn"
-                        class="w-full bg-canope-green text-white py-4 rounded-xl font-semibold text-base hover:bg-canope-olive transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-canope-green/20">
-                    Envoyer ma demande
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <!-- Bouton d'envoi -->
+                <div id="submit-btn-container" class="relative inline-flex items-center justify-center gap-4 group w-full">
+                    <div
+                        class="absolute inset-0 duration-1000 opacity-60 transitiona-all rounded-xl blur-lg filter"
+                    ></div>
+                    <button
+                        type="button"
+                        onclick="submitFormFromSidebar()"
+                        id="submit-btn"
+                        disabled
+                        class="group relative inline-flex items-center justify-center text-base rounded-xl bg-canope-green px-8 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                        title="Envoyer ma demande"
+                    >Envoyer ma demande<svg
+                        aria-hidden="true"
+                        viewBox="0 0 10 10"
+                        height="10"
+                        width="10"
+                        fill="none"
+                        class="mt-0.5 ml-2 -mr-1 stroke-white stroke-2"
+                    >
+                        <path
+                            d="M0 5h7"
+                            class="transition opacity-0"
+                        ></path>
+                        <path
+                            d="M1 1l4 4-4 4"
+                            class="transition"
+                        ></path>
                     </svg>
-                </button>
+                    </button>
+                </div>
                 
                 <p id="selection-warning" class="text-sm text-gray-500 text-center mt-4 flex items-center justify-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -194,7 +217,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Success Modal -->
+<!-- Modal de confirmation -->
 <div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-slide-up">
         <div class="w-16 h-16 bg-canope-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -216,7 +239,7 @@ include 'includes/header.php';
         background-color: rgba(58, 107, 86, 0.05);
     }
     
-    /* Custom checkbox styling */
+    /* Style du checkbox custom */
     #privacy-checkbox:checked + div {
         background-color: #3A6B56;
         border-color: #3A6B56;
@@ -232,7 +255,7 @@ include 'includes/header.php';
 </style>
 
 <script>
-// Request type selection
+// Gestion de la sélection du type de demande
 function selectRequestType(type) {
     document.getElementById('request-type-input').value = type;
     
@@ -252,7 +275,7 @@ function selectRequestType(type) {
     }
 }
 
-// Display cart items on page load
+// Affichage des éléments du panier au chargement de la page
 function displayCart() {
     const cart = getCart();
     const cartItemsContainer = document.getElementById('cart-items');
@@ -272,7 +295,7 @@ function displayCart() {
     cartEmpty.classList.add('hidden');
     selectionWarning.classList.add('hidden');
     
-    // Cart items (left column)
+    // Affichage des éléments du panier (colonne de gauche)
     let cartHtml = '';
     cart.forEach(item => {
         cartHtml += `
@@ -291,7 +314,7 @@ function displayCart() {
     });
     cartItemsContainer.innerHTML = cartHtml;
     
-    // Recap items (right column)
+    // Recap des items (colonne de droite)
     let recapHtml = '';
     cart.forEach(item => {
         recapHtml += `
@@ -319,16 +342,16 @@ function submitFormFromSidebar() {
         return;
     }
     
-    // Check form validity
+    // Vérification de la validité du formulaire
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
     }
     
-    // Set cart data
+    // Set données du panier
     document.getElementById('cart-data-input').value = JSON.stringify(cart);
     
-    // Submit the form
+    // Submit le formulaire
     submitRequest(new Event('submit'));
 }
 
@@ -338,10 +361,10 @@ function submitRequest(event) {
     const form = document.getElementById('request-form');
     const formData = new FormData(form);
     
-    // Add cart data
+    // Ajout des données du panier
     formData.set('cart_data', JSON.stringify(getCart()));
     
-    // Submit to backend
+    // Submit au backend
     fetch('submit_request.php', {
         method: 'POST',
         body: formData
@@ -362,8 +385,30 @@ function submitRequest(event) {
     });
 }
 
-// Initialize cart display
-document.addEventListener('DOMContentLoaded', displayCart);
+// Initialisation de l'affichage du panier
+document.addEventListener('DOMContentLoaded', function() {
+    displayCart();
+    
+    // Gestion de l'état du bouton en fonction du checkbox
+    const privacyCheckbox = document.getElementById('privacy-checkbox');
+    const submitBtn = document.getElementById('submit-btn');
+    const gradientGlow = document.querySelector('#submit-btn-container > div:first-child');
+    
+    function updateButtonState() {
+        if (privacyCheckbox.checked) {
+            submitBtn.disabled = false;
+            gradientGlow.classList.remove('opacity-0');
+            gradientGlow.classList.add('opacity-60');
+        } else {
+            submitBtn.disabled = true;
+            gradientGlow.classList.remove('opacity-60');
+            gradientGlow.classList.add('opacity-0');
+        }
+    }
+    
+    privacyCheckbox.addEventListener('change', updateButtonState);
+    updateButtonState(); // État initial
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>
