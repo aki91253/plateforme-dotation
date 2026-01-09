@@ -63,9 +63,10 @@ try {
     $requestId = $pdo->lastInsertId();
     
     // Insertion des lignes de demande pour chaque produit
-    $stmtLine = $pdo->prepare('INSERT INTO request_line (request_id, product_id, quantity, comment) VALUES (?, ?, 1, ?)');
+    $stmtLine = $pdo->prepare('INSERT INTO request_line (request_id, product_id, quantity, comment) VALUES (?, ?, ?, ?)');
     foreach ($cartData as $item) {
-        $stmtLine->execute([$requestId, $item['id'], $item['name']]);
+        $quantity = $item['quantity'] ?? 1;
+        $stmtLine->execute([$requestId, $item['id'], $quantity, $item['name']]);
     }
     
     $pdo->commit();
