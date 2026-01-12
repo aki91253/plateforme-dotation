@@ -9,7 +9,7 @@
             </div>
             <div class="flex items-center gap-5">
                 <a href="#" class="text-gray-500 no-underline hover:text-canope-green transition-colors">Savoir Plus</a>
-                <a href="#" class="text-gray-500 no-underline hover:text-canope-green transition-colors">Support</a>
+                <a href="support.php" class="text-gray-500 no-underline hover:text-canope-green transition-colors">Support</a>
                 
                 <!-- Icones des Sociaux -->
                 <div class="flex items-center gap-2 ml-2">
