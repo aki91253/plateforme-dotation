@@ -135,6 +135,16 @@ include 'includes/header.php';
                 <p class="text-gray-600 text-sm">Demande acceptée !</p>
             </div>
             
+            <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-2">Envoyée</span>
+                <p class="text-gray-600 text-sm">Colis expédié</p>
+            </div>
+            
+            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-2">Livrée</span>
+                <p class="text-gray-600 text-sm">La dotation a été réceptionnée. Bonne utilisation !</p>
+            </div>
+            
             <div class="bg-red-50 rounded-xl p-4 border border-red-100">
                 <span class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium mb-2">Rejetée</span>
                 <p class="text-gray-600 text-sm">La demande n'a pas pu être acceptée. Contactez-nous pour plus d'informations.</p>

@@ -202,6 +202,7 @@ include 'includes/header.php';
                             <li><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm font-medium">Vérifiée</span> - Demande validée par notre équipe</li>
                             <li><span class="inline-block px-2 py-1 bg-green-100 text-green-700 rounded text-sm font-medium">Approuvée</span> - Demande acceptée, préparation en cours</li>
                             <li><span class="inline-block px-2 py-1 bg-purple-100 text-purple-700 rounded text-sm font-medium">Envoyée</span> - Colis expédié</li>
+                            <li><span class="inline-block px-2 py-1 bg-red-100 text-red-700 rounded text-sm font-medium">Refusée</span> - La demande n'a pas pu être acceptée. Contactez-nous pour plus d'informations.</li>
                             <li><span class="inline-block px-2 py-1 bg-green-100 text-green-700 rounded text-sm font-medium">Livrée</span> - Dotation reçue</li>
                         </ul>
                     </div>
