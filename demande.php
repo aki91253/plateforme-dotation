@@ -5,33 +5,39 @@ $demande = null;
 $erreur = '';
 $searched = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
     $searched = true;
-    $searchId = isset($_POST['search_id']) ? trim($_POST['search_id']) : (isset($_GET['id']) ? trim($_GET['id']) : '');
+    $searchToken = isset($_POST['search_token']) ? trim($_POST['search_token']) : (isset($_GET['token']) ? trim($_GET['token']) : '');
     
-    if (!empty($searchId)) {
+    if (!empty($searchToken)) {
         try {
             $query = $pdo->prepare("
                 SELECT 
-                    last_namename as demandeur_nom,
-                    email as demandeur_email,
-                    phone as demandeur_phone,
-                    establishment_name as demandeur_institution
-                FROM request
-                WHERE id = :id OR token = :token
+                    re.id,
+                    re.status,
+                    re.last_name as demandeur_nom,
+                    re.email as demandeur_email,
+                    re.phone as demandeur_phone,
+                    re.request_date as created_at,
+                    re.token,
+                    rl.quantity,
+                    re.establishment_name as demandeur_institution
+                FROM request re
+                JOIN request_line rl ON re.id = rl.request_id
+                WHERE token = :token
                 LIMIT 1
             ");
-            $query->execute(['id' => $searchId, 'token' => $searchId]);
+            $query->execute(['token' => $searchToken]);
             $demande = $query->fetch(PDO::FETCH_ASSOC);
             
             if (!$demande) {
-                $erreur = "Demande non trouvée. Vérifiez votre identifiant ou token.";
+                $erreur = "Demande non trouvée. Vérifiez votre token.";
             }
         } catch (Exception $e) {
-            $erreur = "Erreur lors de la recherche.";
+            $erreur = $e->getMessage();
         }
     } else {
-        $erreur = "Veuillez entrer un identifiant ou un token.";
+        $erreur = "Veuillez entrer un token.";
     }
 }
 
@@ -39,10 +45,10 @@ $historique = [];
 if ($demande) {
     $histQuery = $pdo->prepare("
         SELECT * FROM request 
-        WHERE id = :id 
+        WHERE token = :token 
         ORDER BY request_date DESC
     ");
-    $histQuery->execute(['request_id' => $demande['id']]);
+    $histQuery->execute(['token' => $demande['token']]);
     $historique = $histQuery->fetchAll(PDO::FETCH_ASSOC);
     
     $produits = [];
@@ -55,7 +61,7 @@ if ($demande) {
         LEFT JOIN product p ON re.product_id = p.id
         WHERE re.id = :id
     ");
-    $prodQuery->execute(['request_id' => $demande['id']]);
+    $prodQuery->execute(['id' => $demande['id']]);
     $produits = $prodQuery->fetchAll(PDO::FETCH_ASSOC);
     $demande['produits'] = $produits;
 }
@@ -71,9 +77,9 @@ include 'includes/header.php';
         <form method="POST" class="flex gap-3">
             <input 
                 type="text" 
-                name="search_id" 
-                value="<?php echo htmlspecialchars($_POST['search_id'] ?? $_GET['id'] ?? ''); ?>"
-                placeholder="Entrez votre identifiant ou token de demande"
+                name="search_token" 
+                value="<?php echo htmlspecialchars($_POST['search_token'] ?? $_GET['token'] ?? ''); ?>"
+                placeholder="Entrez votre token de demande"
                 class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-canope-green"
             />
             <button 
@@ -173,7 +179,7 @@ include 'includes/header.php';
                                 <p class="text-sm text-gray-500">Réf: <?php echo htmlspecialchars($produit['reference']); ?></p>
                             <?php endif; ?>
                         </div>
-                        <span class="text-lg font-semibold text-canope-green">x<?php echo (int)$produit['quantity']; ?></span>
+                        <span class="text-lg font-semibold text-canope-green">x<?php echo (int)$demande['quantity']; ?></span>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -219,7 +225,7 @@ include 'includes/header.php';
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
                                 </svg>
-                                <?php echo date('d F Y à H:i', strtotime($event['created_at'])); ?>
+                                <?php echo date('d F Y à H:i', strtotime($demande['created_at'])); ?>
                             </div>
                         </div>
                     </div>
