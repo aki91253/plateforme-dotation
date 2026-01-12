@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
             $query = $pdo->prepare("
                 SELECT 
                     re.id,
-                    re.status,
+                    t.libelle as status,
                     re.last_name as demandeur_nom,
                     re.email as demandeur_email,
                     re.phone as demandeur_phone,
@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
                     re.establishment_name as demandeur_institution
                 FROM request re
                 JOIN request_line rl ON re.id = rl.request_id
+                JOIN type_status t ON re.status_id = t.id
                 WHERE token = :token
                 LIMIT 1
             ");
@@ -59,6 +60,7 @@ if ($demande) {
             p.reference
         FROM request re
         LEFT JOIN product p ON re.product_id = p.id
+        JOIN request_line rl ON re.id = rl.request_id
         WHERE re.id = :id
     ");
     $prodQuery->execute(['id' => $demande['id']]);
