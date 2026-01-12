@@ -1,5 +1,5 @@
 # SQL files containing sensitive database structure and credentials
-assets/SQL/
+assets/SQL
 
 # MAMP configuration files
 .mamp/

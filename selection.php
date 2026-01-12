@@ -226,7 +226,16 @@ include 'includes/header.php';
             </svg>
         </div>
         <h2 class="text-2xl font-semibold text-gray-800 mb-2">Demande envoyée !</h2>
-        <p class="text-gray-600 mb-6">Votre demande de dotation a été enregistrée. Vous recevrez une confirmation par email.</p>
+        <p class="text-gray-600 mb-4">Votre demande de dotation a été enregistrée. Voici votre numéro de suivi :</p>
+        
+        <!-- Token Display -->
+        <div class="bg-gray-50 border-2 border-dashed border-canope-green/30 rounded-xl p-4 mb-6">
+            <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Token de suivi</p>
+            <p id="request-token" class="text-lg font-mono font-bold text-canope-green break-all"></p>
+        </div>
+        
+        <p class="text-sm text-gray-500 mb-6">Conservez ce token pour suivre l'état de votre demande.</p>
+        
         <a href="donations.php" class="inline-block bg-canope-green text-white px-6 py-3 rounded-xl font-semibold hover:bg-canope-olive transition-colors">
             Découvrir d'autres dotations
         </a>
@@ -390,6 +399,8 @@ function submitRequest(event) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Display the token in the modal
+            document.getElementById('request-token').textContent = data.token;
             document.getElementById('success-modal').classList.remove('hidden');
             clearCart();
             displayCart();

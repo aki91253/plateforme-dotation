@@ -32,21 +32,23 @@ try {
         exit;
     }
     
-    // Génération d'un numéro unique de demande
-    $year = date('Y');
-    $stmt = $pdo->query("SELECT MAX(CAST(SUBSTRING(request_number, 10) AS UNSIGNED)) as max_num FROM request WHERE request_number LIKE 'DEM-$year-%'");
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $nextNum = ($result['max_num'] ?? 0) + 1;
-    $requestNumber = sprintf("DEM-%s-%04d", $year, $nextNum);
+    // Génération d'un token unique pour la demande
+    // Boucle pour s'assurer que le token n'existe pas déjà
+    do {
+        $token = bin2hex(random_bytes(16)); // Génère un token hexadécimal de 32 caractères
+        $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM request WHERE token = ?');
+        $checkStmt->execute([$token]);
+        $tokenExists = $checkStmt->fetchColumn() > 0;
+    } while ($tokenExists);
     
     // Début de la transaction
     $pdo->beginTransaction();
     
     // Insertion de la demande principale (utilisation du premier product_id pour la compatibilité avec l'historique)
     $firstProductId = $cartData[0]['id'] ?? 1;
-    $stmt = $pdo->prepare('INSERT INTO request (request_number, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, request_type, status, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, "EN_COURS", ?)');
+    $stmt = $pdo->prepare('INSERT INTO request (token, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, request_type, status, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, "EN_COURS", ?)');
     $stmt->execute([
-        $requestNumber,
+        $token,
         $firstProductId,
         $lastName,
         $firstName,
@@ -74,7 +76,7 @@ try {
     echo json_encode([
         'success' => true, 
         'message' => 'Demande enregistrée avec succès',
-        'request_number' => $requestNumber
+        'token' => $token
     ]);
     
 } catch (PDOException $e) {

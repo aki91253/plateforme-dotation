@@ -120,7 +120,7 @@ INSERT INTO `product_image` (`id`, `product_id`, `url`, `alt_text`) VALUES
 
 CREATE TABLE `request` (
   `id` int(11) NOT NULL,
-  `request_number` varchar(50) NOT NULL,
+  `token` varchar(50) NOT NULL,
   `product_id` int(11) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   `first_name` varchar(100) NOT NULL,
