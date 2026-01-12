@@ -64,7 +64,7 @@ require_once __DIR__ . '/auth.php';
     }
   </script>
 <body class="min-h-screen flex flex-col bg-white text-gray-800">
-    <header class="bg-white py-4">
+    <header class="bg-white py-4 sticky top-0 z-40 shadow-sm">
         <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
             <!-- Logo -->
             <a href="index.php" class="font-bold text-canope-green text-xl">
