@@ -45,7 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
 $historique = [];
 if ($demande) {
     $histQuery = $pdo->prepare("
-        SELECT * FROM request 
+        SELECT 
+        re.token,
+        h.changed_at,
+        t.libelle
+        FROM request re
+        JOIN historique_etat h ON re.id = h.request_id
+        JOIN type_status t ON h.status_id = t.id
         WHERE token = :token 
         ORDER BY request_date DESC
     ");
@@ -66,6 +72,9 @@ if ($demande) {
     $prodQuery->execute(['id' => $demande['id']]);
     $produits = $prodQuery->fetchAll(PDO::FETCH_ASSOC);
     $demande['produits'] = $produits;
+
+
+
 }
 
 include 'includes/header.php';
@@ -215,10 +224,10 @@ include 'includes/header.php';
                                         'delivered' => 'bg-green-100 text-green-700',
                                         'rejected' => 'bg-red-100 text-red-700'
                                     ];
-                                    echo $statusColor[$event['status']] ?? 'bg-gray-100 text-gray-700';
+                                    echo $statusColor[$event['libelle']] ?? 'bg-gray-100 text-gray-700';
                                 ?>
                             ">
-                                <?php echo $statuts[$event['status']] ?? htmlspecialchars($event['status']); ?>
+                                <?php echo $statuts[$event['libelle']] ?? htmlspecialchars($event['libelle']); ?>
                             </span>
                             <?php if (!empty($event['notes'])): ?>
                                 <p class="text-gray-700 mt-2"><?php echo htmlspecialchars($event['notes']); ?></p>
@@ -227,7 +236,7 @@ include 'includes/header.php';
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
                                 </svg>
-                                <?php echo date('d F Y à H:i', strtotime($demande['created_at'])); ?>
+                                <?php echo date('d F Y à H:i', strtotime($event['changed_at'])); ?>
                             </div>
                         </div>
                     </div>
