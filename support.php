@@ -326,7 +326,7 @@ include 'includes/header.php';
 
 <!-- Contact CTA -->
 <div class="max-w-4xl mx-auto px-5 py-12">
-    <div class="bg-gradient-to-r from-canope-dark to-canope-slate rounded-2xl p-8 md:p-12 text-center text-white">
+    <div class="bg-gradient-to-r from-canope-dark to-canope-gray rounded-2xl p-8 md:p-12 text-center text-white">
         <h2 class="text-2xl md:text-3xl font-semibold mb-4">Vous n'avez pas trouvé de réponse ?</h2>
         <p class="text-white/80 mb-6">Notre équipe est disponible pour répondre à toutes vos questions.</p>
         <a href="contact.php" class="inline-flex items-center gap-2 bg-white text-canope-dark px-6 py-3 rounded-full font-semibold hover:bg-canope-gray-100 transition-colors shadow-lg">
