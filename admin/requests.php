@@ -23,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
     if ($action === 'update_status' && $requestId > 0) {
-        $newStatus = $_POST['status'] ?? '';
+        $newStatusId = (int)($_POST['status_id'] ?? 0);
         $responsibleId = (int)($_POST['responsible_id'] ?? 0);
         
-        if (in_array($newStatus, ['EN_COURS', 'TRAITEE'])) {
+        if ($newStatusId >= 1 && $newStatusId <= 6) {
             try {
-                $stmt = $pdo->prepare('UPDATE request SET status = ?, responsible_id = ? WHERE id = ?');
-                $stmt->execute([$newStatus, $responsibleId ?: null, $requestId]);
+                $stmt = $pdo->prepare('UPDATE request SET status_id = ?, responsible_id = ? WHERE id = ?');
+                $stmt->execute([$newStatusId, $responsibleId ?: null, $requestId]);
                 $message = 'Statut mis à jour avec succès.';
                 $messageType = 'success';
             } catch (PDOException $e) {
@@ -49,8 +49,8 @@ $whereConditions = [];
 $params = [];
 
 if ($statusFilter) {
-    $whereConditions[] = 'r.status = ?';
-    $params[] = $statusFilter;
+    $whereConditions[] = 'r.status_id = ?';
+    $params[] = (int)$statusFilter;
 }
 
 if ($searchQuery) {
@@ -63,11 +63,12 @@ $whereClause = $whereConditions ? 'WHERE ' . implode(' AND ', $whereConditions) 
 
 // récupération des demandes
 $query = "
-    SELECT r.*, 
+    SELECT r.*, t.libelle as status_label,
            CONCAT(resp.first_name, ' ', resp.last_name) as responsible_name,
            (SELECT COUNT(*) FROM request_line rl WHERE rl.request_id = r.id) as item_count
     FROM request r 
     LEFT JOIN responsible resp ON resp.id = r.responsible_id
+    LEFT JOIN type_status t ON t.id = r.status_id
     $whereClause
     ORDER BY r.request_date DESC, r.id DESC
 ";
@@ -81,8 +82,8 @@ $responsibles = $pdo->query('SELECT id, first_name, last_name, job_title FROM re
 
 // récupération des statistiques
 $totalRequests = $pdo->query('SELECT COUNT(*) FROM request')->fetchColumn();
-$pendingRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status = 'EN_COURS'")->fetchColumn();
-$completedRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status = 'TRAITEE'")->fetchColumn();
+$pendingRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id = 1")->fetchColumn();
+$completedRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id >= 4")->fetchColumn();
 
 include 'includes/admin_header.php';
 ?>
@@ -165,8 +166,12 @@ include 'includes/admin_header.php';
         <div class="flex gap-2">
             <select name="status" class="border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-canope-green focus:border-transparent">
                 <option value="">Tous les statuts</option>
-                <option value="EN_COURS" <?= $statusFilter === 'EN_COURS' ? 'selected' : '' ?>>En cours</option>
-                <option value="TRAITEE" <?= $statusFilter === 'TRAITEE' ? 'selected' : '' ?>>Traitées</option>
+                <option value="1" <?= $statusFilter === '1' ? 'selected' : '' ?>>En attente</option>
+                <option value="2" <?= $statusFilter === '2' ? 'selected' : '' ?>>Vérifiée</option>
+                <option value="3" <?= $statusFilter === '3' ? 'selected' : '' ?>>Approuvée</option>
+                <option value="4" <?= $statusFilter === '4' ? 'selected' : '' ?>>Envoyée</option>
+                <option value="5" <?= $statusFilter === '5' ? 'selected' : '' ?>>Livrée</option>
+                <option value="6" <?= $statusFilter === '6' ? 'selected' : '' ?>>Refusée</option>
             </select>
             <button type="submit" class="px-4 py-2.5 bg-canope-green hover:bg-canope-olive text-white rounded-lg transition-colors">
                 Filtrer
@@ -213,7 +218,7 @@ include 'includes/admin_header.php';
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-6 py-4">
                         <div>
-                            <p class="font-medium text-gray-800"><?= htmlspecialchars($request['request_number']) ?></p>
+                            <p class="font-medium text-gray-800"><?= htmlspecialchars($request['token']) ?></p>
                             <p class="text-xs text-gray-500"><?= date('d/m/Y', strtotime($request['request_date'])) ?></p>
                         </div>
                     </td>
@@ -237,16 +242,16 @@ include 'includes/admin_header.php';
                     <td class="px-6 py-4 text-center">
                         <?php
                         $statusColors = [
-                            'EN_COURS' => 'bg-amber-100 text-amber-700',
-                            'TRAITEE' => 'bg-emerald-100 text-emerald-700'
-                        ];
-                        $statusLabels = [
-                            'EN_COURS' => 'En cours',
-                            'TRAITEE' => 'Traitée'
+                            1 => 'bg-amber-100 text-amber-700',
+                            2 => 'bg-blue-100 text-blue-700',
+                            3 => 'bg-indigo-100 text-indigo-700',
+                            4 => 'bg-cyan-100 text-cyan-700',
+                            5 => 'bg-emerald-100 text-emerald-700',
+                            6 => 'bg-red-100 text-red-700'
                         ];
                         ?>
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?= $statusColors[$request['status']] ?? 'bg-gray-100 text-gray-700' ?>">
-                            <?= $statusLabels[$request['status']] ?? $request['status'] ?>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?= $statusColors[$request['status_id']] ?? 'bg-gray-100 text-gray-700' ?>">
+                            <?= htmlspecialchars($request['status_label'] ?? 'Inconnu') ?>
                         </span>
                     </td>
                     <td class="px-6 py-4">
@@ -301,9 +306,13 @@ include 'includes/admin_header.php';
             
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-                <select name="status" id="status_select" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-canope-green focus:border-transparent">
-                    <option value="EN_COURS">En cours</option>
-                    <option value="TRAITEE">Traitée</option>
+                <select name="status_id" id="status_select" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-canope-green focus:border-transparent">
+                    <option value="1">En attente</option>
+                    <option value="2">Vérifiée</option>
+                    <option value="3">Approuvée</option>
+                    <option value="4">Envoyée</option>
+                    <option value="5">Livrée</option>
+                    <option value="6">Refusée</option>
                 </select>
             </div>
             
@@ -354,8 +363,8 @@ include 'includes/admin_header.php';
 <script>
     function openStatusModal(request) {
         document.getElementById('status_request_id').value = request.id;
-        document.getElementById('status_request_number').textContent = request.request_number;
-        document.getElementById('status_select').value = request.status;
+        document.getElementById('status_request_number').textContent = request.token;
+        document.getElementById('status_select').value = request.status_id;
         document.getElementById('status_responsible_id').value = request.responsible_id || '';
         
         document.getElementById('statusModal').classList.remove('hidden');

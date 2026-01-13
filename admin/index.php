@@ -14,8 +14,8 @@ try {
     // Get statistics
     $totalProducts = $pdo->query('SELECT COUNT(*) FROM product WHERE is_active = 1')->fetchColumn();
     $totalStock = $pdo->query('SELECT SUM(quantity) FROM stock')->fetchColumn() ?? 0;
-    $pendingRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status = 'EN_COURS'")->fetchColumn();
-    $completedRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status = 'TRAITEE'")->fetchColumn();
+    $pendingRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id = 1")->fetchColumn();
+    $completedRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id >= 4")->fetchColumn();
     
     // Get low stock items (< 20 units)
     $lowStockQuery = $pdo->query('
@@ -30,10 +30,11 @@ try {
     
     // Get recent requests
     $recentRequestsQuery = $pdo->query('
-        SELECT r.request_number, r.establishment_name, r.status, r.request_date, 
+        SELECT r.token as request_number, r.establishment_name, r.status_id, t.libelle as status_label, r.request_date, 
                CONCAT(resp.first_name, " ", resp.last_name) as responsible_name
         FROM request r 
         LEFT JOIN responsible resp ON resp.id = r.responsible_id
+        LEFT JOIN type_status t ON t.id = r.status_id
         ORDER BY r.request_date DESC 
         LIMIT 5
     ');
@@ -168,15 +169,15 @@ include 'includes/admin_header.php';
                     <div class="text-right">
                         <?php
                         $statusColors = [
-                            'EN_COURS' => 'bg-amber-100 text-amber-700',
-                            'TRAITEE' => 'bg-emerald-100 text-emerald-700'
+                            1 => 'bg-amber-100 text-amber-700',
+                            2 => 'bg-blue-100 text-blue-700',
+                            3 => 'bg-indigo-100 text-indigo-700',
+                            4 => 'bg-cyan-100 text-cyan-700',
+                            5 => 'bg-emerald-100 text-emerald-700',
+                            6 => 'bg-red-100 text-red-700'
                         ];
-                        $statusLabels = [
-                            'EN_COURS' => 'En cours',
-                            'TRAITEE' => 'Traitée'
-                        ];
-                        $statusClass = $statusColors[$request['status']] ?? 'bg-gray-100 text-gray-700';
-                        $statusLabel = $statusLabels[$request['status']] ?? $request['status'];
+                        $statusClass = $statusColors[$request['status_id']] ?? 'bg-gray-100 text-gray-700';
+                        $statusLabel = $request['status_label'] ?? 'Inconnu';
                         ?>
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?= $statusClass ?>">
                             <?= $statusLabel ?>
