@@ -1,7 +1,8 @@
 <?php
 require_once 'includes/db.php';
 
-$product_id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
+$product_id = (int) $_GET['id'];
+
 
 $stmt = $pdo->prepare('
     SELECT p.*, c.name as category_name, s.quantity as stock_quantity

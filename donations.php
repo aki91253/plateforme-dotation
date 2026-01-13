@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/db.php';
 
-$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 1;
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
@@ -137,7 +137,7 @@ include 'includes/header.php';
                         <div class="flex justify-between items-center pt-3 border-t border-gray-100">
                             <span class="text-canope-green font-bold">
                                 <!-- From Uiverse.io by M4rio1 --> 
-                                 <a href="details.php">
+                                 <a href="details.php?id=<?php echo $product['id']; ?>">
                                 <button
             
                                     class="relative bg-[#3B556D] text-white font-medium text-[12px] px-8 py-[0.35em] pl-5 h-[2.8em] rounded-[0.9em] flex items-center overflow-hidden cursor-pointer shadow-[inset_0_0_1.6em_-0.6em_#0B162C] group"
