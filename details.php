@@ -34,13 +34,13 @@ include 'includes/header.php';
 ?>
 
 <!-- section header -->
-<div onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
-class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
-    <!-- From Uiverse.io by Rahulcheryala --> 
+ 
+<div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
+    <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-1 px-5">
      <a href="./donations.php">
         <button
             type="button"
-            class="bg-white text-center w-40 rounded-2xl h-10 relative text-black text-xl font-semibold border-4 border-white group"
+            class="bg-canope-light text-center w-40 rounded-2xl h-10 relative text-black text-xl font-semibold border-4 border-white group"
             >
             <div
                 class="bg-canope-gray rounded-xl h-8 w-1/4 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500"
@@ -64,11 +64,25 @@ class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
         <p class="translate-x-4"></p>
         </button>
         </a>
+</div>
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <svg stroke="#FFFFFF" class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
+							<path fill="none" d="M16.588,3.411h-4.466c0.042-0.116,0.074-0.236,0.074-0.366c0-0.606-0.492-1.098-1.099-1.098H8.901c-0.607,0-1.098,0.492-1.098,1.098c0,0.13,0.033,0.25,0.074,0.366H3.41c-0.606,0-1.098,0.492-1.098,1.098c0,0.607,0.492,1.098,1.098,1.098h0.366V16.59c0,0.808,0.655,1.464,1.464,1.464h9.517c0.809,0,1.466-0.656,1.466-1.464V5.607h0.364c0.607,0,1.1-0.491,1.1-1.098C17.688,3.903,17.195,3.411,16.588,3.411z M8.901,2.679h2.196c0.202,0,0.366,0.164,0.366,0.366S11.3,3.411,11.098,3.411H8.901c-0.203,0-0.366-0.164-0.366-0.366S8.699,2.679,8.901,2.679z M15.491,16.59c0,0.405-0.329,0.731-0.733,0.731H5.241c-0.404,0-0.732-0.326-0.732-0.731V5.607h10.983V16.59z M16.588,4.875H3.41c-0.203,0-0.366-0.164-0.366-0.366S3.208,4.143,3.41,4.143h13.178c0.202,0,0.367,0.164,0.367,0.366S16.79,4.875,16.588,4.875zM6.705,14.027h6.589c0.202,0,0.366-0.164,0.366-0.366s-0.164-0.367-0.366-0.367H6.705c-0.203,0-0.366,0.165-0.366,0.367S6.502,14.027,6.705,14.027z M6.705,11.83h6.589c0.202,0,0.366-0.164,0.366-0.365c0-0.203-0.164-0.367-0.366-0.367H6.705c-0.203,0-0.366,0.164-0.366,0.367C6.339,11.666,6.502,11.83,6.705,11.83z M6.705,9.634h6.589c0.202,0,0.366-0.164,0.366-0.366c0-0.202-0.164-0.366-0.366-0.366H6.705c-0.203,0-0.366,0.164-0.366,0.366C6.339,9.47,6.502,9.634,6.705,9.634z"></path>
+						</svg>
+            </div>
+            <h1 class="text-3xl font-semibold text-white">Détails</h1>
+        </div>
+        <p class="text-white/80 text-sm ml-13">Voici les détails du produit</p>
+    </div>
+</div>
+    <!-- From Uiverse.io by Rahulcheryala --> 
     </div>
 </div>
 
 <!--Contenu principal -->
- <main class="max-w-7xl mx-auto px-4 py-8">
+ <main class="max-w-7xl mx-auto px-2 py-8">
       <div class="grid grid-cols-2 gap-8">
         <!-- Left: Image -->
         <div>
@@ -149,7 +163,8 @@ class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
           </div>
 
           <!-- CTA Button -->
-          <button class="w-full bg-gradient-to-r from-canope-slate to-canope-teal text-white font-medium py-3 px-6 rounded-lg hover:from-canope-teal hover:to-canope-slate transition-all flex items-center justify-center gap-2">
+          <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
+          class="w-full bg-gradient-to-r from-canope-slate to-canope-teal text-white font-medium py-3 px-6 rounded-lg hover:from-canope-teal hover:to-canope-slate transition-all flex items-center justify-center gap-2">
             🛒 Demander cette dotation
           </button>
         </div>
