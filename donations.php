@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/db.php';
-
-$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 1;
+//categories
+$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0;
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
