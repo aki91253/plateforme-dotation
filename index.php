@@ -17,7 +17,7 @@ include 'includes/header.php';
                     <span
                         class="absolute inset-0 rounded-xl bg-gradient-to-r from-canope-green via-emerald-500 to-canope-olive p-[2px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                     ></span>
-                    <span class="relative z-10 block px-6 py-3 rounded-xl bg-canope-green">
+                    <span class="relative z-10 block px-6 py-3 rounded-xl bg-canope-slate">
                         <div class="relative z-10 flex items-center space-x-2">
                             <span class="transition-all duration-500 group-hover:translate-x-1">Explorer le catalogue</span>
                             <svg
@@ -41,13 +41,13 @@ include 'includes/header.php';
 
             <!-- bouton 2 - shimmer effect -->
             <a href="selection.php"
-                class="group/button relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-canope-green/20 backdrop-blur-lg px-6 py-3 text-base font-semibold text-canope-green transition-all duration-300 ease-in-out border-2 border-canope-green/40 hover:border-canope-green"
+                class="group/button relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-canope-teal/10 backdrop-blur-lg px-6 py-3 text-base font-semibold text-canope-green transition-all duration-300 ease-in-out border-2 border-canope-teal/40 hover:border-canope-teal"
             >
                 <span class="text-lg">Faire une demande</span>
                 <div
                     class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]"
                 >
-                    <div class="relative h-full w-10 bg-canope-green/30"></div>
+                    <div class="relative h-full w-10 bg-canope-teal/30"></div>
                 </div>
             </a>
         </div>
