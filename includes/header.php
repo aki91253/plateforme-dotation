@@ -15,9 +15,11 @@ require_once __DIR__ . '/auth.php';
             theme: {
                 extend: {
                     colors: {
-                        'canope-green': '#3A6B56',
-                        'canope-olive': '#4A5D3B',
-                        'canope-light': '#E0E8E3',
+                        'canope-dark': '#0B162C',
+                        'canope-slate': '#1C2942',
+                        'canope-light': '#FFFFFF',
+                        'canope-gray' : '#3B556D',
+                        'canope-teal' : '#5FC2BA',
                     },
                     fontFamily: {
                         'display': ['Playfair Display', 'serif'],
@@ -67,22 +69,22 @@ require_once __DIR__ . '/auth.php';
     <header class="bg-white py-4 sticky top-0 z-40 shadow-sm">
         <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
             <!-- Logo -->
-            <a href="index.php" class="font-bold text-canope-green text-xl">
+            <a href="index.php" class="font-bold text-canope-dark text-xl">
                 <img src="assets/img/logo.jpg" alt="Réseau Canopé Logo" class="h-12">
             </a>
             
             <ul class="flex items-center gap-8 list-none m-0 p-0">
-                <li><a href="index.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-green transition-colors">Accueil</a></li>
-                <li><a href="donations.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-green transition-colors">Catalogue</a></li>
-                <li><a href="contact.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-green transition-colors">Contact</a></li>
-                <li><a href="demande.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-green transition-colors">Suivre ma demande</a></li>
+                <li><a href="index.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Accueil</a></li>
+                <li><a href="donations.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Catalogue</a></li>
+                <li><a href="contact.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Contact</a></li>
+                <li><a href="demande.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Suivre ma demande</a></li>
                 <!-- Selection List Icon -->
                 <li>
                     <a href="selection.php" class="relative group" title="Ma sélection">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700 hover:text-canope-green transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700 hover:text-canope-dark transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-canope-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-canope-slate text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
                     </a>
                 </li>
                 <li> <a href="favori.php" class="relative group" title="Mes Favoris">
@@ -113,9 +115,9 @@ require_once __DIR__ . '/auth.php';
                 <?php if (isLoggedIn()): ?>
                 <!-- Logged in: Montre le menu utilisateurs -->
                 <li class="relative group">
-                    <button class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-canope-green transition-colors">
-                        <div class="w-8 h-8 bg-canope-green/10 rounded-full flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <button class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-canope-dark transition-colors">
+                        <div class="w-8 h-8 bg-canope-dark/10 rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
@@ -146,7 +148,7 @@ require_once __DIR__ . '/auth.php';
                 <?php else: ?>
                 <!-- Not logged in: Montre le bouton de connexion -->
                 <li>
-                    <a href="login.php" class="flex justify-center gap-2 items-center shadow-lg text-sm bg-canope-green backdrop-blur-md font-semibold relative z-10 px-4 py-2 overflow-hidden border-2 border-canope-green rounded-full group no-underline text-white hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] transition-all duration-300">
+                    <a href="login.php" class="flex justify-center gap-2 items-center shadow-lg text-sm bg-canope-slate backdrop-blur-md font-semibold relative z-10 px-4 py-2 overflow-hidden border-2 border-canope-gray rounded-full group no-underline text-white hover:bg-gradient-to-r hover:from-canope-dark hover:to-canope-gray hover:border-canope-slate transition-all duration-300">
                         Espace Admin
                         <svg class="w-6 h-6 justify-end group-hover:rotate-90 ease-linear duration-300 rounded-full border border-white/50 p-1 rotate-45" viewBox="0 0 16 19" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z" class="fill-white"></path>

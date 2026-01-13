@@ -140,21 +140,21 @@ include 'includes/header.php';
                 </button>
             </form>
 
-            <!-- Séparateur -->
+            <!-- Séparateur 
             <div class="flex items-center my-6">
                 <div class="flex-1 border-t border-gray-200"></div>
                 <span class="px-4 text-sm text-gray-400">ou</span>
                 <div class="flex-1 border-t border-gray-200"></div>
             </div>
 
-            <!-- lien vers l'inscription -->
+             lien vers l'inscription 
             <p class="text-center text-gray-600">
                 Pas encore de compte ? 
                 <a href="register.php" class="text-canope-green font-semibold hover:underline">Créer un compte</a>
             </p>
         </div>
     </div>
-</div>
+</div>-->
 <!-- Script pour le bouton oeil (voire le mot de passe en claire) -->
 <script>
     function togglePassword() {
@@ -175,5 +175,4 @@ include 'includes/header.php';
         }
     }
 </script>
-
 <?php include 'includes/footer.php'; ?>

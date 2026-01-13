@@ -4,27 +4,28 @@ include 'includes/header.php';
 ?>
 
 <!-- Hero Section with colorful gradient -->
-<div class="bg-gradient-to-br from-canope-green via-canope-olive to-emerald-600 py-16 px-5">
+<!-- Gradient background: dark navy → slate → blue-gray -->
+<div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 py-16 px-5">
     <div class="max-w-4xl mx-auto text-center">
         <h1 class="text-4xl md:text-5xl font-normal text-white mb-4">Comment pouvons-nous vous aider ?</h1>
         <p class="text-white/80 text-lg">Trouvez des réponses à vos questions sur les dotations et la plateforme.</p>
     </div>
-</div>
+</div> 
 
 <!-- Category Cards -->
 <div class="max-w-6xl mx-auto px-5 py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
         <!-- Card 1: Dotations -->
-        <a href="#dotations" class="group bg-white rounded-2xl border-2 border-gray-100 p-6 hover:border-canope-green hover:shadow-lg transition-all duration-300">
+        <a href="#dotations" class="group bg-white rounded-2xl border-2 border-gray-100 p-6 hover:border-canope-gray hover:shadow-lg transition-all duration-300">
             <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-canope-green/10 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-canope-green/20 transition-colors">
+                <div class="w-14 h-14 bg-canope-dark/10 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-canope-slate/20 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-1 group-hover:text-canope-green transition-colors">Dotations</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1 group-hover:text-canope-slate transition-colors">Dotations</h3>
                     <p class="text-sm text-gray-500">Découvrez les ressources disponibles et comment les demander.</p>
                 </div>
             </div>
@@ -115,8 +116,8 @@ include 'includes/header.php';
         <!-- Section Dotations -->
         <div id="dotations" class="mb-12 scroll-mt-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-3">
-                <span class="w-10 h-10 bg-canope-green/10 rounded-lg flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <span class="w-10 h-10 bg-canope-slate/10 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-slate" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                 </span>
@@ -124,7 +125,7 @@ include 'includes/header.php';
             </h2>
             <div class="space-y-3">
                 <details class="bg-white rounded-xl border border-gray-200 group">
-                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-800 hover:text-canope-green transition-colors flex justify-between items-center list-none">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-800 hover:text-canope-gray transition-colors flex justify-between items-center list-none">
                         Qu'est-ce qu'une dotation ?
                         <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -136,7 +137,7 @@ include 'includes/header.php';
                 </details>
                 
                 <details class="bg-white rounded-xl border border-gray-200 group">
-                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-800 hover:text-canope-green transition-colors flex justify-between items-center list-none">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-800 hover:text-canope-gray transition-colors flex justify-between items-center list-none">
                         Comment faire une demande de dotation ?
                         <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -153,7 +154,7 @@ include 'includes/header.php';
                 </details>
 
                 <details class="bg-white rounded-xl border border-gray-200 group">
-                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-800 hover:text-canope-green transition-colors flex justify-between items-center list-none">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-800 hover:text-canope-gray transition-colors flex justify-between items-center list-none">
                         Combien de ressources puis-je demander ?
                         <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -325,10 +326,10 @@ include 'includes/header.php';
 
 <!-- Contact CTA -->
 <div class="max-w-4xl mx-auto px-5 py-12">
-    <div class="bg-gradient-to-r from-canope-green to-canope-olive rounded-2xl p-8 md:p-12 text-center text-white">
+    <div class="bg-gradient-to-r from-canope-dark to-canope-slate rounded-2xl p-8 md:p-12 text-center text-white">
         <h2 class="text-2xl md:text-3xl font-semibold mb-4">Vous n'avez pas trouvé de réponse ?</h2>
         <p class="text-white/80 mb-6">Notre équipe est disponible pour répondre à toutes vos questions.</p>
-        <a href="contact.php" class="inline-flex items-center gap-2 bg-white text-canope-green px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg">
+        <a href="contact.php" class="inline-flex items-center gap-2 bg-white text-canope-dark px-6 py-3 rounded-full font-semibold hover:bg-canope-gray-100 transition-colors shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
