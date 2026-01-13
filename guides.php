@@ -4,7 +4,7 @@ include 'includes/header.php';
 ?>
 
 <!-- Hero Section -->
-<div class="bg-canope-green py-16 px-5">
+<div class="bg-canope-dark py-16 px-5 bg-gradient-to-br from-canope-dark to-canope-gray">
     <div class="max-w-4xl mx-auto text-center">
         <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -22,8 +22,8 @@ include 'includes/header.php';
     <!-- Guide 1: Faire une demande -->
     <div class="bg-white rounded-2xl border border-gray-200 p-8 mb-8 shadow-sm">
         <div class="flex items-start gap-4 mb-6">
-            <div class="w-12 h-12 bg-canope-green/10 rounded-xl flex items-center justify-center shrink-0">
-                <span class="text-2xl font-bold text-canope-green">1</span>
+            <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center shrink-0">
+                <span class="text-2xl font-bold text-teal-700">1</span>
             </div>
             <div>
                 <h2 class="text-2xl font-semibold text-gray-800 mb-2">Comment faire une demande de dotation</h2>
@@ -33,7 +33,7 @@ include 'includes/header.php';
         
         <div class="space-y-6 ml-16">
             <div class="flex gap-4">
-                <div class="w-8 h-8 bg-canope-green rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">1</div>
+                <div class="w-8 h-8 bg-teal-700 rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">1</div>
                 <div>
                     <h3 class="font-semibold text-gray-800 mb-1">Parcourez le catalogue</h3>
                     <p class="text-gray-600">Rendez-vous sur la page <a href="donations.php" class="text-canope-green hover:underline">Liste de dotations</a> pour découvrir toutes les ressources disponibles. Utilisez les filtres par catégorie pour affiner votre recherche.</p>
@@ -41,7 +41,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-4">
-                <div class="w-8 h-8 bg-canope-green rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">2</div>
+                <div class="w-8 h-8 bg-teal-700 rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">2</div>
                 <div>
                     <h3 class="font-semibold text-gray-800 mb-1">Ajoutez à votre sélection</h3>
                     <p class="text-gray-600">Cliquez sur le bouton "Ajouter à la sélection" sur chaque ressource souhaitée. Vous pouvez voir le nombre d'éléments dans votre sélection via l'icône en haut de page.</p>
@@ -49,7 +49,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-4">
-                <div class="w-8 h-8 bg-canope-green rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">3</div>
+                <div class="w-8 h-8 bg-teal-700 rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">3</div>
                 <div>
                     <h3 class="font-semibold text-gray-800 mb-1">Remplissez vos informations</h3>
                     <p class="text-gray-600">Accédez à votre sélection et remplissez le formulaire avec vos coordonnées : nom, prénom, établissement, email et téléphone. Choisissez le type de demande (première demande ou réassort).</p>
@@ -57,7 +57,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-4">
-                <div class="w-8 h-8 bg-canope-green rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">4</div>
+                <div class="w-8 h-8 bg-teal-700 rounded-full flex items-center justify-center shrink-0 text-white font-semibold text-sm">4</div>
                 <div>
                     <h3 class="font-semibold text-gray-800 mb-1">Validez et conservez votre token</h3>
                     <p class="text-gray-600">Après validation, vous recevrez un <strong>token de suivi</strong> unique. Conservez-le précieusement pour suivre l'état de votre demande.</p>
@@ -153,7 +153,7 @@ include 'includes/header.php';
     </div>
     
     <!-- Tips -->
-    <div class="bg-gradient-to-br from-canope-green/5 to-canope-olive/5 rounded-2xl border border-canope-green/20 p-8">
+    <div class="bg-gradient-to-br from-canope-green/5 to-canope-olive/5 rounded-2xl border border-canope-dark/20 p-8">
         <div class="flex items-start gap-4 mb-6">
             <div class="w-12 h-12 bg-canope-green/10 rounded-xl flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -201,10 +201,10 @@ include 'includes/header.php';
 
 <!-- CTA -->
 <div class="max-w-4xl mx-auto px-5 pb-12">
-    <div class="bg-gradient-to-r from-canope-green to-canope-olive rounded-2xl p-8 md:p-12 text-center text-white">
+    <div class="bg-gradient-to-r from-canope-dark to-canope-gray rounded-2xl p-8 md:p-12 text-center text-white">
         <h2 class="text-2xl md:text-3xl font-semibold mb-4">Prêt à faire votre demande ?</h2>
         <p class="text-white/80 mb-6">Parcourez notre catalogue et sélectionnez vos ressources pédagogiques.</p>
-        <a href="donations.php" class="inline-flex items-center gap-2 bg-white text-canope-green px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg">
+        <a href="donations.php" class="inline-flex items-center gap-2 bg-canope-teal text-white px-6 py-3 rounded-full font-semibold transition-colors shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
