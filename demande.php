@@ -60,14 +60,10 @@ if ($demande) {
     
     $produits = [];
     $prodQuery = $pdo->prepare("
-        SELECT 
-            re.*,
-            p.name as product_name,
-            p.reference
-        FROM request re
-        LEFT JOIN product p ON re.product_id = p.id
-        JOIN request_line rl ON re.id = rl.request_id
-        WHERE re.id = :id
+        SELECT rl.*, p.name as product_name, p.reference
+        FROM request_line rl
+        JOIN product p ON p.id = rl.product_id
+        WHERE rl.request_id = :id
     ");
     $prodQuery->execute(['id' => $demande['id']]);
     $produits = $prodQuery->fetchAll(PDO::FETCH_ASSOC);
