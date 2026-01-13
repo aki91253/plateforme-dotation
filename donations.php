@@ -140,11 +140,11 @@ include 'includes/header.php';
                                  <a href="details.php">
                                 <button
             
-                                    class="relative bg-[#476B59] text-white font-medium text-[12px] px-8 py-[0.35em] pl-5 h-[2.8em] rounded-[0.9em] flex items-center overflow-hidden cursor-pointer shadow-[inset_0_0_1.6em_-0.6em_#0b3800] group"
+                                    class="relative bg-[#3B556D] text-white font-medium text-[12px] px-8 py-[0.35em] pl-5 h-[2.8em] rounded-[0.9em] flex items-center overflow-hidden cursor-pointer shadow-[inset_0_0_1.6em_-0.6em_#0B162C] group"
                                 >
                                     <span class="mr-10">Voir détails</span>
                                         <div
-                                            class="absolute right-[0.3em] bg-white h-[2.2em] w-[2.2em] rounded-[0.7em] flex items-center justify-center transition-all duration-300 group-hover:w-[calc(100%-0.6em)] shadow-[0.1em_0.1em_0.6em_0.2em_#135f01] active:scale-95"
+                                            class="absolute right-[0.3em] bg-white h-[2.2em] w-[2.2em] rounded-[0.7em] flex items-center justify-center transition-all duration-300 group-hover:w-[calc(100%-0.6em)] shadow-[0.1em_0.1em_0.6em_0.2em_#0B162C] active:scale-95"
                                         >
                                             <svg
                                             xmlns="http://www.w3.org/2000/svg"
