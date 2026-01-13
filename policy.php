@@ -70,7 +70,7 @@ include 'includes/header.php';
         </div>
         <div class="pl-11 space-y-6">
             <!-- sous-sections pour les usagers et les administrateurs -->
-            <div class="bg-white border border-gray-200 rounded-xl p-5">
+            <div class="bg-white border border-canope-gray rounded-xl p-5">
                 <h3 class="font-semibold text-gray-800 mb-3">👤 Pour les usagers</h3>
                 <ul class="text-gray-600 text-sm space-y-1">
                     <li>• Nom et prénom</li>
@@ -80,7 +80,7 @@ include 'includes/header.php';
                 </ul>
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-xl p-5">
+            <div class="bg-white border border-canope-gray rounded-xl p-5">
                 <h3 class="font-semibold text-gray-800 mb-3">🛡️ Pour les administrateurs</h3>
                 <ul class="text-gray-600 text-sm space-y-1">
                     <li>• Nom et prénom</li>
@@ -89,7 +89,7 @@ include 'includes/header.php';
                 </ul>
             </div>
 
-            <div class="bg-canope-light/50 rounded-xl p-5">
+            <div class="bg-canope-light rounded-xl p-5 border border-canope-gray">
                 <h3 class="font-semibold text-gray-800 mb-3">📊 Finalités du traitement</h3>
                 <ul class="text-gray-600 text-sm space-y-1">
                     <li>• Gestion des demandes de dotation</li>
@@ -123,14 +123,14 @@ include 'includes/header.php';
     <!-- Article 4 -->
     <section id="article4" class="mb-10 scroll-mt-8">
         <div class="flex items-center gap-3 mb-4">
-            <span class="bg-canope-green text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">4</span>
+            <span class="bg-canope-slate text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">4</span>
             <h2 class="text-2xl font-normal text-gray-900">Responsable du traitement</h2>
         </div>
         <div class="pl-11 text-gray-600 leading-relaxed">
             <p class="mb-4">Les données sont collectées par <strong>Réseau Canopé - Corse</strong>.</p>
-            <div class="bg-gray-50 rounded-xl p-5">
-                <p class="font-semibold text-gray-800 mb-2">Délégué à la Protection des Données (DPO)</p>
-                <p class="text-sm">Email : <a href="mailto:dpo@reseau-canope.fr" class="text-canope-green hover:underline">dpo@reseau-canope.fr</a></p>
+            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 rounded-xl p-5">
+                <p class="font-semibold text-white mb-2">Délégué à la Protection des Données (DPO)</p>
+                <p class="text-sm text-white">Email : <a href="mailto:dpo@reseau-canope.fr" class="text-canope-green hover:underline">dpo@reseau-canope.fr</a></p>
             </div>
         </div>
     </section>
@@ -138,32 +138,32 @@ include 'includes/header.php';
     <!-- Article 5 -->
     <section id="article5" class="mb-10 scroll-mt-8">
         <div class="flex items-center gap-3 mb-4">
-            <span class="bg-canope-green text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">5</span>
+            <span class="bg-canope-slate text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">5</span>
             <h2 class="text-2xl font-normal text-gray-900">Droits de l'utilisateur</h2>
         </div>
         <div class="pl-11">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="bg-white border border-canope-gray rounded-xl p-4">
                     <p class="font-medium text-gray-800">📖 Droit d'accès</p>
                     <p class="text-sm text-gray-500 mt-1">Obtenir confirmation du traitement de vos données</p>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="bg-white border border-canope-gray rounded-xl p-4">
                     <p class="font-medium text-gray-800">✏️ Droit de rectification</p>
                     <p class="text-sm text-gray-500 mt-1">Corriger des données inexactes</p>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="bg-white border border-canope-gray rounded-xl p-4">
                     <p class="font-medium text-gray-800">🗑️ Droit à l'effacement</p>
                     <p class="text-sm text-gray-500 mt-1">Demander la suppression de vos données</p>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="bg-white border border-canope-gray rounded-xl p-4">
                     <p class="font-medium text-gray-800">📤 Droit à la portabilité</p>
                     <p class="text-sm text-gray-500 mt-1">Recevoir vos données dans un format lisible</p>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="bg-white border border-canope-gray rounded-xl p-4">
                     <p class="font-medium text-gray-800">⏸️ Droit à la limitation</p>
                     <p class="text-sm text-gray-500 mt-1">Limiter le traitement de vos données</p>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="bg-white border border-canope-gray rounded-xl p-4">
                     <p class="font-medium text-gray-800">🚫 Droit d'opposition</p>
                     <p class="text-sm text-gray-500 mt-1">S'opposer au traitement de vos données</p>
                 </div>
@@ -182,27 +182,27 @@ include 'includes/header.php';
         </div>
         <div class="pl-11">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <div class="bg-canope-light/50 rounded-lg p-4 text-center">
+                <div class="bg-canope-light/50 rounded-lg p-4 text-center border border-canope-gray">
                     <p class="text-2xl mb-2">🔒</p>
                     <p class="text-sm font-medium text-gray-700">HTTPS</p>
                 </div>
-                <div class="bg-canope-light/50 rounded-lg p-4 text-center">
+                <div class="bg-canope-light/50 rounded-lg p-4 text-center border border-canope-gray">
                     <p class="text-2xl mb-2">🔐</p>
                     <p class="text-sm font-medium text-gray-700">Mots de passe hashés</p>
                 </div>
-                <div class="bg-canope-light/50 rounded-lg p-4 text-center">
+                <div class="bg-canope-light/50 rounded-lg p-4 text-center border border-canope-gray">
                     <p class="text-2xl mb-2">👥</p>
                     <p class="text-sm font-medium text-gray-700">Accès restreint</p>
                 </div>
-                <div class="bg-canope-light/50 rounded-lg p-4 text-center">
+                <div class="bg-canope-light/50 rounded-lg p-4 text-center border border-canope-gray">
                     <p class="text-2xl mb-2">💾</p>
                     <p class="text-sm font-medium text-gray-700">Sauvegardes</p>
                 </div>
-                <div class="bg-canope-light/50 rounded-lg p-4 text-center">
+                <div class="bg-canope-light/50 rounded-lg p-4 text-center border border-canope-gray">
                     <p class="text-2xl mb-2">📋</p>
                     <p class="text-sm font-medium text-gray-700">Journalisation</p>
                 </div>
-                <div class="bg-canope-light/50 rounded-lg p-4 text-center">
+                <div class="bg-canope-light/50 rounded-lg p-4 text-center border border-canope-gray">
                     <p class="text-2xl mb-2">🔄</p>
                     <p class="text-sm font-medium text-gray-700">Mises à jour</p>
                 </div>
@@ -227,7 +227,7 @@ include 'includes/header.php';
 
     <!-- Contact -->
     <section id="contact" class="scroll-mt-8">
-        <div class="bg-gradient-to-br from-canope-green to-canope-olive rounded-2xl p-8 text-white">
+        <div class="bg-gradient-to-br from-canope-dark to-canope-gray rounded-2xl p-8 text-white">
             <h2 class="text-2xl font-normal mb-4">📬 Contact</h2>
             <p class="opacity-90 mb-4">Pour toute question concernant cette politique de confidentialité :</p>
             <div class="space-y-2 text-sm">

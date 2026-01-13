@@ -166,7 +166,7 @@ include 'includes/header.php';
 </div>
 
 <!-- Stats Section -->
-<div class="bg-gradient-to-r from-canope-dark to-canope-slate py-16">
+<div class="bg-gradient-to-r from-canope-dark to-canope-gray py-16">
     <div class="max-w-6xl mx-auto px-5">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
@@ -191,9 +191,9 @@ include 'includes/header.php';
 
 <!-- CTA Section -->
 <div class="max-w-4xl mx-auto px-5 py-16">
-    <div class="rounded-2xl border-2 border-gray-100 p-8 md:p-12 text-center shadow-lg bg-canope-dark">
+    <div class="rounded-2xl border-2 border-gray-100 p-8 md:p-12 text-center shadow-lg bg-gradient-to-br from-canope-dark to-canope-gray">
         <h2 class="text-2xl md:text-3xl font-semibold text-white mb-4">Prêt à découvrir nos ressources ?</h2>
-        <p class="text-gray-600 mb-8">Parcourez notre catalogue et faites votre première demande de dotation.</p>
+        <p class="text-white mb-8">Parcourez notre catalogue et faites votre première demande de dotation.</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="donations.php" class="inline-flex items-center justify-center gap-2 bg-canope-teal text-white px-6 py-3 rounded-full font-semibold transition-colors shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
