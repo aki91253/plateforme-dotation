@@ -131,13 +131,14 @@ function updateFavCount() {
 // ====================
 function showNotification(message) {
     const notification = document.createElement('div');
-    notification.className = 'fixed bottom-5 right-5 bg-canope-green text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-y-full opacity-0 transition-all duration-300';
+    notification.className = 'fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-y-full transition-all duration-300';
+    notification.style.backgroundColor = '#0B162C';
     notification.textContent = message;
     document.body.appendChild(notification);
 
-    setTimeout(() => { notification.classList.remove('translate-y-full', 'opacity-0'); }, 10);
+    setTimeout(() => { notification.classList.remove('translate-y-full'); }, 10);
     setTimeout(() => {
-        notification.classList.add('translate-y-full', 'opacity-0');
+        notification.classList.add('translate-y-full');
         setTimeout(() => notification.remove(), 300);
     }, 2000);
 }
