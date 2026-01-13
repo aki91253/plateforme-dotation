@@ -86,7 +86,7 @@ include 'includes/header.php';
             <!-- Dotations demandées -->
             <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center gap-2 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-slate" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                     <h2 class="text-lg font-semibold text-gray-800">Dotations demandées</h2>
@@ -99,21 +99,21 @@ include 'includes/header.php';
                 <div id="cart-empty" class="text-center py-8 hidden">
                     <span class="text-4xl mb-3 block">📋</span>
                     <p class="text-gray-500">Aucune dotation sélectionnée</p>
-                    <a href="donations.php" class="text-canope-green hover:underline text-sm mt-2 inline-block">← Parcourir les dotations</a>
+                    <a href="donations.php" class="text-canope-slate hover:underline text-sm mt-2 inline-block">← Parcourir les dotations</a>
                 </div>
             </div>
             
             <!-- Commentaire -->
             <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center gap-2 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-slate" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                     <h2 class="text-lg font-semibold text-gray-800">Commentaire</h2>
                 </div>
                 
                 <textarea name="comment" form="request-form" rows="4"
-                          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-green focus:border-transparent transition-all resize-none"
+                          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-gray focus:border-transparent transition-all resize-none"
                           placeholder="Précisez votre projet pédagogique, contraintes de dates, etc."></textarea>
             </div>
             
@@ -131,7 +131,7 @@ include 'includes/header.php';
                 <div class="border-t border-gray-200 pt-4 mb-6">
                     <label for="privacy-checkbox" class="flex items-start gap-3 cursor-pointer group">
                         <input id="privacy-checkbox" type="checkbox" class="peer hidden" />
-                        <div class="h-5 w-5 flex-shrink-0 flex rounded-md border border-gray-300 bg-gray-50 peer-checked:bg-canope-green peer-checked:border-canope-green transition mt-0.5">
+                        <div class="h-5 w-5 flex-shrink-0 flex rounded-md border border-gray-300 bg-gray-50 peer-checked:bg-canope-gray peer-checked:border-canope-gray transition mt-0.5">
                             <svg
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -147,7 +147,7 @@ include 'includes/header.php';
                             </svg>
                         </div>
                         <span class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
-                            J'accepte la <a href="policy.php" class="text-canope-green hover:underline">politique de confidentialité</a> et le traitement de mes <a href="policy.php#article3" class="text-canope-green hover:underline">données personnelles</a>. <span class="text-red-500">*</span>
+                            J'accepte la <a href="policy.php" class="text-canope-gray hover:underline">politique de confidentialité</a> et le traitement de mes <a href="policy.php#article3" class="text-canope-slate hover:underline">données personnelles</a>. <span class="text-red-500">*</span>
                         </span>
                     </label>
                 </div>
@@ -198,8 +198,8 @@ include 'includes/header.php';
 <!-- Modal de confirmation -->
 <div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-slide-up">
-        <div class="w-16 h-16 bg-canope-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <div class="w-16 h-16 bg-canope-gray/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-canope-slate" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
         </div>
@@ -207,14 +207,14 @@ include 'includes/header.php';
         <p class="text-gray-600 mb-4">Votre demande de dotation a été enregistrée. Voici votre numéro de suivi :</p>
         
         <!-- Token Display -->
-        <div class="bg-gray-50 border-2 border-dashed border-canope-green/30 rounded-xl p-4 mb-6">
+        <div class="bg-gray-50 border-2 border-dashed border-canope-gray/30 rounded-xl p-4 mb-6">
             <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Token de suivi</p>
-            <p id="request-token" class="text-lg font-mono font-bold text-canope-green break-all"></p>
+            <p id="request-token" class="text-lg font-mono font-bold text-canope-slate break-all"></p>
         </div>
         
         <p class="text-sm text-gray-500 mb-6">Conservez ce token pour suivre l'état de votre demande.</p>
         
-        <a href="donations.php" class="inline-block bg-canope-green text-white px-6 py-3 rounded-xl font-semibold hover:bg-canope-olive transition-colors">
+        <a href="donations.php" class="inline-block bg-canope-gray text-white px-6 py-3 rounded-xl font-semibold hover:bg-canope-slate transition-colors">
             Découvrir d'autres dotations
         </a>
     </div>
@@ -242,25 +242,6 @@ include 'includes/header.php';
 </style>
 
 <script>
-// Gestion de la sélection du type de demande
-function selectRequestType(type) {
-    document.getElementById('request-type-input').value = type;
-    
-    const livraisonBtn = document.getElementById('type-livraison');
-    const reassortBtn = document.getElementById('type-reassort');
-    
-    if (type === 'RECEVOIR') {
-        livraisonBtn.classList.add('selected', 'border-canope-green', 'bg-canope-green/5');
-        livraisonBtn.classList.remove('border-gray-200', 'bg-white');
-        reassortBtn.classList.remove('selected', 'border-canope-green', 'bg-canope-green/5');
-        reassortBtn.classList.add('border-gray-200', 'bg-white');
-    } else {
-        reassortBtn.classList.add('selected', 'border-canope-green', 'bg-canope-green/5');
-        reassortBtn.classList.remove('border-gray-200', 'bg-white');
-        livraisonBtn.classList.remove('selected', 'border-canope-green', 'bg-canope-green/5');
-        livraisonBtn.classList.add('border-gray-200', 'bg-white');
-    }
-}
 
 // Affichage des éléments du panier au chargement de la page
 function displayCart() {
@@ -287,21 +268,21 @@ function displayCart() {
     cart.forEach(item => {
         const qty = item.quantity || 1;
         cartHtml += `
-            <div class="flex items-center justify-between bg-gray-50 p-4 rounded-xl border border-gray-100 group hover:border-canope-green/30 transition-all">
+            <div class="flex items-center justify-between bg-gray-50 p-4 rounded-xl border border-gray-100 group hover:border-canope-slate/30 transition-all">
                 <div class="flex-1">
                     <h3 class="font-medium text-gray-800">${item.name}</h3>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-1 bg-white border border-gray-200 rounded-lg">
                         <button onclick="updateQuantity(${item.id}, ${qty - 1})"
-                                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-canope-green hover:bg-gray-50 rounded-l-lg transition-colors">
+                                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-canope-slate hover:bg-gray-50 rounded-l-lg transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
                             </svg>
                         </button>
                         <span class="w-8 text-center font-medium text-gray-800">${qty}</span>
                         <button onclick="updateQuantity(${item.id}, ${qty + 1})"
-                                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-canope-green hover:bg-gray-50 rounded-r-lg transition-colors">
+                                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-canope-slate hover:bg-gray-50 rounded-r-lg transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                             </svg>
@@ -324,7 +305,7 @@ function displayCart() {
     cart.forEach(item => {
         recapHtml += `
             <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                <div class="w-2 h-2 bg-canope-green rounded-full"></div>
+                <div class="w-2 h-2 bg-canope-gray rounded-full"></div>
                 <span class="text-sm text-gray-700 truncate flex-1">${item.name}</span>
             </div>
         `;

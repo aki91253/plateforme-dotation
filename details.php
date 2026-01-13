@@ -21,7 +21,7 @@ $img_stmt = $pdo->prepare('SELECT url, alt_text FROM product_image WHERE product
 $img_stmt->execute([$product_id]);
 $image = $img_stmt->fetch();
 
-$total_stock = 10;
+$total_stock = 100;
 $available = $product['stock_quantity'] ?? 0;
 $percentage = ($available / $total_stock) * 100;
 
@@ -33,15 +33,16 @@ include 'includes/header.php';
 ?>
 
 <!-- section header -->
-<div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
+<div onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
+class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
     <!-- From Uiverse.io by Rahulcheryala --> 
      <a href="./donations.php">
         <button
             type="button"
-            class="bg-white text-center w-48 rounded-2xl h-10 relative text-black text-xl font-semibold border-4 border-white group"
+            class="bg-white text-center w-40 rounded-2xl h-10 relative text-black text-xl font-semibold border-4 border-white group"
             >
             <div
-                class="bg-blue-400 rounded-xl h-8 w-1/4 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500"
+                class="bg-canope-gray rounded-xl h-8 w-1/4 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500"
             >
                 <svg
                     width="25px"
@@ -50,16 +51,16 @@ include 'includes/header.php';
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <path
-                        fill="#000000"
+                        fill="#ffffffff"
                         d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
                     ></path>
                     <path
-                        fill="#000000"
+                        fill="#ffffffff"
                         d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
                     ></path>
                 </svg>
             </div>
-        <p class="translate-x-4">Retour</p>
+        <p class="translate-x-4"></p>
         </button>
         </a>
     </div>
@@ -101,7 +102,7 @@ include 'includes/header.php';
               <p class="text-2xl font-bold text-gray-900"><?php echo $available; ?>/<?php echo $total_stock; ?></p>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-green-500 h-2 rounded-full" style="width: <?php echo $percentage; ?>%"></div>
+              <div class="bg-canope-slate h-2 rounded-full" style="width: <?php echo $percentage; ?>%"></div>
             </div>
           </div>
 
@@ -140,17 +141,14 @@ include 'includes/header.php';
             <!-- Conditions -->
             <div class="flex gap-4">
               <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
-                ℹ️
               </div>
               <div>
-                <p class="text-gray-600 text-sm">Conditions d'utilisation</p>
-                <p class="text-gray-900 font-medium">Prêt de 3 semaines maximum. Formation préalable recommandée.</p>
               </div>
             </div>
           </div>
 
           <!-- CTA Button -->
-          <button class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white font-medium py-3 px-6 rounded-lg hover:from-green-700 hover:to-teal-700 transition-all flex items-center justify-center gap-2">
+          <button class="w-full bg-gradient-to-r from-canope-slate to-canope-teal text-white font-medium py-3 px-6 rounded-lg hover:from-canope-teal hover:to-canope-slate transition-all flex items-center justify-center gap-2">
             🛒 Demander cette dotation
           </button>
         </div>

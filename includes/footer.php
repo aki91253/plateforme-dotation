@@ -52,7 +52,7 @@
         <!-- Bouton Scroll To Top -->
 <button 
   id="scrollToTopBtn"
-  class="fixed right-4 bottom-4 z-50 w-14 h-14 rounded-full bg-canope-green text-white flex items-center justify-center shadow-lg border-2 border-canope-green hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] active:scale-90 transition-all duration-300"
+  class="fixed right-4 bottom-4 z-50 w-14 h-14 rounded-full bg-canope-slate text-white flex items-center justify-center shadow-lg border-2 border-canope-dark hover:bg-gradient-to-r hover:from-canope-stale hover:to-canope-teal hover:border-canope-dark active:scale-90 transition-all duration-300"
   title="Remonter en haut">
   <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
