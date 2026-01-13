@@ -25,7 +25,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </p>
             
             <!-- Bouton avec méthode pour ouvrir l'interface de mail / Quand on clique on nous demande notre messagerie préféré  -->
-            <button onclick="openEmailModal()" class="bg-canope-green text-white px-6 py-3 rounded-full text-sm cursor-pointer border-2 border-canope-green font-semibold hover:bg-gradient-to-r hover:from-canope-green hover:to-[#4a8a70] hover:border-[#4a8a70] transition-all duration-300 flex items-center gap-2 shadow-lg">
+            <button onclick="openEmailModal()" style="background-color:#3B556D" class="bg-canope-slate text-white px-6 py-3 rounded-full text-sm cursor-pointer border-2 border-canope-dark font-semibold hover:bg-gradient-to-r hover:from-canope-dark hover:to-[#0B162C] hover:border-[#0B162C] transition-all duration-300 flex items-center gap-2 shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
@@ -95,14 +95,14 @@ $emailSubject = "Contact depuis la plateforme de dotation";
 
             <!-- Default Mail App -->
             <a href="mailto:<?php echo $contactEmail; ?>?subject=<?php echo urlencode($emailSubject); ?>" 
-               class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-canope-green hover:bg-canope-light/30 transition-all group">
-                <div class="w-12 h-12 flex items-center justify-center bg-canope-green/10 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-canope-green" viewBox="0 0 20 20" fill="currentColor">
+               class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-canope-slate hover:bg-canope-light/30 transition-all group">
+                <div class="w-12 h-12 flex items-center justify-center bg-canope-slate/10 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-canope-slate" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
                 </div>
-                <span class="font-medium text-gray-700 group-hover:text-canope-green">Autre</span>
+                <span class="font-medium text-gray-700 group-hover:text-canope-slate">Autre</span>
             </a>
         </div>
 

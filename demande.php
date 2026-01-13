@@ -77,6 +77,9 @@ include 'includes/header.php';
 ?>
 
 <div class="max-w-4xl mx-auto px-5 py-12">
+    <svg stroke="#3B556D" class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
+							<path d="M18.125,15.804l-4.038-4.037c0.675-1.079,1.012-2.308,1.01-3.534C15.089,4.62,12.199,1.75,8.584,1.75C4.815,1.75,1.982,4.726,2,8.286c0.021,3.577,2.908,6.549,6.578,6.549c1.241,0,2.417-0.347,3.44-0.985l4.032,4.026c0.167,0.166,0.43,0.166,0.596,0l1.479-1.478C18.292,16.234,18.292,15.968,18.125,15.804 M8.578,13.99c-3.198,0-5.716-2.593-5.733-5.71c-0.017-3.084,2.438-5.686,5.74-5.686c3.197,0,5.625,2.493,5.64,5.624C14.242,11.548,11.621,13.99,8.578,13.99 M16.349,16.981l-3.637-3.635c0.131-0.11,0.721-0.695,0.876-0.884l3.642,3.639L16.349,16.981z"></path>
+						</svg>
     <h1 class="text-4xl font-normal mb-12 text-gray-900">Suivre ma demande</h1>
     
     <!-- Formulaire de recherche -->
@@ -89,14 +92,14 @@ include 'includes/header.php';
                 placeholder="Entrez votre token de demande"
                 class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-canope-green"
             />
-            <button 
-                type="submit"
-                class="px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
-            >
-                Rechercher 
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7m0 0l-7 7m7-7H5"></path>
-                </svg>
+            <!-- From Uiverse.io by Javierrocadev --> 
+                <button class="relative border hover:border-sky-600 duration-500 group cursor-pointer text-sky-50  overflow-hidden h-14 w-56 rounded-md bg-sky-800 p-2 flex justify-center items-center font-extrabold">
+                    <div class="absolute z-10 w-48 h-48 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-sky-900 delay-150 group-hover:delay-75"></div>
+                        <div class="absolute z-10 w-40 h-40 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-sky-800 delay-150 group-hover:delay-100"></div>
+                            <div class="absolute z-10 w-32 h-32 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-sky-700 delay-150 group-hover:delay-150"></div>
+                        <div class="absolute z-10 w-24 h-24 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-sky-600 delay-150 group-hover:delay-200"></div>
+                    <div class="absolute z-10 w-16 h-16 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-sky-500 delay-150 group-hover:delay-300"></div>
+                <p class="z-10">Rechercher</p>
             </button>
         </form>
     </div>
@@ -140,13 +143,13 @@ include 'includes/header.php';
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <div class="flex items-center gap-2 text-gray-600 mb-3">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path>
                         </svg>
                         <span><?php echo htmlspecialchars($demande['demandeur_nom'] ?? 'Non spécifié'); ?></span>
                     </div>
                     <div class="flex items-center gap-2 text-gray-600">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
                             <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
                         </svg>
@@ -156,13 +159,13 @@ include 'includes/header.php';
                 
                 <div>
                     <div class="flex items-center gap-2 text-gray-600 mb-3">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
 							<path d="M13.372,1.781H6.628c-0.696,0-1.265,0.569-1.265,1.265v13.91c0,0.695,0.569,1.265,1.265,1.265h6.744c0.695,0,1.265-0.569,1.265-1.265V3.045C14.637,2.35,14.067,1.781,13.372,1.781 M13.794,16.955c0,0.228-0.194,0.421-0.422,0.421H6.628c-0.228,0-0.421-0.193-0.421-0.421v-0.843h7.587V16.955z M13.794,15.269H6.207V4.731h7.587V15.269z M13.794,3.888H6.207V3.045c0-0.228,0.194-0.421,0.421-0.421h6.744c0.228,0,0.422,0.194,0.422,0.421V3.888z"></path>
 						</svg>
                         <span><?php echo htmlspecialchars($demande['demandeur_phone'] ?? 'Non spécifié'); ?></span>
                     </div>
                     <div class="flex items-center gap-2 text-gray-600">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
                         </svg>
                         <span><?php echo htmlspecialchars($demande['demandeur_institution'] ?? 'Non spécifié'); ?></span>
@@ -185,7 +188,7 @@ include 'includes/header.php';
                                 <p class="text-sm text-gray-500">Réf: <?php echo htmlspecialchars($produit['reference']); ?></p>
                             <?php endif; ?>
                         </div>
-                        <span class="text-lg font-semibold text-canope-green">x<?php echo (int)$demande['quantity']; ?></span>
+                        <span fill="#3B556D" class="text-lg font-semibold ">x<?php echo (int)$demande['quantity']; ?></span>
                     </div>
                 <?php endforeach; ?>
             </div>
