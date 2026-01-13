@@ -25,18 +25,20 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </p>
             
             <!-- Bouton avec méthode pour ouvrir l'interface de mail / Quand on clique on nous demande notre messagerie préféré  -->
-            <button onclick="openEmailModal()" style="background-color:#3B556D" class="bg-canope-slate text-white px-6 py-3 rounded-full text-sm cursor-pointer border-2 border-canope-dark font-semibold hover:bg-gradient-to-r hover:from-canope-dark hover:to-[#0B162C] hover:border-[#0B162C] transition-all duration-300 flex items-center gap-2 shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <button onclick="openEmailModal()" class="border hover:scale-95 duration-300 relative group cursor-pointer text-sky-50  overflow-hidden h-13 w-60 rounded-full bg-sky-200 p-2 flex justify-center items-center font-extrabold">
+                    
+  <div class="absolute right-32 -top-4  group-hover:top-1 group-hover:right-2 z-10 w-40 h-40 rounded-full group-hover:scale-150 duration-500 bg-sky-900"></div>
+  <div class="absolute right-2 -top-4  group-hover:top-1 group-hover:right-2 z-10 w-32 h-32 rounded-full group-hover:scale-150  duration-500 bg-sky-800"></div>
+  <div class="absolute -right-12 top-4 group-hover:top-1 group-hover:right-2 z-10 w-24 h-24 rounded-full group-hover:scale-150  duration-500 bg-sky-700"></div>
+  <div class="absolute right-20 -top-4 group-hover:top-1 group-hover:right-2 z-10 w-16 h-16 rounded-full group-hover:scale-150  duration-500 bg-sky-600"></div>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 z-10 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-                Nous contacter
-            </button>
+  <p class="z-10">Nous contacter</p>
+</svg>
+</button>
         </div>
-        
-
-        
-        <div>
+         <div>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.073876723538!2d8.75318227648099!3d41.93426387123558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12da6a32050d040b%3A0x5d1a1183b2ec787a!2sCANOPE%20Acad%C3%A9mie%20de%20Corse!5e0!3m2!1sfr!2sfr!4v1767691927215!5m2!1sfr!2sfr" 
                     width="100%" height="450" style="border:0; border-radius: 16px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>

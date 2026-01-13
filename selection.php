@@ -11,7 +11,7 @@ include 'includes/header.php';
 ?>
 
 <!-- section header -->
-<div class="bg-gradient-to-r from-canope-green to-canope-olive py-10 px-5">
+<div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
     <div class="max-w-6xl mx-auto">
         <div class="flex items-center gap-3 mb-2">
             <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -35,7 +35,7 @@ include 'includes/header.php';
             <!-- Vos informations -->
             <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center gap-2 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-gray" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     <h2 class="text-lg font-semibold text-gray-800">Vos informations</h2>
@@ -46,12 +46,12 @@ include 'includes/header.php';
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nom <span class="text-red-500">*</span></label>
                             <input type="text" name="nom" required placeholder="Dupont"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-green focus:border-transparent transition-all">
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Prénom <span class="text-red-500">*</span></label>
                             <input type="text" name="prenom" required placeholder="Marie"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-green focus:border-transparent transition-all">
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
                         </div>
                     </div>
                     
@@ -59,7 +59,7 @@ include 'includes/header.php';
                         <label class="block text-sm font-medium text-gray-700 mb-1">Établissement <span class="text-red-500">*</span></label>
                         <input type="text" name="establishment_name" required placeholder="École Primaire de..."
                                value="<?= $userEtablissement ?>"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-green focus:border-transparent transition-all">
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -67,12 +67,12 @@ include 'includes/header.php';
                             <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
                             <input type="email" name="email" required placeholder="email@ac-corse.fr"
                                    value="<?= $userEmail ?>"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-green focus:border-transparent transition-all">
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone portable <span class="text-red-500">*</span></label>
                             <input type="tel" name="phone" required placeholder="0612345678"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-green focus:border-transparent transition-all">
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
                         </div>
                     </div>
                     
@@ -82,28 +82,6 @@ include 'includes/header.php';
                 </form>
             </div>
             
-            <!-- Type de demande -->
-            <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-                <div class="flex items-center gap-2 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-canope-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                    <h2 class="text-lg font-semibold text-gray-800">Type de demande</h2>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button type="button" id="type-livraison" onclick="selectRequestType('RECEVOIR')"
-                            class="request-type-btn selected p-4 rounded-xl border-2 border-canope-green bg-canope-green/5 text-center transition-all hover:border-canope-green">
-                        <span class="block font-semibold text-gray-800">Livraison</span>
-                        <span class="text-sm text-gray-500">Première demande de dotation</span>
-                    </button>
-                    <button type="button" id="type-reassort" onclick="selectRequestType('REASSORT')"
-                            class="request-type-btn p-4 rounded-xl border-2 border-gray-200 bg-white text-center transition-all hover:border-canope-green/50">
-                        <span class="block font-semibold text-gray-800">Réassort</span>
-                        <span class="text-sm text-gray-500">Renouvellement ou complément</span>
-                    </button>
-                </div>
-            </div>
             
             <!-- Dotations demandées -->
             <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
@@ -183,7 +161,7 @@ include 'includes/header.php';
                         onclick="submitFormFromSidebar()"
                         id="submit-btn"
                         disabled
-                        class="group relative inline-flex items-center justify-center text-base rounded-xl bg-canope-green px-8 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                        class="group relative inline-flex items-center justify-center text-base rounded-xl bg-canope-slate px-8 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                         title="Envoyer ma demande"
                     >Envoyer ma demande<svg
                         aria-hidden="true"
