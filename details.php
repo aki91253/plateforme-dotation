@@ -3,7 +3,7 @@ require_once 'includes/db.php';
 
 $product_id = (int) $_GET['id'];
 
-
+//requête qui récupère toutes les informations d'un produit en fonction de l'id 
 $stmt = $pdo->prepare('
     SELECT p.*, c.name as category_name, s.quantity as stock_quantity, l.langue as langue, d.libelle as discipline, t.libelle as ressource
     FROM product p
@@ -17,15 +17,15 @@ $stmt = $pdo->prepare('
 $stmt->execute([$product_id]);
 $product = $stmt->fetch();
 
-if (!$product) {
+if (!$product) {//dans le cas ou un produit n'est pas trouvé on renvoie une erreur 
     die('Produit non trouvé');
 }
 
-$img_stmt = $pdo->prepare('SELECT url, alt_text FROM product_image WHERE product_id = ? LIMIT 1');
+$img_stmt = $pdo->prepare('SELECT url, alt_text FROM product_image WHERE product_id = ? LIMIT 1'); // Permet de récupérer l'image du produit (en fonction de l'id)
 $img_stmt->execute([$product_id]);
 $image = $img_stmt->fetch();
 
-$total_stock = 100;
+$total_stock = 100; // Total de stock pour la barre de stock 
 $available = $product['stock_quantity'] ?? 0;
 $percentage = ($available / $total_stock) * 100;
 
@@ -48,10 +48,9 @@ include 'includes/header.php';
         <p class="text-white/80 text-sm ml-13">Voici les détails du produit</p>
     </div>
 </div>
-    <!-- From Uiverse.io by Rahulcheryala --> 
+    <!-- Petit header avec en dessous de "Détails" pour le bouton retour  -->
      <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-1 px-5">
      <a href="./donations.php">
-        <!-- From Uiverse.io by catraco --> 
         <button class="cursor-pointer duration-200 hover:scale-125 active:scale-100" title="Go Back">
             <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" class="stroke-white">
                 <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M11 6L5 12M5 12L11 18M5 12H19"></path>
