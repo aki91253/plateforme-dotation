@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/db.php';
 
-// Get selected filter values from URL
+// GET les filtres sélectionnés depuis l'URL
 $selectedCategories = [];
 if (isset($_GET['niveau'])) {
     if (is_array($_GET['niveau'])) {
@@ -49,7 +49,7 @@ if (isset($_GET['collection'])) {
 
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Fetch filter options from database
+// récupère les options des filtres depuis la base de données
 $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
 $categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
 
@@ -62,11 +62,11 @@ $languages = $languagesQuery->fetchAll(PDO::FETCH_ASSOC);
 $disciplinesQuery = $pdo->query("SELECT * FROM discipline ORDER BY libelle");
 $disciplines = $disciplinesQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Get distinct collections from products (filtering out empty ones)
+// récupère les collections distinctes des produits (en filtrant les vides)
 $collectionsQuery = $pdo->query("SELECT DISTINCT collection FROM product WHERE collection IS NOT NULL AND collection != '' ORDER BY collection");
 $collections = $collectionsQuery->fetchAll(PDO::FETCH_COLUMN);
 
-// Build product query with filters
+// Construit la requête de base avec les filtres
 $baseQuery = "SELECT p.*, c.name as category_name, rt.libelle as resource_type_name, 
               l.langue as language_name, d.libelle as discipline_name,
               pi.url as image_url, pi.alt_text as image_alt
@@ -80,7 +80,7 @@ $baseQuery = "SELECT p.*, c.name as category_name, rt.libelle as resource_type_n
 
 $params = [];
 
-// Apply category/niveau filter
+// Applique le filtre niveau
 if (!empty($selectedCategories)) {
     $placeholders = [];
     foreach ($selectedCategories as $i => $catId) {
@@ -90,7 +90,7 @@ if (!empty($selectedCategories)) {
     $baseQuery .= " AND p.category_id IN (" . implode(',', $placeholders) . ")";
 }
 
-// Apply resource type filter
+// Applique le filtre type de ressource
 if (!empty($selectedResourceTypes)) {
     $placeholders = [];
     foreach ($selectedResourceTypes as $i => $rtId) {
@@ -100,7 +100,7 @@ if (!empty($selectedResourceTypes)) {
     $baseQuery .= " AND p.id_ressource IN (" . implode(',', $placeholders) . ")";
 }
 
-// Apply language filter
+// Applique le filtre langue
 if (!empty($selectedLanguages)) {
     $placeholders = [];
     foreach ($selectedLanguages as $i => $langId) {
@@ -110,7 +110,7 @@ if (!empty($selectedLanguages)) {
     $baseQuery .= " AND p.langue_id IN (" . implode(',', $placeholders) . ")";
 }
 
-// Apply discipline filter
+// Applique le filtre discipline
 if (!empty($selectedDisciplines)) {
     $placeholders = [];
     foreach ($selectedDisciplines as $i => $discId) {
@@ -120,7 +120,7 @@ if (!empty($selectedDisciplines)) {
     $baseQuery .= " AND p.discipline_id IN (" . implode(',', $placeholders) . ")";
 }
 
-// Apply collection filter
+// Applique le filtre collection
 if (!empty($selectedCollections)) {
     $placeholders = [];
     foreach ($selectedCollections as $i => $coll) {
@@ -130,7 +130,7 @@ if (!empty($selectedCollections)) {
     $baseQuery .= " AND p.collection IN (" . implode(',', $placeholders) . ")";
 }
 
-// Apply search filter
+// Applique le filtre de recherche
 if (!empty($searchTerm)) {
     $baseQuery .= " AND (p.name LIKE :search OR p.description LIKE :search OR p.reference LIKE :search)";
     $params['search'] = '%' . $searchTerm . '%';
@@ -142,52 +142,52 @@ $productsQuery = $pdo->prepare($baseQuery);
 $productsQuery->execute($params);
 $products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Check if any filters are active
+// Vérifie si des filtres sont actifs
 $hasActiveFilters = !empty($selectedCategories) || !empty($selectedResourceTypes) || 
                     !empty($selectedLanguages) || !empty($selectedDisciplines) || !empty($selectedCollections) || !empty($searchTerm);
 
-// Helper function to build URL without a specific filter value
+// Fonction pour construire l'URL sans un filtre spécifique
 function buildFilterUrl($filterType, $valueToRemove) {
     global $selectedResourceTypes, $selectedLanguages, $selectedDisciplines, $selectedCollections, $selectedCategories, $searchTerm;
     
     $params = [];
     
-    // Add resource_type params
+    // Ajoute les paramètres resource_type
     foreach ($selectedResourceTypes as $val) {
         if ($filterType !== 'resource_type' || $val != $valueToRemove) {
             $params[] = 'resource_type[]=' . urlencode($val);
         }
     }
     
-    // Add langue params
+    // Ajoute les paramètres langue
     foreach ($selectedLanguages as $val) {
         if ($filterType !== 'langue' || $val != $valueToRemove) {
             $params[] = 'langue[]=' . urlencode($val);
         }
     }
     
-    // Add discipline params
+    // Ajoute les paramètres discipline
     foreach ($selectedDisciplines as $val) {
         if ($filterType !== 'discipline' || $val != $valueToRemove) {
             $params[] = 'discipline[]=' . urlencode($val);
         }
     }
     
-    // Add collection params
+    // Ajoute les paramètres collection
     foreach ($selectedCollections as $val) {
         if ($filterType !== 'collection' || $val != $valueToRemove) {
             $params[] = 'collection[]=' . urlencode($val);
         }
     }
     
-    // Add niveau params
+    // Ajoute les paramètres niveau
     foreach ($selectedCategories as $val) {
         if ($filterType !== 'niveau' || $val != $valueToRemove) {
             $params[] = 'niveau[]=' . urlencode($val);
         }
     }
     
-    // Add search param
+    // Ajoute le paramètre de recherche
     if (!empty($searchTerm)) {
         $params[] = 'search=' . urlencode($searchTerm);
     }
@@ -582,7 +582,7 @@ include 'includes/header.php';
                 </div>
             </div>
 
-            <!-- Clear All Filters -->
+            <!-- Effacer tout les filtres -->
             <?php if ($hasActiveFilters): ?>
                 <a href="donations.php" class="clear-filters-btn">
                     ✕ Effacer tout
@@ -590,11 +590,11 @@ include 'includes/header.php';
             <?php endif; ?>
         </div>
 
-        <!-- Selected Filter Tags -->
+        <!-- Tags des filtres actifs -->
         <?php if ($hasActiveFilters): ?>
         <div class="filter-tags">
             <?php 
-            // Resource Type tags
+            // Tags des types de ressources
             foreach ($selectedResourceTypes as $rtId): 
                 $rtName = '';
                 foreach ($resourceTypes as $rt) {
@@ -612,7 +612,7 @@ include 'includes/header.php';
             <?php endforeach; ?>
 
             <?php 
-            // Language tags
+            // Tags des langues
             foreach ($selectedLanguages as $langId): 
                 $langName = '';
                 foreach ($languages as $lang) {
@@ -630,7 +630,7 @@ include 'includes/header.php';
             <?php endforeach; ?>
 
             <?php 
-            // Discipline tags
+            // Tags des disciplines
             foreach ($selectedDisciplines as $discId): 
                 $discName = '';
                 foreach ($disciplines as $disc) {
@@ -648,7 +648,7 @@ include 'includes/header.php';
             <?php endforeach; ?>
 
             <?php 
-            // Collection tags
+            // Tags des collections
             foreach ($selectedCollections as $coll): 
             ?>
                 <div class="filter-tag">
@@ -662,7 +662,7 @@ include 'includes/header.php';
             <?php endforeach; ?>
 
             <?php 
-            // Niveau tags
+            // Tags des niveaux
             foreach ($selectedCategories as $catId): 
                 $catName = '';
                 foreach ($categories as $cat) {
@@ -684,54 +684,54 @@ include 'includes/header.php';
     </form>
 
     <script>
-        // Dropdown toggle functionality
+        // Fonctionnalité de basculement du menu déroulant
         document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
             const btn = dropdown.querySelector('.filter-dropdown-btn');
             
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Close all other dropdowns
+                // Ferme tous les autres menus déroulants
                 document.querySelectorAll('.filter-dropdown').forEach(d => {
                     if (d !== dropdown) d.classList.remove('open');
                 });
-                // Toggle current dropdown
+                // Bascule le menu déroulant actuel
                 dropdown.classList.toggle('open');
             });
         });
 
-        // Close dropdowns when clicking outside
+        // Ferme les menus déroulants en cliquant en dehors
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.filter-dropdown')) {
                 document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
             }
         });
 
-        // Handle menu item clicks - toggle filter selection
+        // Gestion des clics sur les éléments du menu - bascule de sélection du filtre
         document.querySelectorAll('.filter-menu-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 const filterType = item.dataset.filter;
                 const filterValue = item.dataset.value;
                 const isSelected = item.classList.contains('selected');
                 
-                // Build URL with/without this filter
+                // Construit l'URL avec/sans ce filtre
                 const urlParams = new URLSearchParams(window.location.search);
                 
                 if (isSelected) {
-                    // Remove this value from the filter
+                    // Supprime cette valeur du filtre
                     const values = urlParams.getAll(filterType + '[]').filter(v => v !== filterValue);
                     urlParams.delete(filterType + '[]');
                     values.forEach(v => urlParams.append(filterType + '[]', v));
                 } else {
-                    // Add this value to the filter
+                    // Ajoute cette valeur au filtre
                     urlParams.append(filterType + '[]', filterValue);
                 }
                 
-                // Navigate to the new URL
+                // Navigue vers l'URL nouvelle
                 window.location.href = 'donations.php' + (urlParams.toString() ? '?' + urlParams.toString() : '');
             });
         });
 
-        // Handle search on Enter key
+        // Gestion de la recherche sur la touche Enter
         const searchInput = document.querySelector('.filter-search-box input');
         if (searchInput) {
             searchInput.addEventListener('keypress', (e) => {
