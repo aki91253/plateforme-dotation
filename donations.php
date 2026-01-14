@@ -146,6 +146,55 @@ $products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);
 $hasActiveFilters = !empty($selectedCategories) || !empty($selectedResourceTypes) || 
                     !empty($selectedLanguages) || !empty($selectedDisciplines) || !empty($selectedCollections) || !empty($searchTerm);
 
+// Helper function to build URL without a specific filter value
+function buildFilterUrl($filterType, $valueToRemove) {
+    global $selectedResourceTypes, $selectedLanguages, $selectedDisciplines, $selectedCollections, $selectedCategories, $searchTerm;
+    
+    $params = [];
+    
+    // Add resource_type params
+    foreach ($selectedResourceTypes as $val) {
+        if ($filterType !== 'resource_type' || $val != $valueToRemove) {
+            $params[] = 'resource_type[]=' . urlencode($val);
+        }
+    }
+    
+    // Add langue params
+    foreach ($selectedLanguages as $val) {
+        if ($filterType !== 'langue' || $val != $valueToRemove) {
+            $params[] = 'langue[]=' . urlencode($val);
+        }
+    }
+    
+    // Add discipline params
+    foreach ($selectedDisciplines as $val) {
+        if ($filterType !== 'discipline' || $val != $valueToRemove) {
+            $params[] = 'discipline[]=' . urlencode($val);
+        }
+    }
+    
+    // Add collection params
+    foreach ($selectedCollections as $val) {
+        if ($filterType !== 'collection' || $val != $valueToRemove) {
+            $params[] = 'collection[]=' . urlencode($val);
+        }
+    }
+    
+    // Add niveau params
+    foreach ($selectedCategories as $val) {
+        if ($filterType !== 'niveau' || $val != $valueToRemove) {
+            $params[] = 'niveau[]=' . urlencode($val);
+        }
+    }
+    
+    // Add search param
+    if (!empty($searchTerm)) {
+        $params[] = 'search=' . urlencode($searchTerm);
+    }
+    
+    return 'donations.php' . (!empty($params) ? '?' . implode('&', $params) : '');
+}
+
 include 'includes/header.php';
 ?>
 
@@ -324,7 +373,7 @@ include 'includes/header.php';
             </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3 mb-8">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
             <!-- Type de Ressource Dropdown -->
             <div class="filter-dropdown" data-dropdown="resource_type">
                 <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedResourceTypes) ? 'active' : ''; ?>">
@@ -335,14 +384,9 @@ include 'includes/header.php';
                 </button>
                 <div class="filter-dropdown-menu">
                     <?php foreach ($resourceTypes as $rt): ?>
-                        <div class="filter-checkbox-item">
-                            <input type="checkbox" 
-                                   name="resource_type[]" 
-                                   value="<?php echo $rt['id']; ?>" 
-                                   id="rt_<?php echo $rt['id']; ?>"
-                                   <?php echo in_array($rt['id'], $selectedResourceTypes) ? 'checked' : ''; ?>
-                                   onchange="document.getElementById('filterForm').submit();">
-                            <label for="rt_<?php echo $rt['id']; ?>"><?php echo htmlspecialchars($rt['libelle']); ?></label>
+                        <div class="filter-menu-item <?php echo in_array($rt['id'], $selectedResourceTypes) ? 'selected' : ''; ?>"
+                             data-filter="resource_type" data-value="<?php echo $rt['id']; ?>">
+                            <?php echo htmlspecialchars($rt['libelle']); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -358,14 +402,9 @@ include 'includes/header.php';
                 </button>
                 <div class="filter-dropdown-menu">
                     <?php foreach ($languages as $lang): ?>
-                        <div class="filter-checkbox-item">
-                            <input type="checkbox" 
-                                   name="langue[]" 
-                                   value="<?php echo $lang['id']; ?>" 
-                                   id="lang_<?php echo $lang['id']; ?>"
-                                   <?php echo in_array($lang['id'], $selectedLanguages) ? 'checked' : ''; ?>
-                                   onchange="document.getElementById('filterForm').submit();">
-                            <label for="lang_<?php echo $lang['id']; ?>"><?php echo htmlspecialchars($lang['langue']); ?></label>
+                        <div class="filter-menu-item <?php echo in_array($lang['id'], $selectedLanguages) ? 'selected' : ''; ?>"
+                             data-filter="langue" data-value="<?php echo $lang['id']; ?>">
+                            <?php echo htmlspecialchars($lang['langue']); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -381,14 +420,9 @@ include 'includes/header.php';
                 </button>
                 <div class="filter-dropdown-menu">
                     <?php foreach ($disciplines as $disc): ?>
-                        <div class="filter-checkbox-item">
-                            <input type="checkbox" 
-                                   name="discipline[]" 
-                                   value="<?php echo $disc['id']; ?>" 
-                                   id="disc_<?php echo $disc['id']; ?>"
-                                   <?php echo in_array($disc['id'], $selectedDisciplines) ? 'checked' : ''; ?>
-                                   onchange="document.getElementById('filterForm').submit();">
-                            <label for="disc_<?php echo $disc['id']; ?>"><?php echo htmlspecialchars($disc['libelle']); ?></label>
+                        <div class="filter-menu-item <?php echo in_array($disc['id'], $selectedDisciplines) ? 'selected' : ''; ?>"
+                             data-filter="discipline" data-value="<?php echo $disc['id']; ?>">
+                            <?php echo htmlspecialchars($disc['libelle']); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -405,14 +439,9 @@ include 'includes/header.php';
                 </button>
                 <div class="filter-dropdown-menu">
                     <?php foreach ($collections as $coll): ?>
-                        <div class="filter-checkbox-item">
-                            <input type="checkbox" 
-                                   name="collection[]" 
-                                   value="<?php echo htmlspecialchars($coll); ?>" 
-                                   id="coll_<?php echo md5($coll); ?>"
-                                   <?php echo in_array($coll, $selectedCollections) ? 'checked' : ''; ?>
-                                   onchange="document.getElementById('filterForm').submit();">
-                            <label for="coll_<?php echo md5($coll); ?>"><?php echo htmlspecialchars($coll); ?></label>
+                        <div class="filter-menu-item <?php echo in_array($coll, $selectedCollections) ? 'selected' : ''; ?>"
+                             data-filter="collection" data-value="<?php echo htmlspecialchars($coll); ?>">
+                            <?php echo htmlspecialchars($coll); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -429,43 +458,112 @@ include 'includes/header.php';
                 </button>
                 <div class="filter-dropdown-menu">
                     <?php foreach ($categories as $category): ?>
-                        <div class="filter-checkbox-item">
-                            <input type="checkbox" 
-                                   name="niveau[]" 
-                                   value="<?php echo $category['id']; ?>" 
-                                   id="niveau_<?php echo $category['id']; ?>"
-                                   <?php echo in_array($category['id'], $selectedCategories) ? 'checked' : ''; ?>
-                                   onchange="document.getElementById('filterForm').submit();">
-                            <label for="niveau_<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></label>
+                        <div class="filter-menu-item <?php echo in_array($category['id'], $selectedCategories) ? 'selected' : ''; ?>"
+                             data-filter="niveau" data-value="<?php echo $category['id']; ?>">
+                            <?php echo htmlspecialchars($category['name']); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <!-- Clear Filters -->
+            <!-- Clear All Filters -->
             <?php if ($hasActiveFilters): ?>
                 <a href="donations.php" class="text-sm text-gray-500 hover:text-red-500 transition-colors ml-2">
-                    Effacer les filtres
+                    Effacer tout
                 </a>
             <?php endif; ?>
         </div>
 
-        <!-- Hidden fields to preserve filter selections during search -->
-        <?php foreach ($selectedResourceTypes as $rtId): ?>
-            <input type="hidden" name="resource_type_hidden[]" value="<?php echo $rtId; ?>">
-        <?php endforeach; ?>
-        <?php foreach ($selectedLanguages as $langId): ?>
-            <input type="hidden" name="langue_hidden[]" value="<?php echo $langId; ?>">
-        <?php endforeach; ?>
-        <?php foreach ($selectedDisciplines as $discId): ?>
-            <input type="hidden" name="discipline_hidden[]" value="<?php echo $discId; ?>">
-        <?php endforeach; ?>
-        <?php foreach ($selectedCollections as $coll): ?>
-            <input type="hidden" name="collection_hidden[]" value="<?php echo htmlspecialchars($coll); ?>">
-        <?php endforeach; ?>
-        <?php foreach ($selectedCategories as $catId): ?>
-            <input type="hidden" name="niveau_hidden[]" value="<?php echo $catId; ?>">
-        <?php endforeach; ?>
+        <!-- Selected Filter Tags -->
+        <?php if ($hasActiveFilters): ?>
+        <div class="filter-tags">
+            <?php 
+            // Resource Type tags
+            foreach ($selectedResourceTypes as $rtId): 
+                $rtName = '';
+                foreach ($resourceTypes as $rt) {
+                    if ($rt['id'] == $rtId) { $rtName = $rt['libelle']; break; }
+                }
+            ?>
+                <div class="filter-tag">
+                    <span><?php echo htmlspecialchars($rtName); ?></span>
+                    <a href="<?php echo buildFilterUrl('resource_type', $rtId); ?>" class="filter-tag-remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+
+            <?php 
+            // Language tags
+            foreach ($selectedLanguages as $langId): 
+                $langName = '';
+                foreach ($languages as $lang) {
+                    if ($lang['id'] == $langId) { $langName = $lang['langue']; break; }
+                }
+            ?>
+                <div class="filter-tag">
+                    <span><?php echo htmlspecialchars($langName); ?></span>
+                    <a href="<?php echo buildFilterUrl('langue', $langId); ?>" class="filter-tag-remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+
+            <?php 
+            // Discipline tags
+            foreach ($selectedDisciplines as $discId): 
+                $discName = '';
+                foreach ($disciplines as $disc) {
+                    if ($disc['id'] == $discId) { $discName = $disc['libelle']; break; }
+                }
+            ?>
+                <div class="filter-tag">
+                    <span><?php echo htmlspecialchars($discName); ?></span>
+                    <a href="<?php echo buildFilterUrl('discipline', $discId); ?>" class="filter-tag-remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+
+            <?php 
+            // Collection tags
+            foreach ($selectedCollections as $coll): 
+            ?>
+                <div class="filter-tag">
+                    <span><?php echo htmlspecialchars($coll); ?></span>
+                    <a href="<?php echo buildFilterUrl('collection', $coll); ?>" class="filter-tag-remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+
+            <?php 
+            // Niveau tags
+            foreach ($selectedCategories as $catId): 
+                $catName = '';
+                foreach ($categories as $cat) {
+                    if ($cat['id'] == $catId) { $catName = $cat['name']; break; }
+                }
+            ?>
+                <div class="filter-tag">
+                    <span><?php echo htmlspecialchars($catName); ?></span>
+                    <a href="<?php echo buildFilterUrl('niveau', $catId); ?>" class="filter-tag-remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
     </form>
 
     <script>
@@ -491,13 +589,41 @@ include 'includes/header.php';
             }
         });
 
-        // Handle search on Enter key
-        document.querySelector('.filter-search-box input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('filterForm').submit();
-            }
+        // Handle menu item clicks - toggle filter selection
+        document.querySelectorAll('.filter-menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const filterType = item.dataset.filter;
+                const filterValue = item.dataset.value;
+                const isSelected = item.classList.contains('selected');
+                
+                // Build URL with/without this filter
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                if (isSelected) {
+                    // Remove this value from the filter
+                    const values = urlParams.getAll(filterType + '[]').filter(v => v !== filterValue);
+                    urlParams.delete(filterType + '[]');
+                    values.forEach(v => urlParams.append(filterType + '[]', v));
+                } else {
+                    // Add this value to the filter
+                    urlParams.append(filterType + '[]', filterValue);
+                }
+                
+                // Navigate to the new URL
+                window.location.href = 'donations.php' + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            });
         });
+
+        // Handle search on Enter key
+        const searchInput = document.querySelector('.filter-search-box input');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('filterForm').submit();
+                }
+            });
+        }
     </script>
 
 
