@@ -34,13 +34,19 @@ $products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);
 include 'includes/header.php';
 ?>
 
-<div class="max-w-6xl mx-auto px-5 py-8">
-    <div class="flex items-center justify-center w-fit h-fit [--book-color:#f1775b] [--book-cover-color:#506c86]">
-        <div class="relative flex justify-end items-start w-[100px] h-[8px] bg-[var(--book-color)] border-b-2 border-[var(--book-cover-color)]">
-            <div class="w-1/2 h-[1px] bg-[var(--book-color)] origin-left animate-page1"></div>
-            <div class="absolute w-1/2 h-[1px] bg-[var(--book-color)] origin-left animate-page2"></div>
+<div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <svg stroke="#FFFFFF" class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
+							<path d="M18.125,15.804l-4.038-4.037c0.675-1.079,1.012-2.308,1.01-3.534C15.089,4.62,12.199,1.75,8.584,1.75C4.815,1.75,1.982,4.726,2,8.286c0.021,3.577,2.908,6.549,6.578,6.549c1.241,0,2.417-0.347,3.44-0.985l4.032,4.026c0.167,0.166,0.43,0.166,0.596,0l1.479-1.478C18.292,16.234,18.292,15.968,18.125,15.804 M8.578,13.99c-3.198,0-5.716-2.593-5.733-5.71c-0.017-3.084,2.438-5.686,5.74-5.686c3.197,0,5.625,2.493,5.64,5.624C14.242,11.548,11.621,13.99,8.578,13.99 M16.349,16.981l-3.637-3.635c0.131-0.11,0.721-0.695,0.876-0.884l3.642,3.639L16.349,16.981z"></path>
+						</svg>
+            </div>
+            <h1 class="text-3xl font-semibold text-white">Notre catalogue</h1>
         </div>
+        <p class="text-white/80 text-sm ml-13">Bienvenue sur notre liste de dotations </p>
     </div>
+</div>
 
     <style>
         @keyframes page1 {
@@ -58,8 +64,6 @@ include 'includes/header.php';
             animation: page2 0.8s ease-out infinite;
         }
     </style>
-
-    <h1 class="text-4xl font-normal mb-8 text-gray-900">Liste des dotations</h1>
     
     <?php if (!empty($searchTerm)): ?>
         <div class="mb-4 text-sm text-gray-600">
