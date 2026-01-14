@@ -5,10 +5,13 @@ $product_id = (int) $_GET['id'];
 
 
 $stmt = $pdo->prepare('
-    SELECT p.*, c.name as category_name, s.quantity as stock_quantity
+    SELECT p.*, c.name as category_name, s.quantity as stock_quantity, l.langue as langue, d.libelle as discipline, t.libelle as ressource
     FROM product p
     LEFT JOIN category c ON p.category_id = c.id
     LEFT JOIN stock s ON p.id = s.product_id
+    LEFT JOIN langue_product l ON p.langue_id = l.id
+    LEFT JOIN discipline d ON p.discipline_id = d.id 
+    LEFT JOIN type_ressource t ON p.id_ressource = t.id
     WHERE p.id = ?
 ');
 $stmt->execute([$product_id]);
@@ -26,9 +29,6 @@ $total_stock = 100;
 $available = $product['stock_quantity'] ?? 0;
 $percentage = ($available / $total_stock) * 100;
 
-$responsible_stmt = $pdo->prepare('SELECT first_name, last_name, job_title FROM responsible ORDER BY id LIMIT 1');
-$responsible_stmt->execute();
-$responsible = $responsible_stmt->fetch();
 
 include 'includes/header.php';
 ?>
@@ -36,7 +36,20 @@ include 'includes/header.php';
 <!-- section header -->
  
 <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
-    <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-1 px-5">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <svg stroke="#FFFFFF" class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
+							<path fill="none" d="M16.588,3.411h-4.466c0.042-0.116,0.074-0.236,0.074-0.366c0-0.606-0.492-1.098-1.099-1.098H8.901c-0.607,0-1.098,0.492-1.098,1.098c0,0.13,0.033,0.25,0.074,0.366H3.41c-0.606,0-1.098,0.492-1.098,1.098c0,0.607,0.492,1.098,1.098,1.098h0.366V16.59c0,0.808,0.655,1.464,1.464,1.464h9.517c0.809,0,1.466-0.656,1.466-1.464V5.607h0.364c0.607,0,1.1-0.491,1.1-1.098C17.688,3.903,17.195,3.411,16.588,3.411z M8.901,2.679h2.196c0.202,0,0.366,0.164,0.366,0.366S11.3,3.411,11.098,3.411H8.901c-0.203,0-0.366-0.164-0.366-0.366S8.699,2.679,8.901,2.679z M15.491,16.59c0,0.405-0.329,0.731-0.733,0.731H5.241c-0.404,0-0.732-0.326-0.732-0.731V5.607h10.983V16.59z M16.588,4.875H3.41c-0.203,0-0.366-0.164-0.366-0.366S3.208,4.143,3.41,4.143h13.178c0.202,0,0.367,0.164,0.367,0.366S16.79,4.875,16.588,4.875zM6.705,14.027h6.589c0.202,0,0.366-0.164,0.366-0.366s-0.164-0.367-0.366-0.367H6.705c-0.203,0-0.366,0.165-0.366,0.367S6.502,14.027,6.705,14.027z M6.705,11.83h6.589c0.202,0,0.366-0.164,0.366-0.365c0-0.203-0.164-0.367-0.366-0.367H6.705c-0.203,0-0.366,0.164-0.366,0.367C6.339,11.666,6.502,11.83,6.705,11.83z M6.705,9.634h6.589c0.202,0,0.366-0.164,0.366-0.366c0-0.202-0.164-0.366-0.366-0.366H6.705c-0.203,0-0.366,0.164-0.366,0.366C6.339,9.47,6.502,9.634,6.705,9.634z"></path>
+						</svg>
+            </div>
+            <h1 class="text-3xl font-semibold text-white">Détails</h1>
+        </div>
+        <p class="text-white/80 text-sm ml-13">Voici les détails du produit</p>
+    </div>
+</div>
+    <!-- From Uiverse.io by Rahulcheryala --> 
+     <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-1 px-5">
      <a href="./donations.php">
         <button
             type="button"
@@ -65,19 +78,6 @@ include 'includes/header.php';
         </button>
         </a>
 </div>
-    <div class="max-w-6xl mx-auto">
-        <div class="flex items-center gap-3 mb-2">
-            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                <svg stroke="#FFFFFF" class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
-							<path fill="none" d="M16.588,3.411h-4.466c0.042-0.116,0.074-0.236,0.074-0.366c0-0.606-0.492-1.098-1.099-1.098H8.901c-0.607,0-1.098,0.492-1.098,1.098c0,0.13,0.033,0.25,0.074,0.366H3.41c-0.606,0-1.098,0.492-1.098,1.098c0,0.607,0.492,1.098,1.098,1.098h0.366V16.59c0,0.808,0.655,1.464,1.464,1.464h9.517c0.809,0,1.466-0.656,1.466-1.464V5.607h0.364c0.607,0,1.1-0.491,1.1-1.098C17.688,3.903,17.195,3.411,16.588,3.411z M8.901,2.679h2.196c0.202,0,0.366,0.164,0.366,0.366S11.3,3.411,11.098,3.411H8.901c-0.203,0-0.366-0.164-0.366-0.366S8.699,2.679,8.901,2.679z M15.491,16.59c0,0.405-0.329,0.731-0.733,0.731H5.241c-0.404,0-0.732-0.326-0.732-0.731V5.607h10.983V16.59z M16.588,4.875H3.41c-0.203,0-0.366-0.164-0.366-0.366S3.208,4.143,3.41,4.143h13.178c0.202,0,0.367,0.164,0.367,0.366S16.79,4.875,16.588,4.875zM6.705,14.027h6.589c0.202,0,0.366-0.164,0.366-0.366s-0.164-0.367-0.366-0.367H6.705c-0.203,0-0.366,0.165-0.366,0.367S6.502,14.027,6.705,14.027z M6.705,11.83h6.589c0.202,0,0.366-0.164,0.366-0.365c0-0.203-0.164-0.367-0.366-0.367H6.705c-0.203,0-0.366,0.164-0.366,0.367C6.339,11.666,6.502,11.83,6.705,11.83z M6.705,9.634h6.589c0.202,0,0.366-0.164,0.366-0.366c0-0.202-0.164-0.366-0.366-0.366H6.705c-0.203,0-0.366,0.164-0.366,0.366C6.339,9.47,6.502,9.634,6.705,9.634z"></path>
-						</svg>
-            </div>
-            <h1 class="text-3xl font-semibold text-white">Détails</h1>
-        </div>
-        <p class="text-white/80 text-sm ml-13">Voici les détails du produit</p>
-    </div>
-</div>
-    <!-- From Uiverse.io by Rahulcheryala --> 
     </div>
 </div>
 
@@ -103,12 +103,8 @@ include 'includes/header.php';
 
         <!-- Right: Details -->
         <div>
-          <p class="text-gray-600 text-sm mb-2"><?php echo htmlspecialchars($product['category_name'] ?? 'Équipement'); ?></p>
+          <p class="text-gray-600 text-sm mb-2">Description</p>
           <h1 class="text-4xl font-bold text-gray-900 mb-4"><?php echo htmlspecialchars($product['name']); ?></h1>
-
-          <p class="text-gray-600 mb-6 leading-relaxed">
-            <?php echo htmlspecialchars($product['description'] ?? 'Aucune description disponible.'); ?>
-          </p>
 
           <!-- Stock -->
           <div class="mb-8">
@@ -123,45 +119,81 @@ include 'includes/header.php';
 
           <!-- Info Items -->
           <div class="space-y-4 mb-8">
-            <!-- Location -->
+            <!-- Titre -->
             <div class="flex gap-4">
               <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
-                📍
+                📔
               </div>
               <div>
-                <p class="text-gray-600 text-sm">Lieu de stockage</p>
-                <p class="text-gray-900 font-medium">Atelier Canopé Ajaccio</p>
+                <p class="text-gray-600 text-sm">Titre</p>
+                <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($product['name']); ?></p>
               </div>
             </div>
 
-            <!-- Responsible -->
+            <!-- Collection -->
             <div class="flex gap-4">
               <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
-                👤
+                📚
               </div>
               <div>
-                <p class="text-gray-600 text-sm">Responsable</p>
+                <p class="text-gray-600 text-sm">Collection</p>
                 <p class="text-gray-900 font-medium">
                   <?php
-                    if ($responsible) {
-                      echo htmlspecialchars($responsible['first_name'] . ' ' . $responsible['last_name']);
-                    } else {
-                      echo 'Non assigné';
+                    if(!empty($product['collection'])){
+                      echo htmlspecialchars($product['collection']);
+                    }else {
+                        echo htmlspecialchars('Pas de collection pour cette dotation');
                     }
                   ?>
                 </p>
               </div>
             </div>
 
-            <!-- Conditions -->
+            <!-- Niveau -->
             <div class="flex gap-4">
               <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
+                🏷️
               </div>
               <div>
+                <p class="text-gray-600 text-sm">Niveau</p>
+                <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($product['category_name']); ?></p>
               </div>
             </div>
-          </div>
 
+            <!-- Discipline -->
+            <div class="flex gap-4">
+              <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
+                🎓
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Discipline</p>
+                <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($product['discipline']); ?></p>
+              </div>
+            </div>
+
+
+
+            <!-- Langue -->
+            <div class="flex gap-4">
+              <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
+                🌍
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Langue</p>
+                <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($product['langue']); ?></p>
+              </div>
+            </div>
+
+            <!-- Type de ressource -->
+            <div class="flex gap-4">
+              <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
+                📦
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Type de la ressource</p>
+                <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($product['ressource']); ?></p>
+              </div>
+            </div>
           <!-- CTA Button -->
           <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
           class="w-full bg-gradient-to-r from-canope-slate to-canope-teal text-white font-medium py-3 px-6 rounded-lg hover:from-canope-teal hover:to-canope-slate transition-all flex items-center justify-center gap-2">

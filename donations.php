@@ -198,14 +198,19 @@ function buildFilterUrl($filterType, $valueToRemove) {
 include 'includes/header.php';
 ?>
 
-
-<div class="max-w-6xl mx-auto px-5 py-8">
-    <div class="flex items-center justify-center w-fit h-fit [--book-color:#f1775b] [--book-cover-color:#506c86]">
-        <div class="relative flex justify-end items-start w-[100px] h-[8px] bg-[var(--book-color)] border-b-2 border-[var(--book-cover-color)]">
-            <div class="w-1/2 h-[1px] bg-[var(--book-color)] origin-left animate-page1"></div>
-            <div class="absolute w-1/2 h-[1px] bg-[var(--book-color)] origin-left animate-page2"></div>
+<div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <svg stroke="#FFFFFF" class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
+						<path d="M8.627,7.885C8.499,8.388,7.873,8.101,8.13,8.177L4.12,7.143c-0.218-0.057-0.351-0.28-0.293-0.498c0.057-0.218,0.279-0.351,0.497-0.294l4.011,1.037C8.552,7.444,8.685,7.667,8.627,7.885 M8.334,10.123L4.323,9.086C4.105,9.031,3.883,9.162,3.826,9.38C3.769,9.598,3.901,9.82,4.12,9.877l4.01,1.037c-0.262-0.062,0.373,0.192,0.497-0.294C8.685,10.401,8.552,10.18,8.334,10.123 M7.131,12.507L4.323,11.78c-0.218-0.057-0.44,0.076-0.497,0.295c-0.057,0.218,0.075,0.439,0.293,0.495l2.809,0.726c-0.265-0.062,0.37,0.193,0.495-0.293C7.48,12.784,7.35,12.562,7.131,12.507M18.159,3.677v10.701c0,0.186-0.126,0.348-0.306,0.393l-7.755,1.948c-0.07,0.016-0.134,0.016-0.204,0l-7.748-1.948c-0.179-0.045-0.306-0.207-0.306-0.393V3.677c0-0.267,0.249-0.461,0.509-0.396l7.646,1.921l7.654-1.921C17.91,3.216,18.159,3.41,18.159,3.677 M9.589,5.939L2.656,4.203v9.857l6.933,1.737V5.939z M17.344,4.203l-6.939,1.736v9.859l6.939-1.737V4.203z M16.168,6.645c-0.058-0.218-0.279-0.351-0.498-0.294l-4.011,1.037c-0.218,0.057-0.351,0.28-0.293,0.498c0.128,0.503,0.755,0.216,0.498,0.292l4.009-1.034C16.092,7.085,16.225,6.863,16.168,6.645 M16.168,9.38c-0.058-0.218-0.279-0.349-0.498-0.294l-4.011,1.036c-0.218,0.057-0.351,0.279-0.293,0.498c0.124,0.486,0.759,0.232,0.498,0.294l4.009-1.037C16.092,9.82,16.225,9.598,16.168,9.38 M14.963,12.385c-0.055-0.219-0.276-0.35-0.495-0.294l-2.809,0.726c-0.218,0.056-0.351,0.279-0.293,0.496c0.127,0.506,0.755,0.218,0.498,0.293l2.807-0.723C14.89,12.825,15.021,12.603,14.963,12.385"></path>
+					</svg>
+            </div>
+            <h1 class="text-3xl font-semibold text-white">Notre catalogue</h1>
         </div>
+        <p class="text-white/80 text-sm ml-13">Bienvenue sur notre liste de dotations </p>
     </div>
+</div>
 
     <style>
         @keyframes page1 {
@@ -223,8 +228,6 @@ include 'includes/header.php';
             animation: page2 0.8s ease-out infinite;
         }
     </style>
-
-    <h1 class="text-4xl font-normal mb-8 text-gray-900">Liste des dotations</h1>
     
     <?php if (!empty($searchTerm)): ?>
         <div class="mb-4 text-sm text-gray-600">
@@ -695,21 +698,7 @@ include 'includes/header.php';
                                     <path stroke-width="1.5" d="M8 12H16"></path>
                                     <path stroke-width="1.5" d="M12 16V8"></path>
                                 </svg>
-                            </button>
-                            <button
-                                onclick="this.classList.toggle('active');
-                                        addToFav(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>');"
-                                type="button"
-                                class="group transition-transform duration-200 active:scale-125"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    class="w-8 h-8 fill-gray-300 transition-all duration-300 group-[.active]:fill-red-500 group-[.active]:scale-125"
-                                >
-                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5 -1.935 0-3.597 1.126-4.312 2.733 -.715-1.607-2.377-2.733-4.313-2.733 C5.1 3.75 3 5.765 3 8.25 c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                </svg>
-                            </button>       
+                            </button>      
                         </div>
                     </div>
                 </div>
