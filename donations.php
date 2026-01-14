@@ -237,6 +237,43 @@ include 'includes/header.php';
     
     <!-- Filter Bar -->
     <style>
+        .filter-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(59, 85, 109, 0.08);
+        }
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(59, 85, 109, 0.1);
+        }
+        .filter-header-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3B556D 0%, #5a7a9a 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(59, 85, 109, 0.25);
+        }
+        .filter-header-icon svg {
+            width: 18px;
+            height: 18px;
+            color: white;
+        }
+        .filter-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3B556D;
+            margin: 0;
+        }
         .filter-dropdown {
             position: relative;
             display: inline-block;
@@ -245,134 +282,210 @@ include 'includes/header.php';
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
-            padding: 10px 16px;
-            min-width: 160px;
+            gap: 10px;
+            padding: 12px 18px;
+            min-width: 170px;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border: 2px solid transparent;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
-            color: #6b7280;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
         }
         .filter-dropdown-btn:hover {
-            border-color: #9ca3af;
+            background: white;
+            border-color: rgba(59, 85, 109, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 85, 109, 0.12);
+            transform: translateY(-1px);
         }
         .filter-dropdown-btn.active {
+            background: linear-gradient(135deg, rgba(59, 85, 109, 0.08) 0%, rgba(90, 122, 154, 0.08) 100%);
             border-color: #3B556D;
             color: #3B556D;
         }
         .filter-dropdown-btn svg {
             width: 16px;
             height: 16px;
-            transition: transform 0.2s ease;
+            transition: transform 0.25s ease;
+            opacity: 0.6;
+        }
+        .filter-dropdown.open .filter-dropdown-btn {
+            border-color: #3B556D;
+            box-shadow: 0 4px 16px rgba(59, 85, 109, 0.15);
         }
         .filter-dropdown.open .filter-dropdown-btn svg {
             transform: rotate(180deg);
+            opacity: 1;
         }
         .filter-dropdown-menu {
             position: absolute;
-            top: calc(100% + 4px);
+            top: calc(100% + 8px);
             left: 0;
-            min-width: 200px;
+            min-width: 220px;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(59, 85, 109, 0.1);
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
             z-index: 50;
             display: none;
-            padding: 8px 0;
+            padding: 8px;
+            animation: dropdownFadeIn 0.2s ease;
+        }
+        @keyframes dropdownFadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .filter-dropdown.open .filter-dropdown-menu {
             display: block;
         }
         .filter-menu-item {
-            padding: 10px 16px;
+            padding: 12px 16px;
             cursor: pointer;
             font-size: 14px;
-            color: #374151;
-            transition: background 0.15s ease;
+            color: #475569;
+            transition: all 0.15s ease;
+            border-radius: 8px;
+            margin-bottom: 2px;
+        }
+        .filter-menu-item:last-child {
+            margin-bottom: 0;
         }
         .filter-menu-item:hover {
-            background: #f3f4f6;
+            background: linear-gradient(135deg, rgba(59, 85, 109, 0.06) 0%, rgba(90, 122, 154, 0.06) 100%);
+            color: #3B556D;
         }
         .filter-menu-item.selected {
-            background: #e0f2f1;
+            background: linear-gradient(135deg, rgba(59, 85, 109, 0.12) 0%, rgba(90, 122, 154, 0.12) 100%);
             color: #3B556D;
-            font-weight: 500;
+            font-weight: 600;
+        }
+        .filter-menu-item.selected::before {
+            content: '✓';
+            margin-right: 8px;
+            font-weight: bold;
         }
         .filter-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(59, 85, 109, 0.1);
         }
         .filter-tag {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: #e0f2f1;
+            gap: 8px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(59, 85, 109, 0.1) 0%, rgba(90, 122, 154, 0.1) 100%);
             color: #3B556D;
-            border-radius: 20px;
+            border-radius: 24px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(59, 85, 109, 0.15);
+        }
+        .filter-tag:hover {
+            background: linear-gradient(135deg, rgba(59, 85, 109, 0.15) 0%, rgba(90, 122, 154, 0.15) 100%);
         }
         .filter-tag-remove {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: rgba(59, 85, 109, 0.2);
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: all 0.2s ease;
         }
         .filter-tag-remove:hover {
-            background: rgba(59, 85, 109, 0.4);
+            background: #e74c3c;
+        }
+        .filter-tag-remove:hover svg {
+            color: white;
         }
         .filter-tag-remove svg {
             width: 10px;
             height: 10px;
+            color: #3B556D;
         }
         .filter-search-box {
             display: flex;
             align-items: center;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 8px 12px;
-            gap: 8px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 16px;
+            gap: 12px;
             flex: 1;
-            max-width: 300px;
+            max-width: 320px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+            transition: all 0.25s ease;
+        }
+        .filter-search-box:focus-within {
+            border-color: #3B556D;
+            box-shadow: 0 4px 16px rgba(59, 85, 109, 0.15);
         }
         .filter-search-box input {
             border: none;
             outline: none;
             flex: 1;
             font-size: 14px;
+            font-weight: 500;
             color: #374151;
+            background: transparent;
         }
         .filter-search-box input::placeholder {
-            color: #9ca3af;
+            color: #94a3b8;
+            font-weight: 400;
         }
         .filter-search-box svg {
-            width: 18px;
-            height: 18px;
-            color: #9ca3af;
+            width: 20px;
+            height: 20px;
+            color: #94a3b8;
+            transition: color 0.2s ease;
+        }
+        .filter-search-box:focus-within svg {
+            color: #3B556D;
+        }
+        .clear-filters-btn {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: transparent;
+        }
+        .clear-filters-btn:hover {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.08);
         }
     </style>
 
     <form id="filterForm" method="GET" action="donations.php">
-        <div class="flex flex-wrap items-center gap-3 mb-6">
+    <div class="filter-container">
+        <div class="filter-header">
+            <div class="filter-header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                </svg>
+            </div>
+            <h3>Filtrer les ressources</h3>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-4 mb-5">
             <!-- Search Box -->
             <div class="filter-search-box">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                <input type="text" name="search" placeholder="Recherche" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                <input type="text" name="search" placeholder="Rechercher un produit..." value="<?php echo htmlspecialchars($searchTerm); ?>">
             </div>
         </div>
 
@@ -471,8 +584,8 @@ include 'includes/header.php';
 
             <!-- Clear All Filters -->
             <?php if ($hasActiveFilters): ?>
-                <a href="donations.php" class="text-sm text-gray-500 hover:text-red-500 transition-colors ml-2">
-                    Effacer tout
+                <a href="donations.php" class="clear-filters-btn">
+                    ✕ Effacer tout
                 </a>
             <?php endif; ?>
         </div>
@@ -567,6 +680,7 @@ include 'includes/header.php';
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
+    </div>
     </form>
 
     <script>
