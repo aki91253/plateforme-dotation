@@ -1,25 +1,136 @@
 <?php
 require_once 'includes/db.php';
-//categories
-$selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+
+// Get selected filter values from URL
+$selectedCategories = [];
+if (isset($_GET['niveau'])) {
+    if (is_array($_GET['niveau'])) {
+        $selectedCategories = array_map('intval', $_GET['niveau']);
+    } else {
+        $selectedCategories = array_map('intval', explode(',', $_GET['niveau']));
+    }
+}
+
+$selectedResourceTypes = [];
+if (isset($_GET['resource_type'])) {
+    if (is_array($_GET['resource_type'])) {
+        $selectedResourceTypes = array_map('intval', $_GET['resource_type']);
+    } else {
+        $selectedResourceTypes = array_map('intval', explode(',', $_GET['resource_type']));
+    }
+}
+
+$selectedLanguages = [];
+if (isset($_GET['langue'])) {
+    if (is_array($_GET['langue'])) {
+        $selectedLanguages = array_map('intval', $_GET['langue']);
+    } else {
+        $selectedLanguages = array_map('intval', explode(',', $_GET['langue']));
+    }
+}
+
+$selectedDisciplines = [];
+if (isset($_GET['discipline'])) {
+    if (is_array($_GET['discipline'])) {
+        $selectedDisciplines = array_map('intval', $_GET['discipline']);
+    } else {
+        $selectedDisciplines = array_map('intval', explode(',', $_GET['discipline']));
+    }
+}
+
+$selectedCollections = [];
+if (isset($_GET['collection'])) {
+    if (is_array($_GET['collection'])) {
+        $selectedCollections = $_GET['collection'];
+    } else {
+        $selectedCollections = explode(',', $_GET['collection']);
+    }
+}
+
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
+// Fetch filter options from database
 $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
 $categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
 
-$baseQuery = "SELECT p.*, c.name as category_name, pi.url as image_url, pi.alt_text as image_alt
+$resourceTypesQuery = $pdo->query("SELECT * FROM type_ressource ORDER BY libelle");
+$resourceTypes = $resourceTypesQuery->fetchAll(PDO::FETCH_ASSOC);
+
+$languagesQuery = $pdo->query("SELECT * FROM langue_product ORDER BY langue");
+$languages = $languagesQuery->fetchAll(PDO::FETCH_ASSOC);
+
+$disciplinesQuery = $pdo->query("SELECT * FROM discipline ORDER BY libelle");
+$disciplines = $disciplinesQuery->fetchAll(PDO::FETCH_ASSOC);
+
+// Get distinct collections from products (filtering out empty ones)
+$collectionsQuery = $pdo->query("SELECT DISTINCT collection FROM product WHERE collection IS NOT NULL AND collection != '' ORDER BY collection");
+$collections = $collectionsQuery->fetchAll(PDO::FETCH_COLUMN);
+
+// Build product query with filters
+$baseQuery = "SELECT p.*, c.name as category_name, rt.libelle as resource_type_name, 
+              l.langue as language_name, d.libelle as discipline_name,
+              pi.url as image_url, pi.alt_text as image_alt
               FROM product p 
               LEFT JOIN category c ON p.category_id = c.id 
+              LEFT JOIN type_ressource rt ON p.id_ressource = rt.id
+              LEFT JOIN langue_product l ON p.langue_id = l.id
+              LEFT JOIN discipline d ON p.discipline_id = d.id
               LEFT JOIN product_image pi ON p.id = pi.product_id
               WHERE p.is_active = 1 AND p.is_published = 1";
 
 $params = [];
 
-if ($selectedCategory > 0) {
-    $baseQuery .= " AND p.category_id = :category";
-    $params['category'] = $selectedCategory;
+// Apply category/niveau filter
+if (!empty($selectedCategories)) {
+    $placeholders = [];
+    foreach ($selectedCategories as $i => $catId) {
+        $placeholders[] = ":cat$i";
+        $params["cat$i"] = $catId;
+    }
+    $baseQuery .= " AND p.category_id IN (" . implode(',', $placeholders) . ")";
 }
 
+// Apply resource type filter
+if (!empty($selectedResourceTypes)) {
+    $placeholders = [];
+    foreach ($selectedResourceTypes as $i => $rtId) {
+        $placeholders[] = ":rt$i";
+        $params["rt$i"] = $rtId;
+    }
+    $baseQuery .= " AND p.id_ressource IN (" . implode(',', $placeholders) . ")";
+}
+
+// Apply language filter
+if (!empty($selectedLanguages)) {
+    $placeholders = [];
+    foreach ($selectedLanguages as $i => $langId) {
+        $placeholders[] = ":lang$i";
+        $params["lang$i"] = $langId;
+    }
+    $baseQuery .= " AND p.langue_id IN (" . implode(',', $placeholders) . ")";
+}
+
+// Apply discipline filter
+if (!empty($selectedDisciplines)) {
+    $placeholders = [];
+    foreach ($selectedDisciplines as $i => $discId) {
+        $placeholders[] = ":disc$i";
+        $params["disc$i"] = $discId;
+    }
+    $baseQuery .= " AND p.discipline_id IN (" . implode(',', $placeholders) . ")";
+}
+
+// Apply collection filter
+if (!empty($selectedCollections)) {
+    $placeholders = [];
+    foreach ($selectedCollections as $i => $coll) {
+        $placeholders[] = ":coll$i";
+        $params["coll$i"] = $coll;
+    }
+    $baseQuery .= " AND p.collection IN (" . implode(',', $placeholders) . ")";
+}
+
+// Apply search filter
 if (!empty($searchTerm)) {
     $baseQuery .= " AND (p.name LIKE :search OR p.description LIKE :search OR p.reference LIKE :search)";
     $params['search'] = '%' . $searchTerm . '%';
@@ -31,8 +142,13 @@ $productsQuery = $pdo->prepare($baseQuery);
 $productsQuery->execute($params);
 $products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);
 
+// Check if any filters are active
+$hasActiveFilters = !empty($selectedCategories) || !empty($selectedResourceTypes) || 
+                    !empty($selectedLanguages) || !empty($selectedDisciplines) || !empty($selectedCollections) || !empty($searchTerm);
+
 include 'includes/header.php';
 ?>
+
 
 <div class="max-w-6xl mx-auto px-5 py-8">
     <div class="flex items-center justify-center w-fit h-fit [--book-color:#f1775b] [--book-cover-color:#506c86]">
@@ -64,47 +180,326 @@ include 'includes/header.php';
     <?php if (!empty($searchTerm)): ?>
         <div class="mb-4 text-sm text-gray-600">
             Résultats pour: <strong><?php echo htmlspecialchars($searchTerm); ?></strong>
-            <a href="donations.php<?php echo $selectedCategory > 0 ? '?category=' . $selectedCategory : ''; ?>" class="ml-2 text-canope-green hover:underline">Effacer la recherche</a>
         </div>
     <?php endif; ?>
     
-    <div class="flex flex-wrap gap-3 mb-8">
-        <a href="donations.php<?php echo !empty($searchTerm) ? '?search=' . urlencode($searchTerm) : ''; ?>" 
-           class="px-4 py-2 rounded-full text-sm font-medium transition-all <?php echo $selectedCategory == 0 ? 'bg-canope-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'; ?>">
-            Tout
-        </a>
-        <?php foreach ($categories as $category): ?>
-            <a href="donations.php?category=<?php echo $category['id']; ?><?php echo !empty($searchTerm) ? '&search=' . urlencode($searchTerm) : ''; ?>" 
-               class="px-4 py-2 rounded-full text-sm font-medium transition-all <?php echo $selectedCategory == $category['id'] ? 'bg-canope-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'; ?>">
-                <?php echo htmlspecialchars($category['name']); ?>
-            </a>
-        <?php endforeach; ?>
-        
-        <form method="GET" action="donations.php" class="form relative">
-            <button type="submit" class="absolute left-2 -translate-y-1/2 top-1/2 p-1">
-                <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search" class="w-5 h-5 text-gray-700">
-                    <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+    <!-- Filter Bar -->
+    <style>
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .filter-dropdown-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 16px;
+            min-width: 160px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+        .filter-dropdown-btn:hover {
+            border-color: #9ca3af;
+        }
+        .filter-dropdown-btn.active {
+            border-color: #3B556D;
+            color: #3B556D;
+        }
+        .filter-dropdown-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+        .filter-dropdown.open .filter-dropdown-btn svg {
+            transform: rotate(180deg);
+        }
+        .filter-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            min-width: 200px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+            display: none;
+            padding: 8px 0;
+        }
+        .filter-dropdown.open .filter-dropdown-menu {
+            display: block;
+        }
+        .filter-menu-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #374151;
+            transition: background 0.15s ease;
+        }
+        .filter-menu-item:hover {
+            background: #f3f4f6;
+        }
+        .filter-menu-item.selected {
+            background: #e0f2f1;
+            color: #3B556D;
+            font-weight: 500;
+        }
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #e0f2f1;
+            color: #3B556D;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .filter-tag-remove {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(59, 85, 109, 0.2);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .filter-tag-remove:hover {
+            background: rgba(59, 85, 109, 0.4);
+        }
+        .filter-tag-remove svg {
+            width: 10px;
+            height: 10px;
+        }
+        .filter-search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px 12px;
+            gap: 8px;
+            flex: 1;
+            max-width: 300px;
+        }
+        .filter-search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: #374151;
+        }
+        .filter-search-box input::placeholder {
+            color: #9ca3af;
+        }
+        .filter-search-box svg {
+            width: 18px;
+            height: 18px;
+            color: #9ca3af;
+        }
+    </style>
+
+    <form id="filterForm" method="GET" action="donations.php">
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+            <!-- Search Box -->
+            <div class="filter-search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-            </button>
-            <input 
-                name="search" 
-                value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>" 
-                class="input rounded-full px-8 py-1 border-2 border-transparent focus:outline-none focus:border-blue-500 placeholder-gray-400 transition-all duration-300 shadow-md w-48 placeholder:text-[11px]" 
-                placeholder="Rechercher un produit..." 
-                type="text" 
-            />
-            <?php if (!empty($_GET['category'])): ?>
-                <input type="hidden" name="category" value="<?php echo (int)$_GET['category']; ?>" />
-            <?php endif; ?>
-            <?php if (!empty($_GET['search'])): ?>
-                <a href="donations.php<?php echo !empty($_GET['category']) ? '?category=' . (int)$_GET['category'] : ''; ?>" class="absolute right-3 -translate-y-1/2 top-1/2 p-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                <input type="text" name="search" placeholder="Recherche" value="<?php echo htmlspecialchars($searchTerm); ?>">
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 mb-8">
+            <!-- Type de Ressource Dropdown -->
+            <div class="filter-dropdown" data-dropdown="resource_type">
+                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedResourceTypes) ? 'active' : ''; ?>">
+                    <span>Type de Ressource</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
+                </button>
+                <div class="filter-dropdown-menu">
+                    <?php foreach ($resourceTypes as $rt): ?>
+                        <div class="filter-checkbox-item">
+                            <input type="checkbox" 
+                                   name="resource_type[]" 
+                                   value="<?php echo $rt['id']; ?>" 
+                                   id="rt_<?php echo $rt['id']; ?>"
+                                   <?php echo in_array($rt['id'], $selectedResourceTypes) ? 'checked' : ''; ?>
+                                   onchange="document.getElementById('filterForm').submit();">
+                            <label for="rt_<?php echo $rt['id']; ?>"><?php echo htmlspecialchars($rt['libelle']); ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Langue Dropdown -->
+            <div class="filter-dropdown" data-dropdown="langue">
+                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedLanguages) ? 'active' : ''; ?>">
+                    <span>Langue</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown-menu">
+                    <?php foreach ($languages as $lang): ?>
+                        <div class="filter-checkbox-item">
+                            <input type="checkbox" 
+                                   name="langue[]" 
+                                   value="<?php echo $lang['id']; ?>" 
+                                   id="lang_<?php echo $lang['id']; ?>"
+                                   <?php echo in_array($lang['id'], $selectedLanguages) ? 'checked' : ''; ?>
+                                   onchange="document.getElementById('filterForm').submit();">
+                            <label for="lang_<?php echo $lang['id']; ?>"><?php echo htmlspecialchars($lang['langue']); ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Discipline Dropdown -->
+            <div class="filter-dropdown" data-dropdown="discipline">
+                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedDisciplines) ? 'active' : ''; ?>">
+                    <span>Discipline</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown-menu">
+                    <?php foreach ($disciplines as $disc): ?>
+                        <div class="filter-checkbox-item">
+                            <input type="checkbox" 
+                                   name="discipline[]" 
+                                   value="<?php echo $disc['id']; ?>" 
+                                   id="disc_<?php echo $disc['id']; ?>"
+                                   <?php echo in_array($disc['id'], $selectedDisciplines) ? 'checked' : ''; ?>
+                                   onchange="document.getElementById('filterForm').submit();">
+                            <label for="disc_<?php echo $disc['id']; ?>"><?php echo htmlspecialchars($disc['libelle']); ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Collection Dropdown -->
+            <?php if (!empty($collections)): ?>
+            <div class="filter-dropdown" data-dropdown="collection">
+                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedCollections) ? 'active' : ''; ?>">
+                    <span>Collection</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown-menu">
+                    <?php foreach ($collections as $coll): ?>
+                        <div class="filter-checkbox-item">
+                            <input type="checkbox" 
+                                   name="collection[]" 
+                                   value="<?php echo htmlspecialchars($coll); ?>" 
+                                   id="coll_<?php echo md5($coll); ?>"
+                                   <?php echo in_array($coll, $selectedCollections) ? 'checked' : ''; ?>
+                                   onchange="document.getElementById('filterForm').submit();">
+                            <label for="coll_<?php echo md5($coll); ?>"><?php echo htmlspecialchars($coll); ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Niveau Dropdown -->
+            <div class="filter-dropdown" data-dropdown="niveau">
+                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedCategories) ? 'active' : ''; ?>">
+                    <span>Niveau</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown-menu">
+                    <?php foreach ($categories as $category): ?>
+                        <div class="filter-checkbox-item">
+                            <input type="checkbox" 
+                                   name="niveau[]" 
+                                   value="<?php echo $category['id']; ?>" 
+                                   id="niveau_<?php echo $category['id']; ?>"
+                                   <?php echo in_array($category['id'], $selectedCategories) ? 'checked' : ''; ?>
+                                   onchange="document.getElementById('filterForm').submit();">
+                            <label for="niveau_<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Clear Filters -->
+            <?php if ($hasActiveFilters): ?>
+                <a href="donations.php" class="text-sm text-gray-500 hover:text-red-500 transition-colors ml-2">
+                    Effacer les filtres
                 </a>
             <?php endif; ?>
-        </form>
-    </div>
+        </div>
+
+        <!-- Hidden fields to preserve filter selections during search -->
+        <?php foreach ($selectedResourceTypes as $rtId): ?>
+            <input type="hidden" name="resource_type_hidden[]" value="<?php echo $rtId; ?>">
+        <?php endforeach; ?>
+        <?php foreach ($selectedLanguages as $langId): ?>
+            <input type="hidden" name="langue_hidden[]" value="<?php echo $langId; ?>">
+        <?php endforeach; ?>
+        <?php foreach ($selectedDisciplines as $discId): ?>
+            <input type="hidden" name="discipline_hidden[]" value="<?php echo $discId; ?>">
+        <?php endforeach; ?>
+        <?php foreach ($selectedCollections as $coll): ?>
+            <input type="hidden" name="collection_hidden[]" value="<?php echo htmlspecialchars($coll); ?>">
+        <?php endforeach; ?>
+        <?php foreach ($selectedCategories as $catId): ?>
+            <input type="hidden" name="niveau_hidden[]" value="<?php echo $catId; ?>">
+        <?php endforeach; ?>
+    </form>
+
+    <script>
+        // Dropdown toggle functionality
+        document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+            const btn = dropdown.querySelector('.filter-dropdown-btn');
+            
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Close all other dropdowns
+                document.querySelectorAll('.filter-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
+                // Toggle current dropdown
+                dropdown.classList.toggle('open');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.filter-dropdown')) {
+                document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        // Handle search on Enter key
+        document.querySelector('.filter-search-box input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('filterForm').submit();
+            }
+        });
+    </script>
+
 
     <?php if (count($products) > 0): ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -123,7 +518,7 @@ include 'includes/header.php';
                     <div class="p-5">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-semibold text-gray-900 text-lg"><?php echo htmlspecialchars($product['name']); ?></h3>
-                            <span class="text-xs bg-canope-light text-canope-green px-2 py-1 rounded-full">
+                            <span class="text-xs bg-canope-light text-canope-dark px-2 py-1 rounded-full">
                                 <?php echo htmlspecialchars($product['category_name'] ?? 'Non classé'); ?>
                             </span>
                         </div>
@@ -135,7 +530,7 @@ include 'includes/header.php';
                         <?php endif; ?>
                         
                         <div class="flex justify-between items-center pt-3 border-t border-gray-100">
-                            <span class="text-canope-green font-bold">
+                            <span class="text-canope-dark font-bold">
                                 <!-- From Uiverse.io by M4rio1 --> 
                                  <a href="details.php?id=<?php echo $product['id']; ?>">
                                 <button
@@ -200,7 +595,7 @@ include 'includes/header.php';
             <p class="text-gray-500 text-lg">
                 <?php echo !empty($searchTerm) ? "Aucun produit trouvé pour \"" . htmlspecialchars($searchTerm) . "\"." : "Aucune dotation trouvée dans cette catégorie."; ?>
             </p>
-            <a href="donations.php" class="text-canope-green hover:underline mt-2 inline-block">← Voir toutes les dotations</a>
+            <a href="donations.php" class="text-canope-dark hover:underline mt-2 inline-block">← Voir toutes les dotations</a>
         </div>
     <?php endif; ?>
 </div>
