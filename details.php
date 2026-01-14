@@ -176,10 +176,10 @@ include 'includes/header.php';
               </div>
             </div>
           <!-- CTA Button -->
-          <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
-          class="w-full bg-gradient-to-r from-canope-slate to-canope-teal text-white font-medium py-3 px-6 rounded-lg hover:from-canope-teal hover:to-canope-slate transition-all flex items-center justify-center gap-2">
-            🛒 Demander cette dotation
-          </button>
+            <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
+                class=" w-full bg-gradient-to-r from-canope-slate to-canope-teal hover:from-canope-dark hover:to-canope-gray text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition-all duration-500 ease-in-out hover:scale-110  hover:animate-pulse active:animate-bounce">
+                    🛒 Demander cette dotation
+            </button>
         </div>
       </div>
     </main>
