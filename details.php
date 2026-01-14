@@ -34,7 +34,7 @@ include 'includes/header.php';
 ?>
 
 <!-- section header -->
- 
+
 <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
     <div class="max-w-6xl mx-auto">
         <div class="flex items-center gap-3 mb-2">
@@ -51,33 +51,14 @@ include 'includes/header.php';
     <!-- From Uiverse.io by Rahulcheryala --> 
      <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-1 px-5">
      <a href="./donations.php">
-        <button
-            type="button"
-            class="bg-canope-light text-center w-40 rounded-2xl h-10 relative text-black text-xl font-semibold border-4 border-white group"
-            >
-            <div
-                class="bg-canope-gray rounded-xl h-8 w-1/4 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500"
-            >
-                <svg
-                    width="25px"
-                    height="25px"
-                    viewBox="0 0 1024 1024"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        fill="#ffffffff"
-                        d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
-                    ></path>
-                    <path
-                        fill="#ffffffff"
-                        d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
-                    ></path>
-                </svg>
-            </div>
-        <p class="translate-x-4"></p>
+        <!-- From Uiverse.io by catraco --> 
+        <button class="cursor-pointer duration-200 hover:scale-125 active:scale-100" title="Go Back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" class="stroke-white">
+                <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M11 6L5 12M5 12L11 18M5 12H19"></path>
+            </svg>
         </button>
         </a>
-</div>
+        </div>
     </div>
 </div>
 
