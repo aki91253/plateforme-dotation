@@ -11,7 +11,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- About Canopé Section -->
+<!-- Section sur le réseau Canopé -->
 <div class="max-w-6xl mx-auto px-5 py-16">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
@@ -59,7 +59,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Platform Section -->
+<!-- Section sur la plateforme -->
 <div class="bg-gray-50 py-16">
     <div class="max-w-6xl mx-auto px-5">
         <div class="text-center mb-12">
@@ -69,7 +69,7 @@ include 'includes/header.php';
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Feature 1 -->
+            <!-- Fonctionnalité 1 -->
             <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
                 <div class="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -80,7 +80,7 @@ include 'includes/header.php';
                 <p class="text-gray-600">Accédez à un large choix de ressources pédagogiques : albums, livres, guides, affiches et bien plus encore.</p>
             </div>
             
-            <!-- Feature 2 -->
+            <!-- Fonctionnalité 2 -->
             <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
                 <div class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -91,7 +91,7 @@ include 'includes/header.php';
                 <p class="text-gray-600">Faites vos demandes en quelques clics et suivez leur avancement grâce à un système de suivi transparent.</p>
             </div>
             
-            <!-- Feature 3 -->
+            <!-- Fonctionnalité 3 -->
             <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
                 <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -105,7 +105,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- How it works Section -->
+<!-- Section sur le fonctionnement -->
 <div class="max-w-6xl mx-auto px-5 py-16">
     <div class="text-center mb-12">
         <span class="inline-block px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-4">Comment ça marche ?</span>
@@ -114,49 +114,49 @@ include 'includes/header.php';
     </div>
     
     <div class="flex flex-col md:flex-row items-start justify-center gap-4 md:gap-0">
-        <!-- Step 1 -->
+        <!-- Étape 1 -->
         <div class="text-center flex-1 max-w-[200px]">
             <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto">1</div>
             <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-4">Parcourez</h3>
             <p class="text-gray-600 text-sm">Explorez notre catalogue de ressources pédagogiques.</p>
         </div>
         
-        <!-- Arrow 1 -->
+        <!-- Flèche 1 -->
         <div class="hidden md:flex items-center justify-center shrink-0 h-16">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
         </div>
         
-        <!-- Step 2 -->
+        <!-- Étape 2 -->
         <div class="text-center flex-1 max-w-[200px]">
             <div class="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto">2</div>
             <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-4">Sélectionnez</h3>
             <p class="text-gray-600 text-sm">Ajoutez les ressources à votre sélection.</p>
         </div>
         
-        <!-- Arrow 2 -->
+        <!-- Flèche 2 -->
         <div class="hidden md:flex items-center justify-center shrink-0 h-16">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
         </div>
         
-        <!-- Step 3 -->
+        <!-- Étape 3 -->
         <div class="text-center flex-1 max-w-[200px]">
             <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto">3</div>
             <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-4">Demandez</h3>
             <p class="text-gray-600 text-sm">Remplissez le formulaire et validez.</p>
         </div>
         
-        <!-- Arrow 3 -->
+        <!-- Flèche 3 -->
         <div class="hidden md:flex items-center justify-center shrink-0 h-16">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
         </div>
         
-        <!-- Step 4 -->
+        <!-- Étape 4 -->
         <div class="text-center flex-1 max-w-[200px]">
             <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto">4</div>
             <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-4">Recevez</h3>
@@ -165,7 +165,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Stats Section -->
+<!-- Section sur les statistiques -->
 <div class="bg-gradient-to-r from-canope-dark to-canope-gray py-16">
     <div class="max-w-6xl mx-auto px-5">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -189,7 +189,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- CTA Section -->
+<!-- Section CTA -->
 <div class="max-w-4xl mx-auto px-5 py-16">
     <div class="rounded-2xl border-2 border-gray-100 p-8 md:p-12 text-center shadow-lg bg-gradient-to-br from-canope-dark to-canope-gray">
         <h2 class="text-2xl md:text-3xl font-semibold text-white mb-4">Prêt à découvrir nos ressources ?</h2>

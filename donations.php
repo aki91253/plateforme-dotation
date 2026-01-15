@@ -758,15 +758,11 @@ include 'includes/header.php';
                         <?php endif; ?>
                     </div>
                     
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-semibold text-gray-900 text-lg"><?php echo htmlspecialchars($product['name']); ?></h3>
-                            <span class="text-xs bg-canope-light text-canope-dark px-2 py-1 rounded-full">
-                                <?php echo htmlspecialchars($product['category_name'] ?? 'Non classé'); ?>
-                            </span>
-                        </div>
-                        
-                        <p class="text-sm text-gray-500 mb-3">Réf: <?php echo htmlspecialchars($product['reference']); ?></p>
+                    <div class="p-5 text-center">
+                        <h3 class="font-semibold text-gray-900 text-lg mb-2"><?php echo htmlspecialchars($product['name']); ?></h3>
+                        <span class="inline-block text-xs bg-canope-light text-canope-dark px-2 py-1 rounded-full">
+                            <?php echo htmlspecialchars($product['category_name'] ?? 'Non classé'); ?>
+                        </span>
                         
                         <?php if (!empty($product['description'])): ?>
                             <p class="text-gray-600 text-sm mb-4 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
