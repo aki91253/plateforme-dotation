@@ -74,10 +74,17 @@ include 'includes/header.php';
                 <span>Image non disponible</span>
               </div>
             <?php endif; ?>
-            <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
-              <span class="w-2 h-2 bg-white rounded-full"></span>
-              <?php echo $available > 0 ? 'Disponible' : 'Rupture de stock'; ?>
-            </div>
+            <?php if ($available > 0){
+                echo'<div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2 whitespace-nowrap">
+                      <span class="w-2 h-2 bg-white rounded-full"></span>
+                      Disponible
+                  </div>';
+              } else {
+                echo'<div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2 whitespace-nowrap">
+                      <span class="w-2 h-2 bg-white rounded-full"></span>
+                      Rupture de stock
+                  </div>';
+              }?>
           </div>
         </div>
 
