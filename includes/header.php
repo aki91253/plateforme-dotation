@@ -49,10 +49,12 @@ require_once __DIR__ . '/auth.php';
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <div id="loader" class="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
-  <div class="relative">
-      <div class="w-20 h-20 border-lime-200 border-2 rounded-full"></div>
-      <div class="w-20 h-20 border-lime-700 border-t-2 animate-spin rounded-full absolute left-0 top-0"></div>
-  </div>
+  <!-- From Uiverse.io by Javierrocadev --> 
+<div class="flex flex-row gap-2">
+  <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce"></div>
+  <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:-.3s]"></div>
+  <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:-.5s]"></div>
+</div>
 </div>
  <script>
     // Cacher le loader après le chargement complet de la page
