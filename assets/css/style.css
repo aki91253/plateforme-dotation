@@ -1,21 +1,20 @@
 /* ========================================
-   PLATEFORME SOLIDAIRE - Custom Styles
-   Background & Global Enhancements
+   PLATEFORME SOLIDAIRE - Style custom du fond d'écran du site
 ======================================== */
 
-/* Subtle background with soft gradient */
+/* fond d'écran du site avec un léger dégradé */
 body {
     background:
-        /* Soft radial gradient for depth */
+        /* léger dégradé radial pour la profondeur */
         radial-gradient(ellipse at top left, rgba(58, 107, 86, 0.03) 0%, transparent 50%),
         radial-gradient(ellipse at bottom right, rgba(74, 93, 59, 0.03) 0%, transparent 50%),
-        /* Base gradient: soft white to light gray */
+        /* dégradé de base : blanc doux à gris clair */
         linear-gradient(135deg, #ffffff 0%, #f8f9fa 25%, #f5f7f6 50%, #f8f9fa 75%, #ffffff 100%);
     background-attachment: fixed;
     min-height: 100vh;
 }
 
-/* Optional: Subtle dot pattern overlay for extra texture */
+/* Optionnel: overlay pour une texture supplémentaire */
 body::before {
     content: '';
     position: fixed;
@@ -46,13 +45,12 @@ header {
 }
 
 /* ========================================
-   Content Cards & Sections (Sommaire, etc.)
+   Contenu des cartes & Sections (Sommaire, etc.)
 ======================================== */
 
-/* Sommaire section with greenish background */
+/* Séction sommaire avec un fond vert */
 #sommaire {
     background-color: rgba(224, 232, 227, 0.6);
-    /* canope-light with opacity */
+    /* canope-light avec opacité */
     border: 1px solid rgba(58, 107, 86, 0.1);
 }
-
