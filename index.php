@@ -70,6 +70,66 @@ include 'includes/header.php';
             </div>
         </div>
     </section>
+    <!-- Section Comment ça marche -->
+
+
+    <!-- Titre et sous-titre -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-canope-light mb-4">Comment ça marche ?</h2>
+      <p class="text-white/80 text-sm ml-13">Un processus simple et transparent pour accéder aux ressources Canopé</p>
+    </div>
+
+    <!-- Grille des 4 cartes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <!-- Carte 1 : Catalogue en ligne -->
+      <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Catalogue en ligne</h3>
+        <p class="text-gray-600">Consultez notre catalogue complet de dotations pédagogiques avec disponibilité en temps réel.</p>
+      </div>
+
+      <!-- Carte 2 : Demande simplifiée -->
+      <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Demande simplifiée</h3>
+        <p class="text-gray-600">Formulaire unique pour demander plusieurs dotations, sans création de compte.</p>
+      </div>
+
+      <!-- Carte 3 : Suivi en temps réel -->
+      <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Suivi en temps réel</h3>
+        <p class="text-gray-600">Suivez l'état de votre demande grâce à un lien sécurisé envoyé par email.</p>
+      </div>
+
+      <!-- Carte 4 : Données protégées -->
+      <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Données protégées</h3>
+        <p class="text-gray-600">Vos informations sont traitées conformément au RGPD.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
 </div>
+
 
 <?php include 'includes/footer.php'; ?>
