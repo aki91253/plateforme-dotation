@@ -244,7 +244,7 @@ include 'includes/header.php';
 <script>
 
 // Affichage des éléments du panier au chargement de la page
-function displayCart() {
+function displayCart() { 
     const cart = getCart();
     const cartItemsContainer = document.getElementById('cart-items');
     const cartEmpty = document.getElementById('cart-empty');

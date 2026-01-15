@@ -3,10 +3,19 @@ require_once 'includes/db.php';
 include 'includes/header.php';
 ?>
 <!-- texte de bienvenue -->
+
+<div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-3 mb-2">
+
 <div class="max-w-5xl mx-auto px-5 py-8">
     <section class="text-center py-12">
-        <h1 class="text-6xl font-normal mb-8 leading-tight text-gray-900">Bienvenue sur votre nouvel espace de demande​ de dotations</h1>
-        
+        <span class="inline-block bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-4 py-2 rounded-full border border-white/30">
+  Réseau Canopé – Corse
+</span>
+        <h1 class="text-6xl font-normal mb-8 leading-tight text-canope-light">Dotations pédagogiques pour les établissements corses</h1>
+        <p class="text-white/80 text-sm ml-13">Accédez à notre catalogue de ressources et équipements pédagogiques.</br> Faites votre demande en ligne et suivez son traitement en temps réel. </p>
+</br>
         <!-- section des boutons -->
         <div class="flex items-center justify-center gap-4 mb-8">
             <!-- bouton 1 - gradient hover effect -->
@@ -43,7 +52,7 @@ include 'includes/header.php';
             <a href="selection.php"
                 class="group/button relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-canope-teal/10 backdrop-blur-lg px-6 py-3 text-base font-semibold text-canope-green transition-all duration-300 ease-in-out border-2 border-canope-teal/40 hover:border-canope-teal"
             >
-                <span class="text-lg">Faire une demande</span>
+                <span class="text-canope-light">Faire une demande</span>
                 <div
                     class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]"
                 >
