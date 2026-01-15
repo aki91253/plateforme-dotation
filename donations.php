@@ -772,30 +772,33 @@ include 'includes/header.php';
                             <span class="text-canope-dark font-bold">
                                 <!-- From Uiverse.io by M4rio1 --> 
                                  <a href="details.php?id=<?php echo $product['id']; ?>">
-                                <button
-            
-                                    class="relative bg-[#3B556D] text-white font-medium text-[12px] px-8 py-[0.35em] pl-5 h-[2.8em] rounded-[0.9em] flex items-center overflow-hidden cursor-pointer shadow-[inset_0_0_1.6em_-0.6em_#0B162C] group"
-                                >
-                                    <span class="mr-10">Voir détails</span>
-                                        <div
-                                            class="absolute right-[0.3em] bg-white h-[2.2em] w-[2.2em] rounded-[0.7em] flex items-center justify-center transition-all duration-300 group-hover:w-[calc(100%-0.6em)] shadow-[0.1em_0.1em_0.6em_0.2em_#0B162C] active:scale-95"
-                                        >
-                                            <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            width="24"
-                                            height="24"
-                                            class="w-[1.1em] transition-transform duration-300 text-[#7b52b9] group-hover:translate-x-[0.1em]"
-                                        >
-                                    <path fill="none" d="M0 0h24v24H0z"></path>
-                                <path
-                                    fill="currentColor"
-                                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                                    ></path>
-                                </svg>
-                            </div>
-                      
-                        </button>
+                                <!-- From Uiverse.io by Itskrish01 --> 
+<button
+  class="relative flex items-center px-6 py-1 overflow-hidden font-medium transition-all bg-canope-gray rounded-md group"
+>
+  <span
+    class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-canope-slate rounded group-hover:-mr-4 group-hover:-mt-4"
+  >
+    <span
+      class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
+    ></span>
+  </span>
+  <span
+    class="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-canope-slate rounded group-hover:-ml-4 group-hover:-mb-4"
+  >
+    <span
+      class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
+    ></span>
+  </span>
+  <span
+    class="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-canope-slate rounded-md group-hover:translate-x-0"
+  ></span>
+  <span
+    class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
+    >Voir les détails</span
+  >
+</button>
+
                         </a>
 
                             </span>
