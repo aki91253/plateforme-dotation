@@ -76,7 +76,7 @@ $baseQuery = "SELECT p.*, c.name as category_name, rt.libelle as resource_type_n
               LEFT JOIN langue_product l ON p.langue_id = l.id
               LEFT JOIN discipline d ON p.discipline_id = d.id
               LEFT JOIN product_image pi ON p.id = pi.product_id
-              WHERE p.is_active = 1 AND p.is_published = 1";
+              WHERE p.is_active = 1 AND p.is_published = 1 AND p.stock > 0";
 
 $params = [];
 
