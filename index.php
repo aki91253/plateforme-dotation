@@ -90,7 +90,7 @@ include 'includes/header.php';
           </svg>
         </div>
         <h3 class="text-xl font-semibold text-gray-900 mb-2">Catalogue en ligne</h3>
-        <p class="text-gray-600">Consultez notre catalogue complet de dotations pédagogiques avec disponibilité en temps réel.</p>
+        <p class="text-gray-600">Consultez notre catalogue complet de dotations pédagogiques.</p>
       </div>
 
       <!-- Carte 2 : Demande simplifiée -->
