@@ -20,9 +20,9 @@ try {
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $establishmentName = trim($_POST['establishment_name'] ?? '');
+    $establishmentAddress = trim($_POST['establishment_address'] ?? '');
     $establishmentPostal = trim($_POST['establishment_postal'] ?? '');
     $establishmentCity = trim($_POST['establishment_city'] ?? '');
-    $requestType = $_POST['request_type'] ?? 'RECEVOIR';
     $comment = trim($_POST['comment'] ?? '');
     $cartData = json_decode($_POST['cart_data'] ?? '[]', true);
     
@@ -45,8 +45,9 @@ try {
     $pdo->beginTransaction();
     
     // Insertion de la demande principale (utilisation du premier product_id pour la compatibilité avec l'historique)
+    // id_responsable = 1 par défaut (premier utilisateur admin)
     $firstProductId = $cartData[0]['id'] ?? 1;
-    $stmt = $pdo->prepare('INSERT INTO request (token, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, request_type, status_id, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, ?)');
+    $stmt = $pdo->prepare('INSERT INTO request (token, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, comment, status_id, id_responsable) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, 1)');
     $stmt->execute([
         $token,
         $firstProductId,
@@ -55,10 +56,9 @@ try {
         $email,
         $phone,
         $establishmentName,
-        '', // addresse vide
+        $establishmentAddress,
         $establishmentPostal,
         $establishmentCity,
-        $requestType,
         $comment
     ]);
     

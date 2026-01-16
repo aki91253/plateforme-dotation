@@ -78,7 +78,6 @@ include 'includes/header.php';
                     
                     <!-- champs cachés -->
                     <input type="hidden" name="cart_data" id="cart-data-input">
-                    <input type="hidden" name="request_type" id="request-type-input" value="RECEVOIR">
                 </form>
             </div>
             

@@ -136,7 +136,23 @@ if (!empty($searchTerm)) {
     $params['search'] = '%' . $searchTerm . '%';
 }
 
-$baseQuery .= " ORDER BY p.name";
+// Pagination settings
+$productsPerPage = 12;
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+
+// Count total products for pagination
+$countQuery = str_replace("SELECT p.*, c.name as category_name, rt.libelle as resource_type_name, 
+              l.langue as language_name, d.libelle as discipline_name,
+              pi.url as image_url, pi.alt_text as image_alt", "SELECT COUNT(DISTINCT p.id) as total", $baseQuery);
+$countStmt = $pdo->prepare($countQuery);
+$countStmt->execute($params);
+$totalProducts = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+$totalPages = ceil($totalProducts / $productsPerPage);
+
+// Calculate offset
+$offset = ($currentPage - 1) * $productsPerPage;
+
+$baseQuery .= " ORDER BY p.name LIMIT $productsPerPage OFFSET $offset";
 
 $productsQuery = $pdo->prepare($baseQuery);
 $productsQuery->execute($params);
@@ -745,50 +761,103 @@ include 'includes/header.php';
 
 
     <?php if (count($products) > 0): ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="max-w-7xl mx-auto px-8 lg:px-16 py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <?php foreach ($products as $product): ?>
-                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100">
-                    <div class="h-48 bg-gradient-to-br from-canope-light to-gray-100 flex items-center justify-center overflow-hidden">
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100 flex flex-col h-full">
+                    <div class="h-36 bg-gradient-to-br from-canope-light to-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0">
                         <?php if (!empty($product['image_url'])): ?>
                             <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
                                  alt="<?php echo htmlspecialchars($product['image_alt'] ?? $product['name']); ?>"
                                  class="w-full h-full object-cover">
                         <?php else: ?>
-                            <span class="text-4xl">📦</span>
+                            <span class="text-3xl">📦</span>
                         <?php endif; ?>
                     </div>
                     
-                    <div class="p-5 text-center">
-                        <h3 class="font-semibold text-gray-900 text-lg mb-2"><?php echo htmlspecialchars($product['name']); ?></h3>
-                        <span class="inline-block text-xs bg-canope-light text-canope-dark px-2 py-1 rounded-full">
+                    <div class="p-4 text-center flex flex-col flex-grow">
+                        <h3 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2"><?php echo htmlspecialchars($product['name']); ?></h3>
+                        <span class="inline-block text-xs bg-canope-light text-canope-dark px-2 py-0.5 rounded-full mb-2">
                             <?php echo htmlspecialchars($product['category_name'] ?? 'Non classé'); ?>
                         </span>
                         
                         <?php if (!empty($product['description'])): ?>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
+                            <p class="text-gray-600 text-xs mb-3 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
                         <?php endif; ?>
                         
-                        <div class="flex justify-between items-center pt-3 border-t border-gray-100">
-                            <span class="text-canope-dark font-bold"> 
-                                 <a href="details.php?id=<?php echo $product['id']; ?>">
-                            <!-- Bouton "Voir détails" - devient bleu au survol -->
-                            <button 
-                            class="w-full px-6 py-1.5 border-2 border-blue-900 text-blue-900 font-semibold rounded-lg hover:bg-blue-900 hover:text-white transition-all duration-300">
-                            Voir détails →
-                            </button>
-
-                        </a>
-
-                            </span>
-                            <!-- Bouton "Demander" - monte au survol, descend au clic -->
+                        <!-- Spacer to push buttons to bottom -->
+                        <div class="flex-grow"></div>
+                        
+                        <div class="flex justify-between items-center gap-2 pt-3 border-t border-gray-100 mt-auto">
+                            <a href="details.php?id=<?php echo $product['id']; ?>" class="flex-1">
+                                <button class="w-full px-3 py-1.5 border border-blue-900 text-blue-900 text-xs font-medium rounded-lg hover:bg-blue-900 hover:text-white transition-all duration-300">
+                                    Détails →
+                                </button>
+                            </a>
                             <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')"
-                            class="w-50 px-6 py-2.5 bg-blue-900 text-white font-semibold rounded-lg hover:-translate-y-1 active:translate-y-0 transition-transform duration-200 shadow-md hover:shadow-lg">
-                            Demander
-                            </button>     
+                                class="flex-1 px-3 py-1.5 bg-blue-900 text-white text-xs font-medium rounded-lg hover:-translate-y-0.5 active:translate-y-0 transition-transform duration-200 shadow-sm hover:shadow-md">
+                                Demander
+                            </button>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
+        
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+        <div class="flex justify-center items-center gap-2 mt-8 pb-4">
+            <?php
+            // Build query string for pagination links (preserve filters)
+            $queryParams = $_GET;
+            unset($queryParams['page']);
+            $queryString = http_build_query($queryParams);
+            $baseUrl = 'donations.php' . ($queryString ? '?' . $queryString . '&' : '?');
+            ?>
+            
+            <!-- Previous button -->
+            <?php if ($currentPage > 1): ?>
+                <a href="<?php echo $baseUrl; ?>page=<?php echo $currentPage - 1; ?>" 
+                   class="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors">
+                    ←
+                </a>
+            <?php endif; ?>
+            
+            <!-- Page numbers -->
+            <?php
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+            
+            if ($startPage > 1): ?>
+                <a href="<?php echo $baseUrl; ?>page=1" class="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors">1</a>
+                <?php if ($startPage > 2): ?><span class="px-2 text-gray-400">...</span><?php endif; ?>
+            <?php endif;
+            
+            for ($i = $startPage; $i <= $endPage; $i++): ?>
+                <a href="<?php echo $baseUrl; ?>page=<?php echo $i; ?>" 
+                   class="px-3 py-2 rounded-lg border transition-colors <?php echo $i === $currentPage ? 'bg-blue-900 text-white border-blue-900' : 'border-gray-300 text-gray-600 hover:bg-gray-100'; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor;
+            
+            if ($endPage < $totalPages): ?>
+                <?php if ($endPage < $totalPages - 1): ?><span class="px-2 text-gray-400">...</span><?php endif; ?>
+                <a href="<?php echo $baseUrl; ?>page=<?php echo $totalPages; ?>" class="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"><?php echo $totalPages; ?></a>
+            <?php endif; ?>
+            
+            <!-- Next button -->
+            <?php if ($currentPage < $totalPages): ?>
+                <a href="<?php echo $baseUrl; ?>page=<?php echo $currentPage + 1; ?>" 
+                   class="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors">
+                    →
+                </a>
+            <?php endif; ?>
+        </div>
+        
+        <p class="text-center text-sm text-gray-500 mb-4">
+            Page <?php echo $currentPage; ?> sur <?php echo $totalPages; ?> (<?php echo $totalProducts; ?> produits)
+        </p>
+        <?php endif; ?>
         </div>
     <?php else: ?>
         <div class="text-center py-16">
