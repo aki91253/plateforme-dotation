@@ -763,45 +763,47 @@ include 'includes/header.php';
     <?php if (count($products) > 0): ?>
         <div class="max-w-7xl mx-auto px-8 lg:px-16 py-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <?php foreach ($products as $product): ?>
-                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100 flex flex-col h-full">
-                    <div class="h-36 bg-gradient-to-br from-canope-light to-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        <?php if (!empty($product['image_url'])): ?>
-                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
-                                 alt="<?php echo htmlspecialchars($product['image_alt'] ?? $product['name']); ?>"
-                                 class="w-full h-full object-cover">
-                        <?php else: ?>
-                            <span class="text-3xl">📦</span>
-                        <?php endif; ?>
-                    </div>
-                    
-                    <div class="p-4 text-center flex flex-col flex-grow">
-                        <h3 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2"><?php echo htmlspecialchars($product['name']); ?></h3>
-                        <span class="inline-block text-xs bg-canope-light text-canope-dark px-2 py-0.5 rounded-full mb-2">
-                            <?php echo htmlspecialchars($product['category_name'] ?? 'Non classé'); ?>
-                        </span>
-                        
-                        <?php if (!empty($product['description'])): ?>
-                            <p class="text-gray-600 text-xs mb-3 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
-                        <?php endif; ?>
-                        
-                        <!-- Spacer to push buttons to bottom -->
-                        <div class="flex-grow"></div>
-                        
-                        <div class="flex justify-between items-center gap-2 pt-3 border-t border-gray-100 mt-auto">
-                            <a href="details.php?id=<?php echo $product['id']; ?>" class="flex-1">
-                                <button class="w-full px-3 py-1.5 border border-blue-900 text-blue-900 text-xs font-medium rounded-lg hover:bg-blue-900 hover:text-white transition-all duration-300">
-                                    Détails →
-                                </button>
-                            </a>
-                            <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')"
-                                class="flex-1 px-3 py-1.5 bg-blue-900 text-white text-xs font-medium rounded-lg hover:-translate-y-0.5 active:translate-y-0 transition-transform duration-200 shadow-sm hover:shadow-md">
-                                Demander
-                            </button>
-                        </div>
-                    </div>
+           <?php foreach ($products as $product): ?>
+    <?php if ($product['stock'] > 0): ?>
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100 flex flex-col h-full">
+            <div class="h-36 bg-gradient-to-br from-canope-light to-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <?php if (!empty($product['image_url'])): ?>
+                    <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
+                         alt="<?php echo htmlspecialchars($product['image_alt'] ?? $product['name']); ?>"
+                         class="w-full h-full object-cover">
+                <?php else: ?>
+                    <span class="text-3xl">📦</span>
+                <?php endif; ?>
+            </div>
+            
+            <div class="p-4 text-center flex flex-col flex-grow">
+                <h3 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2"><?php echo htmlspecialchars($product['name']); ?></h3>
+                <span class="inline-block text-xs bg-canope-light text-canope-dark px-2 py-0.5 rounded-full mb-2">
+                    <?php echo htmlspecialchars($product['category_name'] ?? 'Non classé'); ?>
+                </span>
+                
+                <?php if (!empty($product['description'])): ?>
+                    <p class="text-gray-600 text-xs mb-3 line-clamp-2"><?php echo htmlspecialchars($product['description']); ?></p>
+                <?php endif; ?>
+                
+                <!-- Spacer to push buttons to bottom -->
+                <div class="flex-grow"></div>
+                
+                <div class="flex justify-between items-center gap-2 pt-3 border-t border-gray-100 mt-auto">
+                    <a href="details.php?id=<?php echo $product['id']; ?>" class="flex-1">
+                        <button class="w-full px-3 py-1.5 border border-blue-900 text-blue-900 text-xs font-medium rounded-lg hover:bg-blue-900 hover:text-white transition-all duration-300">
+                            Détails →
+                        </button>
+                    </a>
+                    <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')"
+                        class="flex-1 px-3 py-1.5 bg-blue-900 text-white text-xs font-medium rounded-lg hover:-translate-y-0.5 active:translate-y-0 transition-transform duration-200 shadow-sm hover:shadow-md">
+                        Demander
+                    </button>
                 </div>
-            <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endforeach; ?>
         </div>
         
         <!-- Pagination -->
