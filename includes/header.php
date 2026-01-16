@@ -72,7 +72,7 @@ require_once __DIR__ . '/auth.php';
         <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
             <!-- Logo -->
             <a href="index.php" class="font-bold text-canope-dark text-xl">
-                <img src="assets/img/logo.jpg" alt="Réseau Canopé Logo" class="h-12">
+                <img src="assets/img/logo.png" alt="Réseau Canopé Logo" class="h-9">
             </a>
             
             <ul class="flex items-center gap-8 list-none m-0 p-0">

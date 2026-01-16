@@ -4,7 +4,7 @@
     <footer class="py-6 mt-auto border-t border-gray-200 text-sm text-gray-500">
         <div class="max-w-6xl mx-auto px-5 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="assets/img/logo.jpg" alt="Logo" class="h-8">
+                <img src="assets/img/logo.png" alt="Logo" class="h-7">
                 <span><strong class="text-gray-700">Réseau Canopé</strong> | <a href="policy.php" class="text-gray-500 no-underline hover:text-canope-green transition-colors">Politique de Confidentialité</a> | <a href="avis.php" class="text-gray-500 no-underline hover:text-canope-green transition-colors">Laisser un avis</a></span>
             </div>
             <div class="flex items-center gap-5">
