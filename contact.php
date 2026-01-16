@@ -3,7 +3,7 @@ require_once 'includes/db.php';
 include 'includes/header.php';
 
 // Email address to contact
-$contactEmail = "contact@reseau-canope.fr";
+$contactEmail = "dotations.da-corse@reseau-canope.fr";
 $emailSubject = "Contact depuis la plateforme de dotation";
 ?>
 
