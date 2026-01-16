@@ -11,7 +11,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
     <div class="max-w-6xl mx-auto">
         <div class="flex items-center gap-3 mb-2">
             <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                <svg stroke="#FFFFFF" class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"">
+                <svg class="w-16 h-16 mx-auto ml-1.5 -mb-2" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24">
 							<path d="M14.999,8.543c0,0.229-0.188,0.417-0.416,0.417H5.417C5.187,8.959,5,8.772,5,8.543s0.188-0.417,0.417-0.417h9.167C14.812,8.126,14.999,8.314,14.999,8.543 M12.037,10.213H5.417C5.187,10.213,5,10.4,5,10.63c0,0.229,0.188,0.416,0.417,0.416h6.621c0.229,0,0.416-0.188,0.416-0.416C12.453,10.4,12.266,10.213,12.037,10.213 M14.583,6.046H5.417C5.187,6.046,5,6.233,5,6.463c0,0.229,0.188,0.417,0.417,0.417h9.167c0.229,0,0.416-0.188,0.416-0.417C14.999,6.233,14.812,6.046,14.583,6.046 M17.916,3.542v10c0,0.229-0.188,0.417-0.417,0.417H9.373l-2.829,2.796c-0.117,0.116-0.71,0.297-0.71-0.296v-2.5H2.5c-0.229,0-0.417-0.188-0.417-0.417v-10c0-0.229,0.188-0.417,0.417-0.417h15C17.729,3.126,17.916,3.313,17.916,3.542 M17.083,3.959H2.917v9.167H6.25c0.229,0,0.417,0.187,0.417,0.416v1.919l2.242-2.215c0.079-0.077,0.184-0.12,0.294-0.12h7.881V3.959z"></path>
 						</svg>
             </div>
@@ -46,8 +46,8 @@ $emailSubject = "Contact depuis la plateforme de dotation";
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 z-10 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                <p class="z-10">Nous contacter</p>
-            </svg>
+                </svg>
+                <span class="z-10">Nous contacter</span>
                 </button>
 
         </div>
@@ -77,7 +77,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
         <!-- Les clients mail qui apparaît -->
         <div class="p-6 grid grid-cols-2 gap-4">
             <!-- Gmail -->
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<?php echo $contactEmail; ?>&su=<?php echo urlencode($emailSubject); ?>" 
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= $contactEmail ?>&su=<?= urlencode($emailSubject) ?>" 
                target="_blank"
                class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-red-400 hover:bg-red-50 transition-all group">
                 <div class="w-12 h-12 flex items-center justify-center">
@@ -89,7 +89,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </a>
 
             <!-- Outlook -->
-            <a href="https://outlook.live.com/mail/0/deeplink/compose?to=<?php echo $contactEmail; ?>&subject=<?php echo urlencode($emailSubject); ?>" 
+            <a href="https://outlook.live.com/mail/0/deeplink/compose?to=<?= $contactEmail ?>&subject=<?= urlencode($emailSubject) ?>" 
                target="_blank"
                class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-blue-400 hover:bg-blue-50 transition-all group">
                 <div class="w-12 h-12 flex items-center justify-center">
@@ -99,7 +99,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </a>
 
             <!-- Yahoo Mail -->
-            <a href="https://compose.mail.yahoo.com/?to=<?php echo $contactEmail; ?>&subject=<?php echo urlencode($emailSubject); ?>" 
+            <a href="https://compose.mail.yahoo.com/?to=<?= $contactEmail ?>&subject=<?= urlencode($emailSubject) ?>" 
                target="_blank"
                class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-purple-400 hover:bg-purple-50 transition-all group">
                 <div class="w-12 h-12 flex items-center justify-center">
@@ -109,7 +109,7 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </a>
 
             <!-- Default Mail App -->
-            <a href="mailto:<?php echo $contactEmail; ?>?subject=<?php echo urlencode($emailSubject); ?>" 
+            <a href="mailto:<?= $contactEmail ?>?subject=<?= urlencode($emailSubject) ?>" 
                class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-canope-slate hover:bg-canope-light/30 transition-all group">
                 <div class="w-12 h-12 flex items-center justify-center bg-canope-slate/10 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-canope-slate" viewBox="0 0 20 20" fill="currentColor">
