@@ -40,18 +40,16 @@ $emailSubject = "Contact depuis la plateforme de dotation";
             </p>
             
             <!-- Bouton avec méthode pour ouvrir l'interface de mail / Quand on clique on nous demande notre messagerie préféré  -->
-            <button onclick="openEmailModal()" class="border hover:scale-95 duration-300 relative group cursor-pointer text-sky-50  overflow-hidden h-13 w-60 rounded-full bg-sky-200 p-2 flex justify-center items-center font-extrabold">
-                    
-  <div class="absolute right-32 -top-4  group-hover:top-1 group-hover:right-2 z-10 w-40 h-40 rounded-full group-hover:scale-150 duration-500 bg-sky-900"></div>
-  <div class="absolute right-2 -top-4  group-hover:top-1 group-hover:right-2 z-10 w-32 h-32 rounded-full group-hover:scale-150  duration-500 bg-sky-800"></div>
-  <div class="absolute -right-12 top-4 group-hover:top-1 group-hover:right-2 z-10 w-24 h-24 rounded-full group-hover:scale-150  duration-500 bg-sky-700"></div>
-  <div class="absolute right-20 -top-4 group-hover:top-1 group-hover:right-2 z-10 w-16 h-16 rounded-full group-hover:scale-150  duration-500 bg-sky-600"></div>
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 z-10 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <button onclick="openEmailModal()"
+                class="bg-blue-900 text-white px-4 py-2 rounded-full transition duration-200 ease-in-out hover:bg-canope-slate active:bg-canope-dark focus:outline-none h-13 w-60  p-2 flex justify-center items-center"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 z-10 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-  <p class="z-10">Nous contacter</p>
-</svg>
-</button>
+                <p class="z-10">Nous contacter</p>
+            </svg>
+                </button>
+
         </div>
          <div>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.073876723538!2d8.75318227648099!3d41.93426387123558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12da6a32050d040b%3A0x5d1a1183b2ec787a!2sCANOPE%20Acad%C3%A9mie%20de%20Corse!5e0!3m2!1sfr!2sfr!4v1767691927215!5m2!1sfr!2sfr" 

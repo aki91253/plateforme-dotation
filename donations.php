@@ -769,49 +769,22 @@ include 'includes/header.php';
                         <?php endif; ?>
                         
                         <div class="flex justify-between items-center pt-3 border-t border-gray-100">
-                            <span class="text-canope-dark font-bold">
-                                <!-- From Uiverse.io by M4rio1 --> 
+                            <span class="text-canope-dark font-bold"> 
                                  <a href="details.php?id=<?php echo $product['id']; ?>">
-                                <!-- From Uiverse.io by Itskrish01 --> 
-<button
-  class="relative flex items-center px-6 py-1 overflow-hidden font-medium transition-all bg-canope-gray rounded-md group"
->
-  <span
-    class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-canope-slate rounded group-hover:-mr-4 group-hover:-mt-4"
-  >
-    <span
-      class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
-    ></span>
-  </span>
-  <span
-    class="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-canope-slate rounded group-hover:-ml-4 group-hover:-mb-4"
-  >
-    <span
-      class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
-    ></span>
-  </span>
-  <span
-    class="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-canope-slate rounded-md group-hover:translate-x-0"
-  ></span>
-  <span
-    class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
-    >Voir les détails</span
-  >
-</button>
+                            <!-- Bouton "Voir détails" - devient bleu au survol -->
+                            <button 
+                            class="w-full px-6 py-1.5 border-2 border-blue-900 text-blue-900 font-semibold rounded-lg hover:bg-blue-900 hover:text-white transition-all duration-300">
+                            Voir détails →
+                            </button>
 
                         </a>
 
                             </span>
+                            <!-- Bouton "Demander" - monte au survol, descend au clic -->
                             <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')"
-                                    class="add-to-cart-btn group cursor-pointer outline-none hover:rotate-90 duration-300"
-                                    title="Ajouter à ma sélection">
-                                <svg class="stroke-canope-gray fill-none group-hover:fill-canope-light group-hover:stroke-canope-teal group-active:stroke-white group-active:fill-canope-green group-active:duration-0 duration-300"
-                                     viewBox="0 0 24 24" height="40px" width="40px" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-width="1.5" d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"></path>
-                                    <path stroke-width="1.5" d="M8 12H16"></path>
-                                    <path stroke-width="1.5" d="M12 16V8"></path>
-                                </svg>
-                            </button>      
+                            class="w-50 px-6 py-2.5 bg-blue-900 text-white font-semibold rounded-lg hover:-translate-y-1 active:translate-y-0 transition-transform duration-200 shadow-md hover:shadow-lg">
+                            Demander
+                            </button>     
                         </div>
                     </div>
                 </div>

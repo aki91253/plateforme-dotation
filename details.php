@@ -74,17 +74,6 @@ include 'includes/header.php';
                 <span>Image non disponible</span>
               </div>
             <?php endif; ?>
-            <?php if ($available > 0){
-                echo'<div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2 whitespace-nowrap">
-                      <span class="w-2 h-2 bg-white rounded-full"></span>
-                      Disponible
-                  </div>';
-              } else {
-                echo'<div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2 whitespace-nowrap">
-                      <span class="w-2 h-2 bg-white rounded-full"></span>
-                      Rupture de stock
-                  </div>';
-              }?>
           </div>
         </div>
 
@@ -92,17 +81,6 @@ include 'includes/header.php';
         <div>
           <p class="text-gray-600 text-sm mb-2">Description</p>
           <h1 class="text-4xl font-bold text-gray-900 mb-4"><?php echo htmlspecialchars($product['name']); ?></h1>
-
-          <!-- Stock -->
-          <div class="mb-8">
-            <div class="flex items-center justify-between mb-2">
-              <p class="text-gray-700">Stock disponible</p>
-              <p class="text-2xl font-bold text-gray-900"><?php echo $available; ?>/<?php echo $total_stock; ?></p>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-canope-slate h-2 rounded-full" style="width: <?php echo $percentage; ?>%"></div>
-            </div>
-          </div>
 
           <!-- Info Items -->
           <div class="space-y-4 mb-8">
@@ -183,7 +161,7 @@ include 'includes/header.php';
             </div>
           <!-- CTA Button -->
             <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
-                class=" w-full bg-gradient-to-r from-canope-slate to-canope-teal hover:from-canope-dark hover:to-canope-gray text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition-all duration-500 ease-in-out hover:scale-110  hover:animate-pulse active:animate-bounce">
+                class=" w-full bg-gradient-to-r from-canope-gray to-canope-teal hover:from-canope-slate hover:to-canope-gray text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out hover:scale-105">
                     🛒 Demander cette dotation
             </button>
         </div>
