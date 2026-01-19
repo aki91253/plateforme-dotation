@@ -58,7 +58,7 @@ $statusColors = ['EN_COURS' => 'bg-amber-100 text-amber-700', 'TRAITEE' => 'bg-e
     <!-- Request Info -->
     <div class="flex items-start justify-between">
         <div>
-            <h4 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($request['request_number']) ?></h4>
+            <h4 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($request['token']) ?></h4>
             <p class="text-gray-500"><?= date('d/m/Y', strtotime($request['request_date'])) ?></p>
         </div>
         <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium <?= $statusColors[$request['status']] ?? 'bg-gray-100 text-gray-700' ?>">
