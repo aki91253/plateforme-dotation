@@ -80,7 +80,7 @@ include 'includes/admin_header.php';
                     <p class="text-3xl font-bold text-gray-800"><?= number_format($totalStock) ?></p>
                     <p class="text-gray-500 text-sm mt-1">Articles en stock</p>
                 </div>
-                <div class="w-14 h-14 bg-gradient-to-br from-canope-green to-canope-olive rounded-xl flex items-center justify-center shadow-lg shadow-canope-green/30">
+                <div class="w-14 h-14 bg-gradient-to-br from-canope-dark to-canope-teal rounded-xl flex items-center justify-center shadow-lg shadow-canope-dark/30">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
@@ -144,7 +144,7 @@ include 'includes/admin_header.php';
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-800">Demandes récentes</h2>
-                <a href="requests.php" class="text-canope-green hover:text-canope-olive text-sm font-medium transition-colors">
+                <a href="requests.php" class="text-canope-dark hover:text-canope-olive text-sm font-medium transition-colors">
                     Voir tout →
                 </a>
             </div>
@@ -193,7 +193,7 @@ include 'includes/admin_header.php';
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-800">Alertes stock faible</h2>
-                <a href="stock.php" class="text-canope-green hover:text-canope-olive text-sm font-medium transition-colors">
+                <a href="stock.php" class="text-canope-dark hover:text-canope-olive text-sm font-medium transition-colors">
                     Gérer →
                 </a>
             </div>
@@ -251,7 +251,7 @@ include 'includes/admin_header.php';
             </div>
         </a>
         
-        <a href="stock.php" class="bg-gradient-to-r from-canope-green to-canope-olive rounded-2xl p-6 text-white hover:shadow-lg hover:shadow-canope-green/25 transition-all group">
+        <a href="stock.php" class="bg-gradient-to-r from-canope-dark to-canope-teal rounded-2xl p-6 text-white hover:shadow-lg hover:shadow-canope-dark/25 transition-all group">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
