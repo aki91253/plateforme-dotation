@@ -101,6 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
             
+            // ✅ AJOUTER L'HISTORIQUE DE MODIFICATION
+    $histoStmt = $pdo->prepare("INSERT INTO historique_modif (product_id, date_modif) VALUES (?, CURDATE())");
+    $histoStmt->execute([$id]);
+
+    $success = 'Dotation modifiée avec succès !';
+    
+    // Recharger les données du produit
+    $stmt = $pdo->prepare("SELECT * FROM product WHERE id = ?");
+    $stmt->execute([$id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             $error = 'Erreur lors de la modification : ' . $e->getMessage();
         }
