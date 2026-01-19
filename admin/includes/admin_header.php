@@ -20,12 +20,24 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             theme: {
                 extend: {
                     colors: {
-                        'canope-green': '#3A6B56',
-                        'canope-olive': '#4A5D3B',
-                        'canope-light': '#E0E8E3',
+                        'canope-dark': '#0B162C',
+                        'canope-slate': '#1C2942',
+                        'canope-light': '#FFFFFF',
+                        'canope-gray' : '#3B556D',
+                        'canope-teal' : '#5FC2BA',
                     },
                     fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
                         'body': ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(80px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
                     }
                 }
             }
@@ -60,7 +72,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             <!-- Logo -->
             <div class="p-5 border-b border-gray-100">
                 <a href="index.php" class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-canope-green rounded-xl flex items-center justify-center shadow-sm">
+                    <div class="w-10 h-10 bg-canope-dark rounded-xl flex items-center justify-center shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
@@ -135,8 +147,8 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             <!-- Admin Info -->
             <div class="p-4 border-t border-gray-100 bg-gray-50/50">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-canope-green/10 rounded-full flex items-center justify-center">
-                        <span class="text-canope-green font-semibold text-sm">
+                    <div class="w-10 h-10 bg-canope-dark/10 rounded-full flex items-center justify-center">
+                        <span class="text-canope-dark font-semibold text-sm">
                             <?= strtoupper(substr($currentAdmin['first_name'], 0, 1) . substr($currentAdmin['last_name'], 0, 1)) ?>
                         </span>
                     </div>
@@ -160,9 +172,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 <div class="flex justify-between items-center">
                     <div>
                         <h1 class="text-2xl font-semibold text-gray-800" id="page-title">Tableau de bord</h1>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg"><?= date('d/m/Y') ?></span>
                     </div>
                 </div>
             </header>
