@@ -5,10 +5,9 @@ $product_id = (int) $_GET['id'];
 
 //requête qui récupère toutes les informations d'un produit en fonction de l'id 
 $stmt = $pdo->prepare('
-    SELECT p.*, c.name as category_name, s.quantity as stock_quantity, l.langue as langue, d.libelle as discipline, t.libelle as ressource
+    SELECT p.*, p.stock as stock_quantity, c.name as category_name, l.langue as langue, d.libelle as discipline, t.libelle as ressource
     FROM product p
     LEFT JOIN category c ON p.category_id = c.id
-    LEFT JOIN stock s ON p.id = s.product_id
     LEFT JOIN langue_product l ON p.langue_id = l.id
     LEFT JOIN discipline d ON p.discipline_id = d.id 
     LEFT JOIN type_ressource t ON p.id_ressource = t.id

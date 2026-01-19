@@ -13,17 +13,16 @@ try {
     
     // Get statistics
     $totalProducts = $pdo->query('SELECT COUNT(*) FROM product WHERE is_active = 1')->fetchColumn();
-    $totalStock = $pdo->query('SELECT SUM(quantity) FROM stock')->fetchColumn() ?? 0;
+    $totalStock = $pdo->query('SELECT SUM(stock) FROM product WHERE is_active = 1')->fetchColumn() ?? 0;
     $pendingRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id = 1")->fetchColumn();
     $completedRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id >= 4")->fetchColumn();
     
     // Get low stock items (< 20 units)
     $lowStockQuery = $pdo->query('
-        SELECT p.name, s.quantity 
-        FROM stock s 
-        JOIN product p ON p.id = s.product_id 
-        WHERE s.quantity < 20 
-        ORDER BY s.quantity ASC 
+        SELECT name, stock as quantity 
+        FROM product 
+        WHERE is_active = 1 AND stock < 20 
+        ORDER BY stock ASC 
         LIMIT 5
     ');
     $lowStockItems = $lowStockQuery->fetchAll(PDO::FETCH_ASSOC);
