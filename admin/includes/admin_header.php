@@ -3,6 +3,7 @@
  * Admin Panel Header with Sidebar Navigation
  * Light theme matching Canopé brand
  */
+require_once 'includes/admin_auth.php';
 $currentAdmin = getCurrentAdmin();
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 ?>

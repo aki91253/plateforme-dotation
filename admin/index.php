@@ -21,7 +21,7 @@ try {
     $lowStockQuery = $pdo->query('
         SELECT name, stock as quantity 
         FROM product 
-        WHERE is_active = 1 AND stock < 20 
+        WHERE is_active = 1 AND stock < 5
         ORDER BY stock ASC 
         LIMIT 5
     ');
