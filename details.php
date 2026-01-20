@@ -158,11 +158,67 @@ include 'includes/header.php';
                 <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($product['ressource']); ?></p>
               </div>
             </div>
+          <!-- Quantity Selector -->
+            <div class="flex items-center gap-4 mb-4">
+              <p class="text-gray-700 font-medium">Quantité :</p>
+              <div class="flex items-center gap-1 bg-gray-100 border border-gray-200 rounded-lg">
+                <button type="button" onclick="decrementQty()" 
+                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-canope-slate hover:bg-gray-200 rounded-l-lg transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                  </svg>
+                </button>
+                <input type="number" id="quantity-input" value="1" min="1" max="<?php echo $product['stock_quantity']; ?>"
+                       class="w-16 h-10 text-center font-semibold text-gray-800 bg-white border-x border-gray-200 focus:outline-none"
+                       onchange="validateQty()">
+                <button type="button" onclick="incrementQty()" 
+                        class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-canope-slate hover:bg-gray-200 rounded-r-lg transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
+              <span class="text-sm text-gray-500">(<?php echo $product['stock_quantity']; ?> disponible<?php echo $product['stock_quantity'] > 1 ? 's' : ''; ?>)</span>
+            </div>
+
           <!-- CTA Button -->
-            <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
+            <button onclick="addToCartWithQty(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')" 
                 class=" w-full bg-gradient-to-r from-canope-gray to-canope-teal hover:from-canope-slate hover:to-canope-gray text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out hover:scale-105">
                     🛒 Demander cette dotation
             </button>
+
+<script>
+const maxStock = <?php echo $product['stock_quantity']; ?>;
+
+function decrementQty() {
+    const input = document.getElementById('quantity-input');
+    let val = parseInt(input.value) || 1;
+    if (val > 1) {
+        input.value = val - 1;
+    }
+}
+
+function incrementQty() {
+    const input = document.getElementById('quantity-input');
+    let val = parseInt(input.value) || 1;
+    if (val < maxStock) {
+        input.value = val + 1;
+    }
+}
+
+function validateQty() {
+    const input = document.getElementById('quantity-input');
+    let val = parseInt(input.value) || 1;
+    if (val < 1) val = 1;
+    if (val > maxStock) val = maxStock;
+    input.value = val;
+}
+
+function addToCartWithQty(id, name) {
+    const qty = parseInt(document.getElementById('quantity-input').value) || 1;
+    addToCart(id, name, qty);
+}
+</script>
         </div>
       </div>
     </main>

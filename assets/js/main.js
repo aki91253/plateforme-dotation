@@ -13,16 +13,18 @@ function saveCart(cart) { //2.1 -- Méthode pour sauvegarder le panier quand on 
     updateCartCount();
 }
 
-function addToCart(productId, productName) {//3.1 -- Méthode pour ajouter un produit dans le paniern (Id, nom du produit, quantité)
+function addToCart(productId, productName, quantity = 1) {//3.1 -- Méthode pour ajouter un produit dans le paniern (Id, nom du produit, quantité)
     const cart = getCart();
     const existingItem = cart.find(item => item.id === productId);
 
-    if (existingItem) { // 3.2 -- Vérification si le produit est déjà présent dans notre panier
-        showNotification(`"${productName}" est déjà dans votre sélection`);
+    if (existingItem) { // 3.2 -- Si le produit existe déjà, on met à jour la quantité
+        existingItem.quantity = quantity;
+        saveCart(cart);
+        showNotification(`Quantité de "${productName}" mise à jour (${quantity})`);
         return;
     }
 
-    cart.push({ id: productId, name: productName, quantity: 1 }); // 3.3 --  Sinon on ajoute le produit dans le panier 
+    cart.push({ id: productId, name: productName, quantity: quantity }); // 3.3 --  Sinon on ajoute le produit dans le panier 
     saveCart(cart);
     showNotification(`"${productName}" ajouté à votre sélection`);
 }
