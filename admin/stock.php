@@ -17,6 +17,10 @@ if (isset($_GET['error'])) {
     $errorMessage = 'Erreur lors de la suppression : ' . htmlspecialchars($_GET['error']);
 }
 
+if (isset($_GET['created']) && $_GET['created'] == 1) {
+    $successMessage = 'Dotation créée avec succès !';
+}
+
 // Récupérer les statistiques
 $statsQuery = $pdo->query("
     SELECT 
