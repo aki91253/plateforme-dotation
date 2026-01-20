@@ -5,6 +5,18 @@ require_once 'includes/admin_auth.php';
 // Vérifier que l'utilisateur est admin
 requireAdmin();
 
+// Message de confirmation après suppression
+$successMessage = '';
+$errorMessage = '';
+
+if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
+    $successMessage = 'Dotation supprimée avec succès !';
+}
+
+if (isset($_GET['error'])) {
+    $errorMessage = 'Erreur lors de la suppression : ' . htmlspecialchars($_GET['error']);
+}
+
 // Récupérer les statistiques
 $statsQuery = $pdo->query("
     SELECT 
@@ -85,6 +97,19 @@ include 'includes/admin_header.php';
             </a>
         </div>
 
+        <!-- Messages de succès/erreur -->
+        <?php if ($successMessage): ?>
+            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6">
+                <?= $successMessage ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($errorMessage): ?>
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+                <?= $errorMessage ?>
+            </div>
+        <?php endif; ?>
+
         <!-- Statistiques -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -147,7 +172,6 @@ include 'includes/admin_header.php';
         <!-- Filtres et recherche -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
             <form method="GET" class="flex flex-wrap gap-4">
-                <!-- Recherche -->
                 <div class="flex-1 min-w-[300px]">
                     <div class="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,7 +183,6 @@ include 'includes/admin_header.php';
                     </div>
                 </div>
 
-                <!-- Filtre catégorie -->
                 <select name="category" class="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                     <option value="0">Toutes catégories</option>
                     <?php foreach ($categories as $cat): ?>
@@ -169,7 +192,6 @@ include 'includes/admin_header.php';
                     <?php endforeach; ?>
                 </select>
 
-                <!-- Toggle afficher inactives -->
                 <label class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                     <input type="checkbox" name="show_inactive" value="1" <?= $showInactive ? 'checked' : '' ?> 
                            class="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
@@ -221,7 +243,7 @@ include 'includes/admin_header.php';
                                         </div>
                                         <div>
                                             <p class="font-medium text-gray-900"><?= htmlspecialchars($product['name']) ?></p>
-                                            <p class="text-xs text-gray-500"><?= htmlspecialchars($product['description'] ?? '') ?></p>
+                                            <p class="text-xs text-gray-500 line-clamp-1"><?= htmlspecialchars($product['description'] ?? '') ?></p>
                                         </div>
                                     </div>
                                 </td>
@@ -238,26 +260,21 @@ include 'includes/admin_header.php';
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php if ($product['stock'] == 0): ?>
-                                    <!-- Rupture de stock -->
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                                        <span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                                        Rupture
-                                    </span>
-
-                                <?php elseif ($product['stock'] > 0 && $product['stock'] < 20): ?>
-                                    <!-- Stock faible -->
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full whitespace-nowrap">
-                                        <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                                        Stock faible
-                                    </span>
-
-                                <?php else: ?>
-                                    <!-- En stock (>= 20) -->
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                                        En stock
-                                    </span>
-                                <?php endif; ?>
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full whitespace-nowrap">
+                                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+                                            Rupture
+                                        </span>
+                                    <?php elseif ($product['stock'] > 0 && $product['stock'] < 20): ?>
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full whitespace-nowrap">
+                                            <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+                                            Stock faible
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full whitespace-nowrap">
+                                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                            En stock
+                                        </span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <label class="relative inline-flex items-center cursor-pointer">
@@ -269,7 +286,6 @@ include 'includes/admin_header.php';
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-end gap-2">
-                                        <!-- Bouton Éditer -->
                                         <a href="dotation_edit.php?id=<?= $product['id'] ?>" 
                                            class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-blue-100 text-gray-600 hover:text-blue-600 transition-colors"
                                            title="Éditer">
@@ -277,7 +293,6 @@ include 'includes/admin_header.php';
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </a>
-                                        <!-- Bouton Supprimer -->
                                         <button onclick="confirmDelete(<?= $product['id'] ?>, '<?= addslashes(htmlspecialchars($product['name'])) ?>')"
                                                 class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 transition-colors"
                                                 title="Supprimer">
@@ -376,16 +391,3 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 <?php include 'includes/admin_footer.php'; ?>
-
-
-
-
-
-
-<?php
-
-require_once 'includes/admin_footer.php';
-
-?>
-
-
