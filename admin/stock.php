@@ -246,7 +246,7 @@ include 'includes/admin_header.php';
 
                                 <?php elseif ($product['stock'] > 0 && $product['stock'] < 20): ?>
                                     <!-- Stock faible -->
-                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full">
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full whitespace-nowrap">
                                         <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
                                         Stock faible
                                     </span>
