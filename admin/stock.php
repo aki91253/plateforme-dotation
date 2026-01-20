@@ -10,7 +10,7 @@ $statsQuery = $pdo->query("
     SELECT 
         COUNT(*) as total,
         SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as actives,
-        SUM(CASE WHEN stock < 5 THEN 1 ELSE 0 END) as stock_faible,
+        SUM(CASE WHEN stock < 20 THEN 1 ELSE 0 END) as stock_faible,
         SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) as en_rupture
     FROM product
 ");
@@ -237,17 +237,27 @@ include 'includes/admin_header.php';
                                     <span class="font-semibold text-gray-900"><?= $product['stock'] ?>/<?= $product['quantite_totale'] ?></span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <?php if ($product['stock'] > 0): ?>
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
-                                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                                            En stock
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                                            Rupture
-                                        </span>
-                                    <?php endif; ?>
+                                    <?php if ($product['stock'] == 0): ?>
+                                    <!-- Rupture de stock -->
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+                                        Rupture
+                                    </span>
+
+                                <?php elseif ($product['stock'] > 0 && $product['stock'] < 20): ?>
+                                    <!-- Stock faible -->
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+                                        Stock faible
+                                    </span>
+
+                                <?php else: ?>
+                                    <!-- En stock (>= 20) -->
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                        En stock
+                                    </span>
+                                <?php endif; ?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <label class="relative inline-flex items-center cursor-pointer">
