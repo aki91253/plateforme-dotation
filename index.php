@@ -49,10 +49,10 @@ include 'includes/header.php';
             </div>
 
             <!-- bouton 2 - shimmer effect -->
-            <a href="selection.php"
+            <a href="demande.php"
                 class="group/button relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-canope-teal/10 backdrop-blur-lg px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-canope-green transition-all duration-300 ease-in-out border-2 border-canope-teal/40 hover:border-canope-teal"
             >
-                <span class="text-canope-light">Faire une demande</span>
+                <span class="text-canope-light">Suivre une demande</span>
                 <div
                     class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]"
                 >
