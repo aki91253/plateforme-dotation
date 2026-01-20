@@ -42,22 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             redirect('admin/index.php');
         } else {
-            // Vérification si c'est un utilisateur (table users)
-            $stmt = $pdo->prepare("SELECT id, email, password, etablissement, is_active FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user && password_verify($password, $user['password'])) {
-                if ($user['is_active']) {
-                    // Connexion utilisateur réussie
-                    loginUser($user['id'], $user['email'], $user['etablissement']);
-                    redirect('index.php');
-                } else {
-                    $error = 'Votre compte est désactivé.';
-                }
-            } else {
-                $error = 'Email ou mot de passe incorrect.';
-            }
+            $error = 'Email ou mot de passe incorrect.';
         }
     }
 }
