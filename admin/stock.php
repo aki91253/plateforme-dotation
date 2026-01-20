@@ -252,7 +252,7 @@ include 'includes/admin_header.php';
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                                    <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full whitespace-nowrap">
                                         <?= htmlspecialchars($product['category_name'] ?? 'Non classé') ?>
                                     </span>
                                 </td>
