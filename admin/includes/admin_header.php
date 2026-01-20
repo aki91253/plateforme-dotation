@@ -52,16 +52,16 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             transition: all 0.2s ease;
         }
         .sidebar-link:hover {
-            background: rgba(58, 107, 86, 0.1);
-            color: #3A6B56;
+            background: rgba(95, 194, 186, 0.15);
+            color: #4BA8A0;
         }
         .sidebar-link.active {
-            background: rgba(58, 107, 86, 0.15);
-            color: #3A6B56;
-            border-left-color: #3A6B56;
+            background: rgba(95, 194, 186, 0.2);
+            color: #3A9690;
+            border-left-color: #5FC2BA;
         }
         .sidebar-link.active svg {
-            color: #3A6B56;
+            color: #5FC2BA;
         }
         
         /* Sidebar responsive styles */
