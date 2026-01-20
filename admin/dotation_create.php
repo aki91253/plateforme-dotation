@@ -40,7 +40,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_id = intval($_POST['category_id'] ?? 0);
     $location = trim($_POST['location'] ?? '');
     $responsible_id = intval($_POST['responsible_id'] ?? 0);
-    $image_url = trim($_POST['image_url'] ?? '');
+    // Gestion de l'upload d'image
+$image_url = '';
+if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $file = $_FILES['image'];
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    
+    if (in_array($file['type'], $allowedTypes)) {
+        // Créer le dossier s'il n'existe pas
+        $uploadDir = '../assets/img/products/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        
+        // Générer un nom unique
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $newFileName = uniqid('product_') . '.' . $extension;
+        $destination = $uploadDir . $newFileName;
+        
+        // Déplacer le fichier
+        if (move_uploaded_file($file['tmp_name'], $destination)) {
+            $image_url = 'assets/img/products/' . $newFileName;
+        } else {
+            $error = 'Erreur lors de l\'upload de l\'image.';
+        }
+    } else {
+        $error = 'Format d\'image non autorisé. Utilisez JPG, PNG ou WEBP.';
+    }
+}
     $quantite_totale = intval($_POST['quantite_totale'] ?? 0);
     $stock = intval($_POST['stock'] ?? 0);
     $langue_id = intval($_POST['langue_id'] ?? 0);
@@ -126,7 +153,7 @@ include 'includes/admin_header.php';
         <?php endif; ?>
 
         <!-- Formulaire -->
-        <form method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <form method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
             
             <!-- Section 1 : Informations générales -->
             <div>
@@ -304,17 +331,104 @@ include 'includes/admin_header.php';
                 </div>
 
                 <!-- URL Photo -->
-                <div class="mt-4">
-                    <label for="image_url" class="block text-sm font-semibold text-gray-700 mb-2">
-                        URL Photo
-                    </label>
-                    <input type="url" id="image_url" name="image_url"
-                           value="<?= htmlspecialchars($_POST['image_url'] ?? '') ?>"
-                           placeholder="https://example.com/image.jpg ou assets/img/products/nom-image.jpg"
-                           class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <p class="text-xs text-gray-500 mt-1">Entrez l'URL complète ou le chemin relatif de l'image</p>
-                </div>
-            </div>
+                <!-- Upload Photo -->
+<div class="mt-4">
+    <label class="block text-sm font-semibold text-gray-700 mb-2">
+        Photo du produit
+    </label>
+    
+    <!-- Zone de glisser-déposer -->
+    <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-gray-50">
+        <input type="file" id="imageInput" name="image" accept="image/*" class="hidden">
+        
+        <div id="uploadPrompt">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="text-gray-600 font-medium mb-1">Glissez une image ici ou cliquez pour parcourir</p>
+            <p class="text-xs text-gray-500">PNG, JPG, WEBP jusqu'à 5MB</p>
+        </div>
+        
+        <div id="imagePreview" class="hidden">
+            <img id="previewImg" src="" alt="Aperçu" class="max-h-48 mx-auto rounded-lg mb-3">
+            <p id="fileName" class="text-sm text-gray-600 mb-2"></p>
+            <button type="button" onclick="removeImage()" class="text-red-600 text-sm hover:text-red-700 font-medium">
+                ✕ Supprimer l'image
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+const dropZone = document.getElementById('dropZone');
+const imageInput = document.getElementById('imageInput');
+const uploadPrompt = document.getElementById('uploadPrompt');
+const imagePreview = document.getElementById('imagePreview');
+const previewImg = document.getElementById('previewImg');
+const fileName = document.getElementById('fileName');
+
+// Clic sur la zone = ouvrir le sélecteur de fichier
+dropZone.addEventListener('click', () => {
+    imageInput.click();
+});
+
+// Changement de fichier
+imageInput.addEventListener('change', (e) => {
+    handleFile(e.target.files[0]);
+});
+
+// Glisser-déposer
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-blue-500', 'bg-blue-50');
+});
+
+dropZone.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+        imageInput.files = e.dataTransfer.files;
+        handleFile(file);
+    }
+});
+
+// Traiter le fichier
+function handleFile(file) {
+    if (!file) return;
+    
+    // Vérifier la taille (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('L\'image est trop grande. Maximum 5MB.');
+        return;
+    }
+    
+    // Afficher l'aperçu
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        fileName.textContent = file.name;
+        uploadPrompt.classList.add('hidden');
+        imagePreview.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+// Supprimer l'image
+function removeImage() {
+    imageInput.value = '';
+    uploadPrompt.classList.remove('hidden');
+    imagePreview.classList.add('hidden');
+    previewImg.src = '';
+    fileName.textContent = '';
+}
+</script>
 
             <!-- Toggle Dotation active -->
             <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
@@ -330,7 +444,7 @@ include 'includes/admin_header.php';
 
             <!-- Boutons -->
             <div class="flex gap-3 pt-4 border-t border-gray-200">
-                <a href="dotations.php" 
+                <a href="stock.php" 
                    class="flex-1 px-6 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors text-center">
                     Annuler
                 </a>
