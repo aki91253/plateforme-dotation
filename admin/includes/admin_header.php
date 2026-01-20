@@ -63,12 +63,60 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
         .sidebar-link.active svg {
             color: #3A6B56;
         }
+        
+        /* Sidebar responsive styles */
+        .admin-sidebar {
+            transition: transform 0.3s ease-in-out;
+            z-index: 40;
+        }
+        
+        /* Sidebar collapsed state */
+        .admin-sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-overlay {
+            transition: opacity 0.3s ease-in-out;
+            z-index: 30;
+        }
+        
+        /* Main content transition for sidebar toggle */
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        
+        .main-content.sidebar-collapsed {
+            margin-left: 0 !important;
+        }
+        
+        /* Mobile: sidebar hidden by default, show overlay */
+        @media (max-width: 1023px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+        }
+        
+        /* Desktop: hide overlay */
+        @media (min-width: 1024px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <div class="flex min-h-screen">
+        <!-- Sidebar Overlay (mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay fixed inset-0 bg-black/50 opacity-0 pointer-events-none lg:hidden"></div>
+        
         <!-- Sidebar - Light Theme -->
-        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm">
+        <aside id="admin-sidebar" class="admin-sidebar w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm">
             <!-- Logo -->
             <div class="p-5 border-b border-gray-100">
                 <a href="index.php" class="flex items-center gap-3">
@@ -94,14 +142,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                         </a>
                     </li>
                     <li>
-                        <a href="products.php" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 border-transparent text-gray-600 <?= $currentPage === 'products' ? 'active' : '' ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                            <span>Dotations</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="stock.php" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 border-transparent text-gray-600 <?= $currentPage === 'stock' ? 'active' : '' ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -115,15 +155,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <span>Demandes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="visibility.php" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 border-transparent text-gray-600 <?= $currentPage === 'visibility' ? 'active' : '' ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            <span>Visibilité</span>
                         </a>
                     </li>
                 </ul>
@@ -166,15 +197,24 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 ml-64">
+        <div class="main-content flex-1 lg:ml-64 transition-all duration-300">
             <!-- Top Bar -->
-            <header class="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+            <header class="bg-white border-b border-gray-200 px-4 lg:px-8 py-4 sticky top-0 z-10">
                 <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-2xl font-semibold text-gray-800" id="page-title">Tableau de bord</h1>
+                    <div class="flex items-center gap-4">
+                        <!-- Hamburger Menu Button -->
+                        <button id="hamburger-btn" class="hamburger-btn p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Toggle menu">
+                            <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <h1 class="text-xl lg:text-2xl font-semibold text-gray-800" id="page-title">Tableau de bord</h1>
                     </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main class="p-8">
+            <main class="p-4 lg:p-8">

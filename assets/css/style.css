@@ -54,3 +54,139 @@ header {
     /* canope-light avec opacité */
     border: 1px solid rgba(58, 107, 86, 0.1);
 }
+
+/* ========================================
+   Mobile Responsive Styles
+======================================== */
+
+/* Mobile-friendly touch targets */
+@media (max-width: 1024px) {
+    /* Ensure buttons and links are touch-friendly */
+    a, button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Better spacing for mobile */
+    .filter-container {
+        padding: 16px;
+        margin: 16px;
+        border-radius: 12px;
+    }
+    
+    .filter-dropdown-btn {
+        min-width: 140px;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .filter-dropdown-menu {
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        top: auto;
+        bottom: 0;
+        width: auto;
+        max-height: 50vh;
+        overflow-y: auto;
+        border-radius: 16px 16px 0 0;
+        z-index: 60;
+    }
+    
+    .filter-search-box {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    /* Responsive grid for filter buttons */
+    .filter-tags {
+        gap: 8px;
+    }
+    
+    .filter-tag {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 640px) {
+    /* Hero section adjustments */
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    /* Card grid - single column on very small screens */
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Reduce padding on smaller screens */
+    .section-padding {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    
+    /* Mobile filter adjustments */
+    .filter-dropdown-btn {
+        min-width: 100%;
+        justify-content: space-between;
+    }
+    
+    .filter-header h3 {
+        font-size: 14px;
+    }
+    
+    .filter-header-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .filter-header-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Improve form inputs on mobile */
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    textarea,
+    select {
+        font-size: 16px !important; /* Prevents iOS zoom on focus */
+    }
+}
+
+/* Smooth scroll for the whole page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better focus states for accessibility */
+*:focus-visible {
+    outline: 2px solid #3B556D;
+    outline-offset: 2px;
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+    overflow-x: hidden;
+}
+
+/* Make images responsive by default */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Mobile-friendly table alternative */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}

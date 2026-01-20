@@ -75,7 +75,26 @@ require_once __DIR__ . '/auth.php';
                 <img src="assets/img/logo.png" alt="Réseau Canopé Logo" class="h-9">
             </a>
             
-            <ul class="flex items-center gap-8 list-none m-0 p-0">
+            <!-- Mobile: Cart + Hamburger Menu -->
+            <div class="flex items-center gap-4 lg:hidden">
+                <!-- Mobile Cart Icon -->
+                <a href="selection.php" class="relative" title="Ma sélection">
+                    <svg class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-canope-slate text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
+                </a>
+                
+                <!-- Hamburger Button -->
+                <button id="mobile-menu-btn" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Menu">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <ul class="hidden lg:flex items-center gap-8 list-none m-0 p-0">
                 <li><a href="index.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Accueil</a></li>
                 <li><a href="donations.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Catalogue</a></li>
                 <li><a href="contact.php" class="text-gray-800 no-underline text-sm uppercase tracking-wide font-medium hover:text-canope-dark transition-colors">Contact</a></li>
@@ -136,5 +155,168 @@ require_once __DIR__ . '/auth.php';
                 <?php endif; ?>
             </ul>
         </nav>
+        
     </header>
+    
+    <!-- Mobile Navigation Drawer (placed outside header for proper fixed positioning) -->
+    <div id="mobile-menu" class="lg:hidden fixed inset-0 z-[100] hidden">
+        <!-- Overlay -->
+        <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        
+        <!-- Drawer -->
+        <div id="mobile-menu-drawer" class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-out flex flex-col">
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white flex-shrink-0">
+                <span class="font-semibold text-gray-800">Menu</span>
+                <button id="mobile-menu-close" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="p-5 bg-white flex-1 overflow-y-auto">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="index.php" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Accueil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="donations.php" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            Catalogue
+                        </a>
+                    </li>
+                    <li>
+                        <a href="contact.php" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            Contact
+                        </a>
+                    </li>
+                    <li>
+                        <a href="demande.php" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            Suivre ma demande
+                        </a>
+                    </li>
+                    <li>
+                        <a href="selection.php" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Ma sélection
+                            <span id="cart-count-drawer" class="ml-auto bg-canope-slate text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="border-t border-gray-100 my-4"></div>
+                
+                <?php if (isLoggedIn()): ?>
+                <!-- Logged in: Mobile user menu -->
+                <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                    <p class="text-sm font-medium text-gray-800 truncate"><?= htmlspecialchars($_SESSION['user_email']) ?></p>
+                    <p class="text-xs text-gray-500 truncate"><?= htmlspecialchars($_SESSION['user_etablissement']) ?></p>
+                </div>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="profile.php" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Mon profil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="logout.php" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+                <?php else: ?>
+                <!-- Not logged in: Mobile login button -->
+                <a href="login.php" class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-canope-slate text-white rounded-xl font-semibold hover:bg-canope-dark transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                    </svg>
+                    Espace Admin
+                </a>
+                <?php endif; ?>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu Script -->
+    <script>
+        (function() {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const drawer = document.getElementById('mobile-menu-drawer');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            
+            function openMenu() {
+                menu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    drawer.classList.remove('translate-x-full');
+                }, 10);
+            }
+            
+            function closeMenu() {
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+            
+            menuBtn.addEventListener('click', openMenu);
+            closeBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+            
+            // Sync cart counts between mobile icons
+            function syncMobileCartCount() {
+                const mainCount = document.getElementById('cart-count');
+                const mobileCount = document.getElementById('cart-count-mobile');
+                const drawerCount = document.getElementById('cart-count-drawer');
+                
+                if (mainCount && mobileCount) {
+                    mobileCount.textContent = mainCount.textContent;
+                    mobileCount.className = mainCount.className;
+                }
+                if (mainCount && drawerCount) {
+                    drawerCount.textContent = mainCount.textContent;
+                    if (mainCount.classList.contains('hidden')) {
+                        drawerCount.classList.add('hidden');
+                    } else {
+                        drawerCount.classList.remove('hidden');
+                    }
+                }
+            }
+            
+            // Observe changes to main cart count
+            const mainCount = document.getElementById('cart-count');
+            if (mainCount) {
+                const observer = new MutationObserver(syncMobileCartCount);
+                observer.observe(mainCount, { attributes: true, childList: true, characterData: true, subtree: true });
+                syncMobileCartCount();
+            }
+        })();
+    </script>
+    
     <main class="flex-1">
