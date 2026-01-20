@@ -2,10 +2,9 @@
 require_once 'includes/db.php';
 require_once 'includes/auth.php';
 
-// GET les informations de l'utilisateur connecté
-$currentUser = getCurrentUser();
-$userEmail = $currentUser ? htmlspecialchars($currentUser['email']) : '';
-$userEtablissement = $currentUser ? htmlspecialchars($currentUser['etablissement']) : '';
+// Plus de système de compte utilisateur - les champs seront remplis manuellement
+$userEmail = '';
+$userEtablissement = '';
 
 include 'includes/header.php';
 ?>
