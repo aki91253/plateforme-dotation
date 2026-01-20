@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (in_array($file['type'], $allowedTypes)) {
             // Créer le dossier s'il n'existe pas
-            $uploadDir = '../assets/img/products/';
+            $uploadDir = '../assets/img/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Déplacer le fichier
             if (move_uploaded_file($file['tmp_name'], $destination)) {
-                $image_url = 'assets/img/products/' . $newFileName;
+                $image_url = 'assets/img/' . $newFileName;
             } else {
                 $error = 'Erreur lors de l\'upload de l\'image.';
             }
