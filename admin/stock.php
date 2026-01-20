@@ -210,7 +210,7 @@ include 'includes/admin_header.php';
                                     <div class="flex items-center gap-3">
                                         <div class="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                                             <?php if (!empty($product['image_url'])): ?>
-                                                <img src="<?= htmlspecialchars($product['image_url']) ?>" 
+                                                <img src="../<?= htmlspecialchars($product['image_url']) ?>" 
                                                      alt="<?= htmlspecialchars($product['name']) ?>"
                                                      class="w-full h-full object-cover">
                                             <?php else: ?>
