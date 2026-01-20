@@ -47,7 +47,7 @@ try {
     // Insertion de la demande principale (utilisation du premier product_id pour la compatibilité avec l'historique)
     // id_responsable = 1 par défaut (premier utilisateur admin)
     $firstProductId = $cartData[0]['id'] ?? 1;
-    $stmt = $pdo->prepare('INSERT INTO request (token, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, comment, status_id, id_responsable) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, 1)');
+    $stmt = $pdo->prepare('INSERT INTO request (token, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, comment, status_id, responsible_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, 1)');
     $stmt->execute([
         $token,
         $firstProductId,
