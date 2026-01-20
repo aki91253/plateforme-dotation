@@ -6,3 +6,9 @@ assets/SQL
 
 # MAMP logs
 .mamp/logs/
+
+# Email logs
+admin/email_logs/
+
+# Environment variables
+.env

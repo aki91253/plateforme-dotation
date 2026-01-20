@@ -116,6 +116,14 @@ include 'includes/admin_header.php';
             Statut mis à jour avec succès
         </div>
         <?php endif; ?>
+        
+        <!-- Notification pour email envoyé -->
+        <div id="emailNotification" class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl items-center gap-2 hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span id="emailNotificationText"></span>
+        </div>
 
         <!-- Statistiques -->
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
@@ -260,6 +268,14 @@ include 'includes/admin_header.php';
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                             </svg>
                                         </button>
+                                        <!-- Envoyer token par email -->
+                                        <button onclick="sendTokenEmail(<?= $request['id'] ?>, '<?= htmlspecialchars($request['email']) ?>')" 
+                                                class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-green-100 text-gray-600 hover:text-green-600 transition-colors"
+                                                title="Renvoyer le token par email">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -393,6 +409,49 @@ document.getElementById('detailsModal').addEventListener('click', function(e) {
 document.getElementById('statusModal').addEventListener('click', function(e) {
     if (e.target === this) closeStatusModal();
 });
+
+// Fonction pour envoyer le token par email
+function sendTokenEmail(requestId, email) {
+    if (!confirm(`Êtes-vous sûr de vouloir envoyer le token à ${email} ?`)) {
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('request_id', requestId);
+    
+    fetch('send_token_email.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const notification = document.getElementById('emailNotification');
+        const notificationText = document.getElementById('emailNotificationText');
+        
+        if (data.success) {
+            notification.classList.remove('hidden', 'bg-red-50', 'border-red-200', 'text-red-700');
+            notification.classList.add('flex', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
+            notificationText.textContent = data.message;
+        } else {
+            notification.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
+            notification.classList.add('flex', 'bg-red-50', 'border-red-200', 'text-red-700');
+            notificationText.textContent = data.message;
+        }
+        
+        // Scroll vers le haut pour voir la notification
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Masquer après 5 secondes
+        setTimeout(() => {
+            notification.classList.add('hidden');
+            notification.classList.remove('flex');
+        }, 5000);
+    })
+    .catch(error => {
+        alert('Erreur lors de l\'envoi de l\'email');
+        console.error(error);
+    });
+}
 </script>
 
 <?php include 'includes/admin_footer.php'; ?>
