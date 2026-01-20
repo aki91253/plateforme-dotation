@@ -42,6 +42,39 @@ try {
 } catch (PDOException $e) {
     die('Erreur de connexion à la base de données: ' . $e->getMessage());
 }
+// Récupérer les demandes des 30 derniers jours
+$statsQuery = $pdo->query("
+    SELECT DATE(request_date) as date, COUNT(*) as total
+    FROM request
+    WHERE request_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    GROUP BY DATE(request_date)
+    ORDER BY date ASC
+");
+$dailyStats = $statsQuery->fetchAll(PDO::FETCH_ASSOC);
+
+// Préparer les données pour le graphique
+$dates = [];
+$totals = [];
+
+// Remplir tous les jours des 30 derniers jours (même ceux sans demande)
+for ($i = 29; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $dates[] = date('d/m', strtotime($date));
+    
+    // Chercher si on a des données pour ce jour
+    $found = false;
+    foreach ($dailyStats as $stat) {
+        if ($stat['date'] === $date) {
+            $totals[] = (int)$stat['total'];
+            $found = true;
+            break;
+        }
+    }
+    if (!$found) {
+        $totals[] = 0;
+    }
+}
+
 
 include 'includes/admin_header.php';
 ?>
@@ -279,6 +312,74 @@ include 'includes/admin_header.php';
             </div>
         </a>
     </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Demandes des 30 derniers jours</h3>
+    <canvas id="demandesChart" height="80"></canvas>
+</div>
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('demandesChart').getContext('2d');
+const demandesChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: <?= json_encode($dates) ?>,
+        datasets: [{
+            label: 'Nombre de demandes',
+            data: <?= json_encode($totals) ?>,
+            borderColor: 'rgb(37, 99, 235)',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: 'rgb(37, 99, 235)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointHoverRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                displayColors: false,
+                callbacks: {
+                    label: function(context) {
+                        return context.parsed.y + ' demande(s)';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    precision: 0
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+</script>
 </div>
 
 <?php include 'includes/admin_footer.php'; ?>
