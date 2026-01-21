@@ -4,6 +4,7 @@
  * Liste et gestion de toutes les demandes de dotation
  */
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 // Vérifier que l'utilisateur est admin
@@ -15,8 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $newStatus = (int) $_POST['new_status'];
     
     try {
-        $updateStmt = $pdo->prepare("UPDATE request SET status_id = ? WHERE id = ?");
-        $updateStmt->execute([$newStatus, $requestId]);
+        updateRequestStatus($requestId, $newStatus);
         header('Location: requests.php?success=1');
         exit;
     } catch (PDOException $e) {
@@ -27,13 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 // Traitement du nettoyage des demandes de plus de 30 jours
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cleanup_old_requests'])) {
     try {
-        // Les request_line seront supprimées automatiquement grâce à ON DELETE CASCADE
-        $cleanupStmt = $pdo->prepare("
-            DELETE FROM request 
-            WHERE request_date < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-        ");
-        $cleanupStmt->execute();
-        $deletedCount = $cleanupStmt->rowCount();
+        $deletedCount = deleteOldRequests(30);
         header('Location: requests.php?cleanup_success=' . $deletedCount);
         exit;
     } catch (PDOException $e) {
@@ -41,63 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cleanup_old_requests'
     }
 }
 
-// Récupérer les statistiques
-$statsQuery = $pdo->query("
-    SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) as en_attente,
-        SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as verifiees,
-        SUM(CASE WHEN status_id = 3 THEN 1 ELSE 0 END) as approuvees,
-        SUM(CASE WHEN status_id = 4 THEN 1 ELSE 0 END) as envoyees,
-        SUM(CASE WHEN status_id = 5 THEN 1 ELSE 0 END) as livrees,
-        SUM(CASE WHEN status_id = 6 THEN 1 ELSE 0 END) as refusees
-    FROM request
-");
-$stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
-
-// Compter les demandes de plus de 30 jours
-$oldRequestsQuery = $pdo->query("
-    SELECT COUNT(*) as count 
-    FROM request 
-    WHERE request_date < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-");
-$oldRequestsCount = $oldRequestsQuery->fetch(PDO::FETCH_ASSOC)['count'];
-
-// Récupérer les statuts disponibles
-$statusQuery = $pdo->query("SELECT * FROM type_status ORDER BY id");
-$statuses = $statusQuery->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les données via les fonctions centralisées
+$stats = getRequestStats();
+$oldRequestsCount = getOldRequestsCount(30);
+$statuses = getAllStatuses();
 
 // Récupérer les filtres
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $statusFilter = isset($_GET['status']) ? intval($_GET['status']) : 0;
 
-// Construire la requête
-$query = "SELECT r.*, t.libelle as status_label, 
-          CONCAT(resp.first_name, ' ', resp.last_name) as responsible_name,
-          (SELECT COUNT(*) FROM request_line WHERE request_id = r.id) as items_count,
-          (SELECT MAX(changed_at) FROM historique_etat WHERE request_id = r.id) as last_status_change
-          FROM request r 
-          LEFT JOIN type_status t ON r.status_id = t.id
-          LEFT JOIN responsible resp ON r.responsible_id = resp.id
-          WHERE 1=1";
-
-$params = [];
-
-if (!empty($searchTerm)) {
-    $query .= " AND (r.token LIKE :search OR r.establishment_name LIKE :search OR r.email LIKE :search OR r.last_name LIKE :search OR r.first_name LIKE :search)";
-    $params['search'] = '%' . $searchTerm . '%';
-}
-
-if ($statusFilter > 0) {
-    $query .= " AND r.status_id = :status";
-    $params['status'] = $statusFilter;
-}
-
-$query .= " ORDER BY r.request_date DESC, r.id DESC";
-
-$stmt = $pdo->prepare($query);
-$stmt->execute($params);
-$requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les demandes filtrées
+$requests = getFilteredRequests($searchTerm, $statusFilter);
 
 // Couleurs et icônes pour les statuts
 $statusColors = [

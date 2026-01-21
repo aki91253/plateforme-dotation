@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 // Vérifier que l'utilisateur est admin
@@ -21,54 +22,19 @@ if (isset($_GET['created']) && $_GET['created'] == 1) {
     $successMessage = 'Dotation créée avec succès !';
 }
 
-// Récupérer les statistiques
-$statsQuery = $pdo->query("
-    SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as actives,
-        SUM(CASE WHEN stock < 20 THEN 1 ELSE 0 END) as stock_faible,
-        SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) as en_rupture
-    FROM product
-");
-$stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
+// Récupérer les statistiques et données via les fonctions centralisées
+$stats = getStockStats();
 
 // Récupérer les filtres
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryFilter = isset($_GET['category']) ? intval($_GET['category']) : 0;
 $showInactive = isset($_GET['show_inactive']) ? true : false;
 
-// Construire la requête
-$query = "SELECT p.*, c.name as category_name, pi.url as image_url
-          FROM product p 
-          LEFT JOIN category c ON p.category_id = c.id
-          LEFT JOIN product_image pi ON p.id = pi.product_id
-          WHERE 1=1";
-
-$params = [];
-
-if (!$showInactive) {
-    $query .= " AND p.is_active = 1";
-}
-
-if (!empty($searchTerm)) {
-    $query .= " AND (p.name LIKE :search OR p.reference LIKE :search)";
-    $params['search'] = '%' . $searchTerm . '%';
-}
-
-if ($categoryFilter > 0) {
-    $query .= " AND p.category_id = :category";
-    $params['category'] = $categoryFilter;
-}
-
-$query .= " ORDER BY p.id DESC";
-
-$stmt = $pdo->prepare($query);
-$stmt->execute($params);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les produits filtrés via la fonction centralisée
+$products = getFilteredProducts($searchTerm, $categoryFilter, $showInactive);
 
 // Récupérer les catégories pour le filtre
-$categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
-$categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
+$categories = getAllCategories();
 
 include 'includes/admin_header.php';
 ?>

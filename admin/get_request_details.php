@@ -3,6 +3,8 @@
  * Get Request Details (AJAX endpoint)
  * Returns HTML for request detail modal
  */
+require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 if (!isAdminLoggedIn()) {
@@ -17,34 +19,16 @@ if ($requestId <= 0) {
 }
 
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=canope-reseau;charset=utf8mb4', 'root', 'root');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Get request
-    $stmt = $pdo->prepare('
-        SELECT r.*, CONCAT(resp.first_name, " ", resp.last_name) as responsible_name, s.libelle as status
-        FROM request r 
-        JOIN type_status s ON r.status_id = s.id
-        LEFT JOIN responsible resp ON resp.id = r.responsible_id
-        WHERE r.id = ?
-    ');
-    $stmt->execute([$requestId]);
-    $request = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Get request via centralized function
+    $request = getRequestById($requestId);
     
     if (!$request) {
         echo '<p class="text-gray-500">Demande non trouvée</p>';
         exit;
     }
     
-    // Get request lines
-    $stmtLines = $pdo->prepare('
-        SELECT rl.*, p.name as product_name, p.reference
-        FROM request_line rl
-        JOIN product p ON p.id = rl.product_id
-        WHERE rl.request_id = ?
-    ');
-    $stmtLines->execute([$requestId]);
-    $lines = $stmtLines->fetchAll(PDO::FETCH_ASSOC);
+    // Get request lines via centralized function
+    $lines = getRequestLines($requestId);
     
 } catch (PDOException $e) {
     echo '<p class="text-red-500">Erreur de connexion</p>';
