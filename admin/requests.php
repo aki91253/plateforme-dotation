@@ -112,7 +112,7 @@ $statusColors = [
 include 'includes/admin_header.php';
 ?>
 
-<div class="min-h-screen bg-gray-50 p-6">
+<div class="min-h-screen bg-gray-50 p-6 rounded-lg">
     <div class="max-w-7xl mx-auto">
         <!-- En-tête -->
         <div class="flex items-center justify-between mb-6">
