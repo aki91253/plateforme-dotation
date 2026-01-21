@@ -49,7 +49,8 @@ $statusFilter = isset($_GET['status']) ? intval($_GET['status']) : 0;
 // Construire la requête
 $query = "SELECT r.*, t.libelle as status_label, 
           CONCAT(resp.first_name, ' ', resp.last_name) as responsible_name,
-          (SELECT COUNT(*) FROM request_line WHERE request_id = r.id) as items_count
+          (SELECT COUNT(*) FROM request_line WHERE request_id = r.id) as items_count,
+          (SELECT MAX(changed_at) FROM historique_etat WHERE request_id = r.id) as last_status_change
           FROM request r 
           LEFT JOIN type_status t ON r.status_id = t.id
           LEFT JOIN responsible resp ON r.responsible_id = resp.id
@@ -101,7 +102,7 @@ include 'includes/admin_header.php';
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
-                <div>
+            <div>
                     <h1 class="text-2xl font-bold text-gray-900">Gestion des demandes</h1>
                     <p class="text-gray-500 text-sm">Canopé Corse</p>
                 </div>
@@ -123,6 +124,14 @@ include 'includes/admin_header.php';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             <span id="emailNotificationText"></span>
+        </div>
+        
+        <!-- Notification pour nettoyage -->
+        <div id="cleanupNotification" class="mb-6 px-4 py-3 rounded-xl items-center gap-2 hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span id="cleanupNotificationText"></span>
         </div>
 
         <!-- Statistiques -->
@@ -204,6 +213,7 @@ include 'includes/admin_header.php';
                         <th class="text-left px-6 py-4 text-sm font-semibold text-gray-700">Établissement</th>
                         <th class="text-center px-6 py-4 text-sm font-semibold text-gray-700">Articles</th>
                         <th class="text-left px-6 py-4 text-sm font-semibold text-gray-700">Date</th>
+                        <th class="text-center px-6 py-4 text-sm font-semibold text-gray-700">Jours</th>
                         <th class="text-left px-6 py-4 text-sm font-semibold text-gray-700">Statut</th>
                         <th class="text-right px-6 py-4 text-sm font-semibold text-gray-700">Actions</th>
                     </tr>
@@ -211,7 +221,7 @@ include 'includes/admin_header.php';
                 <tbody class="divide-y divide-gray-100">
                     <?php if (empty($requests)): ?>
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
@@ -242,6 +252,15 @@ include 'includes/admin_header.php';
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">
                                     <?= date('d/m/Y', strtotime($request['request_date'])) ?>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <?php 
+                                        $lastChange = $request['last_status_change'] ?? $request['request_date'];
+                                        $daysSinceChange = floor((time() - strtotime($lastChange)) / 86400);
+                                    ?>
+                                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full <?= $daysSinceChange > 30 ? 'bg-red-100 text-red-700' : ($daysSinceChange > 7 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') ?>">
+                                        <?= $daysSinceChange ?> j
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 <?= $colors['bg'] ?> <?= $colors['text'] ?> text-xs font-medium rounded-full">

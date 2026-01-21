@@ -87,7 +87,7 @@ try {
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=UTF-8\r\n";
     $headers .= "From: Réseau Canopé Corse <dotations.da-corse@reseau-canope.fr>\r\n";
-    $headers .= "Reply-To: noreply@canope-corse.fr\r\n";
+    $headers .= "Reply-To: dotations.da-corse@reseau-canope.fr\r\n";
     
     // Mode développement: sauvegarder l'email dans un fichier
     if (DEV_MODE) {
