@@ -215,7 +215,9 @@ include 'includes/admin_header.php';
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-800">Demandes récentes</h2>
-                <a href="requests.php" class="text-canope-dark hover:text-canope-olive text-sm font-medium transition-colors">
+                <a href="requests.php" class="text-canope-dark hover:text-canope-olive text-sm font-medium
+          transition-all duration-200 ease-out
+          transform hover:scale-105">
                     Voir tout →
                 </a>
             </div>
@@ -264,7 +266,9 @@ include 'includes/admin_header.php';
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-800">Alertes stock faible</h2>
-                <a href="stock.php" class="text-canope-dark hover:text-canope-olive text-sm font-medium transition-colors">
+                <a href="stock.php" class="text-canope-dark hover:text-canope-olive text-sm font-medium
+          transition-all duration-200 ease-out
+          transform hover:scale-105">
                     Gérer →
                 </a>
             </div>
