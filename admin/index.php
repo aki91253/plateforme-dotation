@@ -10,6 +10,15 @@ requireAdmin();
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=canope-reseau;charset=utf8mb4', 'root', 'root');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      
+    // Initialiser les variables pour éviter les erreurs
+    $searchTerm = '';
+    $categoryFilter = 0;
+    $showInactive = false;
+    
+    // Récupérer les catégories pour le filtre du graphique
+    $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
+    $categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
     
     // Get statistics
     $totalProducts = $pdo->query('SELECT COUNT(*) FROM product WHERE is_active = 1')->fetchColumn();
@@ -42,26 +51,52 @@ try {
 } catch (PDOException $e) {
     die('Erreur de connexion à la base de données: ' . $e->getMessage());
 }
-// Récupérer les demandes des 30 derniers jours
-$statsQuery = $pdo->query("
-    SELECT DATE(request_date) as date, COUNT(*) as total
-    FROM request
-    WHERE request_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-    GROUP BY DATE(request_date)
-    ORDER BY date ASC
-");
-$dailyStats = $statsQuery->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupérer les filtres pour le graphique
+$days = isset($_GET['days']) ? intval($_GET['days']) : 30;
+$status_filter = isset($_GET['status_filter']) ? intval($_GET['status_filter']) : 0;
+$category_filter_chart = isset($_GET['category_chart']) ? intval($_GET['category_chart']) : 0;
+
+// Limiter le nombre de jours entre 7 et 365
+$days = max(7, min(365, $days));
+
+// Construire la requête avec filtres
+$chartQuery = "
+    SELECT DATE(r.request_date) as date, COUNT(*) as total
+    FROM request r
+    LEFT JOIN product p ON r.product_id = p.id
+    WHERE r.request_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+";
+
+$chartParams = [$days];
+
+// Filtre par statut
+if ($status_filter > 0) {
+    $chartQuery .= " AND r.status_id = ?";
+    $chartParams[] = $status_filter;
+}
+
+// Filtre par catégorie
+if ($category_filter_chart > 0) {
+    $chartQuery .= " AND p.category_id = ?";
+    $chartParams[] = $category_filter_chart;
+}
+
+$chartQuery .= " GROUP BY DATE(r.request_date) ORDER BY date ASC";
+
+$statsStmt = $pdo->prepare($chartQuery);
+$statsStmt->execute($chartParams);
+$dailyStats = $statsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Préparer les données pour le graphique
 $dates = [];
 $totals = [];
 
-// Remplir tous les jours des 30 derniers jours (même ceux sans demande)
-for ($i = 29; $i >= 0; $i--) {
+// Remplir tous les jours
+for ($i = $days - 1; $i >= 0; $i--) {
     $date = date('Y-m-d', strtotime("-$i days"));
     $dates[] = date('d/m', strtotime($date));
     
-    // Chercher si on a des données pour ce jour
     $found = false;
     foreach ($dailyStats as $stat) {
         if ($stat['date'] === $date) {
@@ -75,6 +110,9 @@ for ($i = 29; $i >= 0; $i--) {
     }
 }
 
+// Récupérer les statuts pour le filtre
+$statusQuery = $pdo->query("SELECT * FROM type_status ORDER BY id");
+$statuses = $statusQuery->fetchAll(PDO::FETCH_ASSOC);
 
 include 'includes/admin_header.php';
 ?>
@@ -312,9 +350,121 @@ include 'includes/admin_header.php';
             </div>
         </a>
     </div>
+    
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">Demandes des 30 derniers jours</h3>
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Demandes sur les derniers jours</h3>
+        
+        <!-- Filtres du graphique -->
+        <form method="GET" class="flex items-center gap-3">
+            <!-- Conserver les autres filtres de la page -->
+            <?php if (!empty($searchTerm)): ?>
+                <input type="hidden" name="search" value="<?= htmlspecialchars($searchTerm) ?>">
+            <?php endif; ?>
+            <?php if ($categoryFilter > 0): ?>
+                <input type="hidden" name="category" value="<?= $categoryFilter ?>">
+            <?php endif; ?>
+            <?php if ($showInactive): ?>
+                <input type="hidden" name="show_inactive" value="1">
+            <?php endif; ?>
+            
+            <!-- Nombre de jours -->
+            <div class="flex items-center gap-2">
+                <label for="days" class="text-sm text-gray-700 font-medium whitespace-nowrap">Période :</label>
+                <select name="days" id="days" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <option value="7" <?= $days == 7 ? 'selected' : '' ?>>7 jours</option>
+                    <option value="14" <?= $days == 14 ? 'selected' : '' ?>>14 jours</option>
+                    <option value="30" <?= $days == 30 ? 'selected' : '' ?>>30 jours</option>
+                    <option value="60" <?= $days == 60 ? 'selected' : '' ?>>60 jours</option>
+                    <option value="90" <?= $days == 90 ? 'selected' : '' ?>>90 jours</option>
+                    <option value="180" <?= $days == 180 ? 'selected' : '' ?>>6 mois</option>
+                    <option value="365" <?= $days == 365 ? 'selected' : '' ?>>1 an</option>
+                </select>
+            </div>
+
+            <!-- Filtre par statut -->
+            <div class="flex items-center gap-2">
+                <label for="status_filter" class="text-sm text-gray-700 font-medium whitespace-nowrap">Statut :</label>
+                <select name="status_filter" id="status_filter" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <option value="0">Tous les statuts</option>
+                    <?php foreach ($statuses as $status): ?>
+                        <option value="<?= $status['id'] ?>" <?= $status_filter == $status['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($status['libelle']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Filtre par catégorie -->
+            <div class="flex items-center gap-2">
+                <label for="category_chart" class="text-sm text-gray-700 font-medium whitespace-nowrap">Catégorie :</label>
+                <select name="category_chart" id="category_chart" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <option value="0">Toutes catégories</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= $cat['id'] ?>" <?= $category_filter_chart == $cat['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($cat['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Bouton Appliquer -->
+            <button type="submit" class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap">
+                Actualiser
+            </button>
+
+            <!-- Bouton Réinitialiser -->
+            <?php if ($days != 30 || $status_filter > 0 || $category_filter_chart > 0): ?>
+                <a href="?<?= !empty($searchTerm) ? 'search='.urlencode($searchTerm).'&' : '' ?><?= $categoryFilter > 0 ? 'category='.$categoryFilter.'&' : '' ?><?= $showInactive ? 'show_inactive=1' : '' ?>" 
+                   class="px-4 py-1.5 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors font-medium whitespace-nowrap">
+                    Réinitialiser
+                </a>
+            <?php endif; ?>
+        </form>
+    </div>
+
+    <!-- Graphique -->
     <canvas id="demandesChart" height="80"></canvas>
+    
+    <!-- Résumé sous le graphique -->
+    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-sm">
+        <div class="flex items-center gap-6">
+            <div>
+                <span class="text-gray-500">Total des demandes :</span>
+                <span class="font-bold text-gray-900 ml-1"><?= array_sum($totals) ?></span>
+            </div>
+            <div>
+                <span class="text-gray-500">Moyenne par jour :</span>
+                <span class="font-bold text-gray-900 ml-1"><?= $days > 0 ? round(array_sum($totals) / $days, 1) : 0 ?></span>
+            </div>
+            <div>
+                <span class="text-gray-500">Pic :</span>
+                <span class="font-bold text-gray-900 ml-1"><?= !empty($totals) ? max($totals) : 0 ?></span>
+            </div>
+        </div>
+        
+        <?php if ($status_filter > 0 || $category_filter_chart > 0): ?>
+            <div class="flex items-center gap-2 text-xs">
+                <span class="text-gray-500">Filtres actifs :</span>
+                <?php if ($status_filter > 0): ?>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+                        <?php 
+                        $statusName = array_filter($statuses, fn($s) => $s['id'] == $status_filter);
+                        echo htmlspecialchars(reset($statusName)['libelle'] ?? 'Statut');
+                        ?>
+                    </span>
+                <?php endif; ?>
+                <?php if ($category_filter_chart > 0): ?>
+                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                        <?php 
+                        $catName = array_filter($categories, fn($c) => $c['id'] == $category_filter_chart);
+                        echo htmlspecialchars(reset($catName)['name'] ?? 'Catégorie');
+                        ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
