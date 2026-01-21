@@ -22,8 +22,9 @@ try {
     
     // Get request
     $stmt = $pdo->prepare('
-        SELECT r.*, CONCAT(resp.first_name, " ", resp.last_name) as responsible_name
+        SELECT r.*, CONCAT(resp.first_name, " ", resp.last_name) as responsible_name, s.libelle as status
         FROM request r 
+        JOIN type_status s ON r.status_id = s.id
         LEFT JOIN responsible resp ON resp.id = r.responsible_id
         WHERE r.id = ?
     ');
