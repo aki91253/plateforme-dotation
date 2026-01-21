@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/queries.php';
 
 $demande = null;
 $erreur = '';
@@ -11,25 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
     
     if (!empty($searchToken)) {
         try {
-            $query = $pdo->prepare("
-                SELECT 
-                    re.id,
-                    t.libelle as status,
-                    re.last_name as demandeur_nom,
-                    re.email as demandeur_email,
-                    re.phone as demandeur_phone,
-                    re.request_date as created_at,
-                    re.token,
-                    rl.quantity,
-                    re.establishment_name as demandeur_institution
-                FROM request re
-                JOIN request_line rl ON re.id = rl.request_id
-                JOIN type_status t ON re.status_id = t.id
-                WHERE token = :token
-                LIMIT 1
-            ");
-            $query->execute(['token' => $searchToken]);
-            $demande = $query->fetch(PDO::FETCH_ASSOC);
+            $demande = getRequestByToken($searchToken);
             
             if (!$demande) {
                 $erreur = "Demande non trouvée. Vérifiez votre token.";
@@ -44,33 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
 
 $historique = [];
 if ($demande) {
-    $histQuery = $pdo->prepare("
-        SELECT 
-        re.token,
-        h.changed_at,
-        t.libelle
-        FROM request re
-        JOIN historique_etat h ON re.id = h.request_id
-        JOIN type_status t ON h.status_id = t.id
-        WHERE token = :token 
-        ORDER BY request_date DESC
-    ");
-    $histQuery->execute(['token' => $demande['token']]);
-    $historique = $histQuery->fetchAll(PDO::FETCH_ASSOC);
+    $historique = getRequestStatusHistory($demande['token']);
     
-    $produits = [];
-    $prodQuery = $pdo->prepare("
-        SELECT rl.*, p.name as product_name, p.reference
-        FROM request_line rl
-        JOIN product p ON p.id = rl.product_id
-        WHERE rl.request_id = :id
-    ");
-    $prodQuery->execute(['id' => $demande['id']]);
-    $produits = $prodQuery->fetchAll(PDO::FETCH_ASSOC);
+    $produits = getRequestProductsByRequestId($demande['id']);
     $demande['produits'] = $produits;
-
-
-
 }
 
 include 'includes/header.php';

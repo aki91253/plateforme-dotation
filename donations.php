@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/queries.php';
 
 // GET les filtres sélectionnés depuis l'URL
 $selectedCategories = [];
@@ -49,114 +50,34 @@ if (isset($_GET['collection'])) {
 
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// récupère les options des filtres depuis la base de données
-$categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
-$categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les options des filtres avec les fonctions centralisées
+$categories = getAllCategories();
+$resourceTypes = getAllRessources();
+$languages = getAllLangues();
+$disciplines = getAllDisciplines();
 
-$resourceTypesQuery = $pdo->query("SELECT * FROM type_ressource ORDER BY libelle");
-$resourceTypes = $resourceTypesQuery->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les collections distinctes des produits
+$collectionsData = getDistinctCollections();
+$collections = array_column($collectionsData, 'collection');
 
-$languagesQuery = $pdo->query("SELECT * FROM langue_product ORDER BY langue");
-$languages = $languagesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-$disciplinesQuery = $pdo->query("SELECT * FROM discipline ORDER BY libelle");
-$disciplines = $disciplinesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// récupère les collections distinctes des produits (en filtrant les vides)
-$collectionsQuery = $pdo->query("SELECT DISTINCT collection FROM product WHERE collection IS NOT NULL AND collection != '' ORDER BY collection");
-$collections = $collectionsQuery->fetchAll(PDO::FETCH_COLUMN);
-
-// Construit la requête de base avec les filtres
-$baseQuery = "SELECT p.*, c.name as category_name, rt.libelle as resource_type_name, 
-              l.langue as language_name, d.libelle as discipline_name,
-              pi.url as image_url, pi.alt_text as image_alt
-              FROM product p 
-              LEFT JOIN category c ON p.category_id = c.id 
-              LEFT JOIN type_ressource rt ON p.id_ressource = rt.id
-              LEFT JOIN langue_product l ON p.langue_id = l.id
-              LEFT JOIN discipline d ON p.discipline_id = d.id
-              LEFT JOIN product_image pi ON p.id = pi.product_id
-              WHERE p.is_active = 1 AND p.stock > 0";
-
-$params = [];
-
-// Applique le filtre niveau
-if (!empty($selectedCategories)) {
-    $placeholders = [];
-    foreach ($selectedCategories as $i => $catId) {
-        $placeholders[] = ":cat$i";
-        $params["cat$i"] = $catId;
-    }
-    $baseQuery .= " AND p.category_id IN (" . implode(',', $placeholders) . ")";
-}
-
-// Applique le filtre type de ressource
-if (!empty($selectedResourceTypes)) {
-    $placeholders = [];
-    foreach ($selectedResourceTypes as $i => $rtId) {
-        $placeholders[] = ":rt$i";
-        $params["rt$i"] = $rtId;
-    }
-    $baseQuery .= " AND p.id_ressource IN (" . implode(',', $placeholders) . ")";
-}
-
-// Applique le filtre langue
-if (!empty($selectedLanguages)) {
-    $placeholders = [];
-    foreach ($selectedLanguages as $i => $langId) {
-        $placeholders[] = ":lang$i";
-        $params["lang$i"] = $langId;
-    }
-    $baseQuery .= " AND p.langue_id IN (" . implode(',', $placeholders) . ")";
-}
-
-// Applique le filtre discipline
-if (!empty($selectedDisciplines)) {
-    $placeholders = [];
-    foreach ($selectedDisciplines as $i => $discId) {
-        $placeholders[] = ":disc$i";
-        $params["disc$i"] = $discId;
-    }
-    $baseQuery .= " AND p.discipline_id IN (" . implode(',', $placeholders) . ")";
-}
-
-// Applique le filtre collection
-if (!empty($selectedCollections)) {
-    $placeholders = [];
-    foreach ($selectedCollections as $i => $coll) {
-        $placeholders[] = ":coll$i";
-        $params["coll$i"] = $coll;
-    }
-    $baseQuery .= " AND p.collection IN (" . implode(',', $placeholders) . ")";
-}
-
-// Applique le filtre de recherche
-if (!empty($searchTerm)) {
-    $baseQuery .= " AND (p.name LIKE :search OR p.description LIKE :search OR p.reference LIKE :search)";
-    $params['search'] = '%' . $searchTerm . '%';
-}
+// Construire le tableau de filtres pour les fonctions centralisées
+$filters = [
+    'categories' => $selectedCategories,
+    'resourceTypes' => $selectedResourceTypes,
+    'languages' => $selectedLanguages,
+    'disciplines' => $selectedDisciplines,
+    'collections' => $selectedCollections,
+    'search' => $searchTerm
+];
 
 // Pagination settings
 $productsPerPage = 12;
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 
-// Count total products for pagination
-$countQuery = str_replace("SELECT p.*, c.name as category_name, rt.libelle as resource_type_name, 
-              l.langue as language_name, d.libelle as discipline_name,
-              pi.url as image_url, pi.alt_text as image_alt", "SELECT COUNT(DISTINCT p.id) as total", $baseQuery);
-$countStmt = $pdo->prepare($countQuery);
-$countStmt->execute($params);
-$totalProducts = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+// Compter le total de produits et récupérer les produits avec les fonctions centralisées
+$totalProducts = countDonationsWithFilters($filters);
 $totalPages = ceil($totalProducts / $productsPerPage);
-
-// Calculate offset
-$offset = ($currentPage - 1) * $productsPerPage;
-
-$baseQuery .= " ORDER BY p.name LIMIT $productsPerPage OFFSET $offset";
-
-$productsQuery = $pdo->prepare($baseQuery);
-$productsQuery->execute($params);
-$products = $productsQuery->fetchAll(PDO::FETCH_ASSOC);
+$products = getDonationsWithFilters($filters, $currentPage, $productsPerPage);
 
 // Vérifie si des filtres sont actifs
 $hasActiveFilters = !empty($selectedCategories) || !empty($selectedResourceTypes) || 

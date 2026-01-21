@@ -4,6 +4,7 @@
  * Sauvegarde de la demande dans la base de données
  */
 require_once 'includes/db.php';
+require_once 'includes/queries.php';
 require_once 'includes/auth.php';
 
 header('Content-Type: application/json');
@@ -33,42 +34,33 @@ try {
     }
     
     // Génération d'un token unique pour la demande
-    // Boucle pour s'assurer que le token n'existe pas déjà
     do {
-        $token = bin2hex(random_bytes(16)); // Génère un token hexadécimal de 32 caractères
-        $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM request WHERE token = ?');
-        $checkStmt->execute([$token]);
-        $tokenExists = $checkStmt->fetchColumn() > 0;
-    } while ($tokenExists);
+        $token = bin2hex(random_bytes(16));
+    } while (tokenExists($token));
     
     // Début de la transaction
     $pdo->beginTransaction();
     
-    // Insertion de la demande principale (utilisation du premier product_id pour la compatibilité avec l'historique)
-    // id_responsable = 1 par défaut (premier utilisateur admin)
+    // Insertion de la demande principale
     $firstProductId = $cartData[0]['id'] ?? 1;
-    $stmt = $pdo->prepare('INSERT INTO request (token, product_id, last_name, first_name, email, phone, establishment_name, establishment_address, establishment_postal, establishment_city, request_date, comment, status_id, responsible_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, 1)');
-    $stmt->execute([
-        $token,
-        $firstProductId,
-        $lastName,
-        $firstName,
-        $email,
-        $phone,
-        $establishmentName,
-        $establishmentAddress,
-        $establishmentPostal,
-        $establishmentCity,
-        $comment
+    $requestId = createRequest([
+        'token' => $token,
+        'product_id' => $firstProductId,
+        'last_name' => $lastName,
+        'first_name' => $firstName,
+        'email' => $email,
+        'phone' => $phone,
+        'establishment_name' => $establishmentName,
+        'establishment_address' => $establishmentAddress,
+        'establishment_postal' => $establishmentPostal,
+        'establishment_city' => $establishmentCity,
+        'comment' => $comment
     ]);
     
-    $requestId = $pdo->lastInsertId();
-    
     // Insertion des lignes de demande pour chaque produit
-    $stmtLine = $pdo->prepare('INSERT INTO request_line (request_id, product_id, quantity, comment) VALUES (?, ?, ?, ?)');
     foreach ($cartData as $item) {
         $quantity = $item['quantity'] ?? 1;
-        $stmtLine->execute([$requestId, $item['id'], $quantity, $item['name']]);
+        createRequestLine($requestId, $item['id'], $quantity, $item['name']);
     }
     
     $pdo->commit();

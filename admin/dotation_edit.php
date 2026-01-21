@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 requireAdmin();
@@ -13,27 +14,18 @@ if ($id === 0) {
     exit;
 }
 
-// Récupérer les données du produit
-$stmt = $pdo->prepare("SELECT * FROM product WHERE id = ?");
-$stmt->execute([$id]);
-$product = $stmt->fetch(PDO::FETCH_ASSOC);
+// Récupérer les données du produit avec la fonction centralisée
+$product = getProductById($id);
 
 if (!$product) {
     header('Location: stock.php');
     exit;
 }
 
-// Récupérer les catégories
-$categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
-$categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les responsables
-$responsiblesQuery = $pdo->query("SELECT id, last_name, first_name FROM responsible ORDER BY last_name");
-$responsibles = $responsiblesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les lieux de stockage
-$locationsQuery = $pdo->query("SELECT DISTINCT location FROM product WHERE location IS NOT NULL AND location != '' ORDER BY location");
-$locations = $locationsQuery->fetchAll(PDO::FETCH_COLUMN);
+// Récupérer les données de référence avec les fonctions centralisées
+$categories = getAllCategories();
+$responsibles = getAllResponsibles();
+$locations = getDistinctLocations();
 
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -53,18 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
         
         if (in_array($file['type'], $allowedTypes)) {
-            // Créer le dossier s'il n'existe pas
             $uploadDir = '../assets/img/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
             
-            // Générer un nom unique
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             $newFileName = uniqid('product_') . '.' . $extension;
             $destination = $uploadDir . $newFileName;
             
-            // Déplacer le fichier
             if (move_uploaded_file($file['tmp_name'], $destination)) {
                 $image_url = 'assets/img/' . $newFileName;
             } else {
@@ -83,55 +72,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Les quantités ne peuvent pas être négatives.';
     } else {
         try {
-            // Mettre à jour le produit
-            $stmt = $pdo->prepare("
-                UPDATE product 
-                SET name = ?, description = ?, category_id = ?, location = ?, 
-                    responsible_id = ?, quantite_totale = ?, stock = ?, 
-                    is_active = ?
-                WHERE id = ?
-            ");
-            
-            $stmt->execute([
-                $name,
-                $description,
-                $category_id,
-                $location,
-                $responsible_id,
-                $stock_initial,
-                $stock,
-                $is_active,
-                $id
+            // Mettre à jour le produit avec la fonction centralisée
+            updateProduct($id, [
+                'name' => $name,
+                'description' => $description,
+                'category_id' => $category_id,
+                'location' => $location,
+                'responsible_id' => $responsible_id,
+                'quantite_totale' => $stock_initial,
+                'stock' => $stock,
+                'is_active' => $is_active
             ]);
 
             // Mettre à jour l'image si uploadée
             if (!empty($image_url)) {
-                // Vérifier si une image existe déjà
-                $imgStmt = $pdo->prepare("SELECT id FROM product_image WHERE product_id = ?");
-                $imgStmt->execute([$id]);
-                $existingImage = $imgStmt->fetch();
-
-                if ($existingImage) {
-                    // Mettre à jour l'image existante
-                    $updateImg = $pdo->prepare("UPDATE product_image SET url = ? WHERE product_id = ?");
-                    $updateImg->execute([$image_url, $id]);
-                } else {
-                    // Insérer une nouvelle image
-                    $insertImg = $pdo->prepare("INSERT INTO product_image (product_id, url) VALUES (?, ?)");
-                    $insertImg->execute([$id, $image_url]);
-                }
+                upsertProductImage($id, $image_url);
             }
 
             // Ajouter l'historique de modification
-            $histoStmt = $pdo->prepare("INSERT INTO historique_modif (product_id, date_modif) VALUES (?, CURDATE())");
-            $histoStmt->execute([$id]);
+            addProductModificationHistory($id);
 
             $success = 'Dotation modifiée avec succès !';
             
             // Recharger les données du produit
-            $stmt = $pdo->prepare("SELECT * FROM product WHERE id = ?");
-            $stmt->execute([$id]);
-            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+            $product = getProductById($id);
             
         } catch (PDOException $e) {
             $error = 'Erreur lors de la modification : ' . $e->getMessage();
@@ -140,9 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Récupérer l'URL de l'image actuelle
-$imageStmt = $pdo->prepare("SELECT url FROM product_image WHERE product_id = ?");
-$imageStmt->execute([$id]);
-$currentImage = $imageStmt->fetch(PDO::FETCH_ASSOC);
+$currentImageUrl = getProductImage($id);
+$currentImage = $currentImageUrl ? ['url' => $currentImageUrl] : null;
 
 include 'includes/admin_header.php';
 ?>
@@ -220,7 +183,7 @@ include 'includes/admin_header.php';
                            class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                     <datalist id="locationsList">
                         <?php foreach ($locations as $loc): ?>
-                            <option value="<?= htmlspecialchars($loc) ?>">
+                            <option value="<?= htmlspecialchars($loc['location']) ?>">
                         <?php endforeach; ?>
                     </datalist>
                 </div>

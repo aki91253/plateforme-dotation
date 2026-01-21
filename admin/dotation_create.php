@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 requireAdmin();
@@ -7,29 +8,13 @@ requireAdmin();
 $error = '';
 $success = '';
 
-// Récupérer les catégories
-$categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
-$categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les responsables
-$responsiblesQuery = $pdo->query("SELECT id, last_name, first_name FROM responsible ORDER BY last_name");
-$responsibles = $responsiblesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les types de ressources
-$ressourcesQuery = $pdo->query("SELECT * FROM type_ressource ORDER BY libelle");
-$ressources = $ressourcesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les langues
-$languesQuery = $pdo->query("SELECT * FROM langue_product ORDER BY langue");
-$langues = $languesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les disciplines
-$disciplinesQuery = $pdo->query("SELECT * FROM discipline ORDER BY libelle");
-$disciplines = $disciplinesQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Récupérer les lieux de stockage existants
-$locationsQuery = $pdo->query("SELECT DISTINCT location FROM product WHERE location IS NOT NULL AND location != '' ORDER BY location");
-$locations = $locationsQuery->fetchAll(PDO::FETCH_COLUMN);
+// Récupérer les données de référence avec les fonctions centralisées
+$categories = getAllCategories();
+$responsibles = getAllResponsibles();
+$ressources = getAllRessources();
+$langues = getAllLangues();
+$disciplines = getAllDisciplines();
+$locations = getDistinctLocations();
 
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,34 +25,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_id = intval($_POST['category_id'] ?? 0);
     $location = trim($_POST['location'] ?? '');
     $responsible_id = intval($_POST['responsible_id'] ?? 0);
-    // Gestion de l'upload d'image
-$image_url = '';
-if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    $file = $_FILES['image'];
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
     
-    if (in_array($file['type'], $allowedTypes)) {
-        // Créer le dossier s'il n'existe pas
-        $uploadDir = '../assets/img/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
+    // Gestion de l'upload d'image
+    $image_url = '';
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['image'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
         
-        // Générer un nom unique
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $newFileName = uniqid('product_') . '.' . $extension;
-        $destination = $uploadDir . $newFileName;
-        
-        // Déplacer le fichier
-        if (move_uploaded_file($file['tmp_name'], $destination)) {
-            $image_url = 'assets/img/' . $newFileName;
+        if (in_array($file['type'], $allowedTypes)) {
+            $uploadDir = '../assets/img/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $newFileName = uniqid('product_') . '.' . $extension;
+            $destination = $uploadDir . $newFileName;
+            
+            if (move_uploaded_file($file['tmp_name'], $destination)) {
+                $image_url = 'assets/img/' . $newFileName;
+            } else {
+                $error = 'Erreur lors de l\'upload de l\'image.';
+            }
         } else {
-            $error = 'Erreur lors de l\'upload de l\'image.';
+            $error = 'Format d\'image non autorisé. Utilisez JPG, PNG ou WEBP.';
         }
-    } else {
-        $error = 'Format d\'image non autorisé. Utilisez JPG, PNG ou WEBP.';
     }
-}
+    
     $quantite_totale = intval($_POST['quantite_totale'] ?? 0);
     $stock = intval($_POST['stock'] ?? 0);
     $langue_id = intval($_POST['langue_id'] ?? 0);
@@ -88,40 +72,28 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $error = 'Le stock disponible ne peut pas dépasser la quantité totale.';
     } else {
         try {
-            // Insérer le produit
-            $stmt = $pdo->prepare("
-                INSERT INTO product 
-                (name, reference, description, collection, category_id, location, 
-                 responsible_id, quantite_totale, stock, langue_id, id_ressource, 
-                 discipline_id, is_active) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ");
-            
-            $stmt->execute([
-                $name,
-                $reference,
-                $description,
-                $collection,
-                $category_id,
-                $location,
-                $responsible_id > 0 ? $responsible_id : null,
-                $quantite_totale,
-                $stock,
-                $langue_id > 0 ? $langue_id : null,
-                $id_ressource,
-                $discipline_id > 0 ? $discipline_id : null,
-                $is_active
+            // Créer le produit avec la fonction centralisée
+            $product_id = createProduct([
+                'name' => $name,
+                'reference' => $reference,
+                'description' => $description,
+                'collection' => $collection,
+                'category_id' => $category_id,
+                'location' => $location,
+                'responsible_id' => $responsible_id,
+                'quantite_totale' => $quantite_totale,
+                'stock' => $stock,
+                'langue_id' => $langue_id,
+                'id_ressource' => $id_ressource,
+                'discipline_id' => $discipline_id,
+                'is_active' => $is_active
             ]);
 
-            $product_id = $pdo->lastInsertId();
-
-            // Insérer l'image si fournie
+            // Créer l'image si fournie
             if (!empty($image_url)) {
-                $imgStmt = $pdo->prepare("INSERT INTO product_image (product_id, url) VALUES (?, ?)");
-                $imgStmt->execute([$product_id, $image_url]);
+                createProductImage($product_id, $image_url);
             }
 
-            // Redirection avec message de succès
             header('Location: stock.php?created=1');
             exit;
             
@@ -288,7 +260,7 @@ include 'includes/admin_header.php';
                                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                         <datalist id="locationsList">
                             <?php foreach ($locations as $loc): ?>
-                                <option value="<?= htmlspecialchars($loc) ?>">
+                                <option value="<?= htmlspecialchars($loc['location']) ?>">
                             <?php endforeach; ?>
                         </datalist>
                     </div>

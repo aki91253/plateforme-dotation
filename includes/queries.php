@@ -156,14 +156,15 @@ function getOldRequestsCount(int $days = 30): int {
  */
 function getLowStockItems(int $threshold = 20, int $limit = 5): array {
     global $pdo;
-    $stmt = $pdo->prepare('
-        SELECT name, stock as quantity 
-        FROM product 
-        WHERE is_active = 1 AND stock < ?
-        ORDER BY stock ASC 
-        LIMIT ?
-    ');
-    $stmt->execute([$threshold, $limit]);
+    // Use direct query with integer values embedded (safe because function parameters are typed as int)
+    $threshold = (int)$threshold;
+    $limit = (int)$limit;
+    $sql = "SELECT name, stock as quantity 
+            FROM product 
+            WHERE is_active = 1 AND stock < $threshold
+            ORDER BY stock ASC 
+            LIMIT $limit";
+    $stmt = $pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -172,16 +173,16 @@ function getLowStockItems(int $threshold = 20, int $limit = 5): array {
  */
 function getRecentRequests(int $limit = 5): array {
     global $pdo;
-    $stmt = $pdo->prepare('
-        SELECT r.token as request_number, r.establishment_name, r.status_id, t.libelle as status_label, r.request_date, 
-               CONCAT(resp.first_name, " ", resp.last_name) as responsible_name
+    // Use direct query with integer value embedded (safe because function parameter is typed as int)
+    $limit = (int)$limit;
+    $sql = "SELECT r.token as request_number, r.establishment_name, r.status_id, t.libelle as status_label, r.request_date, 
+               CONCAT(resp.first_name, ' ', resp.last_name) as responsible_name
         FROM request r 
         LEFT JOIN responsible resp ON resp.id = r.responsible_id
         LEFT JOIN type_status t ON t.id = r.status_id
         ORDER BY r.request_date DESC 
-        LIMIT ?
-    ');
-    $stmt->execute([$limit]);
+        LIMIT $limit";
+    $stmt = $pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -483,5 +484,427 @@ function getDailyRequestStats(int $days, int $statusFilter = 0, int $categoryFil
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// =============================================================================
+// DONATIONS PAGE QUERIES (Complex Filtering)
+// =============================================================================
+
+/**
+ * Get filtered donations/products for the public catalog
+ * Supports: categories, resource types, languages, disciplines, collections, search
+ */
+function getDonationsWithFilters(array $filters, int $page = 1, int $perPage = 12): array {
+    global $pdo;
+    
+    $query = "SELECT p.*, c.name as category_name, rt.libelle as resource_type_name, 
+              l.langue as language_name, d.libelle as discipline_name,
+              pi.url as image_url, pi.alt_text as image_alt
+              FROM product p 
+              LEFT JOIN category c ON p.category_id = c.id 
+              LEFT JOIN type_ressource rt ON p.id_ressource = rt.id
+              LEFT JOIN langue_product l ON p.langue_id = l.id
+              LEFT JOIN discipline d ON p.discipline_id = d.id
+              LEFT JOIN product_image pi ON p.id = pi.product_id
+              WHERE p.is_active = 1 AND p.stock > 0";
+    
+    $params = [];
+    
+    // Category filter
+    if (!empty($filters['categories'])) {
+        $placeholders = [];
+        foreach ($filters['categories'] as $i => $catId) {
+            $placeholders[] = ":cat$i";
+            $params["cat$i"] = $catId;
+        }
+        $query .= " AND p.category_id IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Resource type filter
+    if (!empty($filters['resourceTypes'])) {
+        $placeholders = [];
+        foreach ($filters['resourceTypes'] as $i => $rtId) {
+            $placeholders[] = ":rt$i";
+            $params["rt$i"] = $rtId;
+        }
+        $query .= " AND p.id_ressource IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Language filter
+    if (!empty($filters['languages'])) {
+        $placeholders = [];
+        foreach ($filters['languages'] as $i => $langId) {
+            $placeholders[] = ":lang$i";
+            $params["lang$i"] = $langId;
+        }
+        $query .= " AND p.langue_id IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Discipline filter
+    if (!empty($filters['disciplines'])) {
+        $placeholders = [];
+        foreach ($filters['disciplines'] as $i => $discId) {
+            $placeholders[] = ":disc$i";
+            $params["disc$i"] = $discId;
+        }
+        $query .= " AND p.discipline_id IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Collection filter
+    if (!empty($filters['collections'])) {
+        $placeholders = [];
+        foreach ($filters['collections'] as $i => $coll) {
+            $placeholders[] = ":coll$i";
+            $params["coll$i"] = $coll;
+        }
+        $query .= " AND p.collection IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Search filter
+    if (!empty($filters['search'])) {
+        $query .= " AND (p.name LIKE :search OR p.description LIKE :search OR p.reference LIKE :search)";
+        $params['search'] = '%' . $filters['search'] . '%';
+    }
+    
+    // Add ordering and pagination
+    $offset = ($page - 1) * $perPage;
+    $query .= " ORDER BY p.name LIMIT $perPage OFFSET $offset";
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Count total donations matching filters (for pagination)
+ */
+function countDonationsWithFilters(array $filters): int {
+    global $pdo;
+    
+    $query = "SELECT COUNT(DISTINCT p.id) as total
+              FROM product p 
+              LEFT JOIN category c ON p.category_id = c.id 
+              LEFT JOIN type_ressource rt ON p.id_ressource = rt.id
+              LEFT JOIN langue_product l ON p.langue_id = l.id
+              LEFT JOIN discipline d ON p.discipline_id = d.id
+              LEFT JOIN product_image pi ON p.id = pi.product_id
+              WHERE p.is_active = 1 AND p.stock > 0";
+    
+    $params = [];
+    
+    // Category filter
+    if (!empty($filters['categories'])) {
+        $placeholders = [];
+        foreach ($filters['categories'] as $i => $catId) {
+            $placeholders[] = ":cat$i";
+            $params["cat$i"] = $catId;
+        }
+        $query .= " AND p.category_id IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Resource type filter
+    if (!empty($filters['resourceTypes'])) {
+        $placeholders = [];
+        foreach ($filters['resourceTypes'] as $i => $rtId) {
+            $placeholders[] = ":rt$i";
+            $params["rt$i"] = $rtId;
+        }
+        $query .= " AND p.id_ressource IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Language filter
+    if (!empty($filters['languages'])) {
+        $placeholders = [];
+        foreach ($filters['languages'] as $i => $langId) {
+            $placeholders[] = ":lang$i";
+            $params["lang$i"] = $langId;
+        }
+        $query .= " AND p.langue_id IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Discipline filter
+    if (!empty($filters['disciplines'])) {
+        $placeholders = [];
+        foreach ($filters['disciplines'] as $i => $discId) {
+            $placeholders[] = ":disc$i";
+            $params["disc$i"] = $discId;
+        }
+        $query .= " AND p.discipline_id IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Collection filter
+    if (!empty($filters['collections'])) {
+        $placeholders = [];
+        foreach ($filters['collections'] as $i => $coll) {
+            $placeholders[] = ":coll$i";
+            $params["coll$i"] = $coll;
+        }
+        $query .= " AND p.collection IN (" . implode(',', $placeholders) . ")";
+    }
+    
+    // Search filter
+    if (!empty($filters['search'])) {
+        $query .= " AND (p.name LIKE :search OR p.description LIKE :search OR p.reference LIKE :search)";
+        $params['search'] = '%' . $filters['search'] . '%';
+    }
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    return (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
+}
+
+// =============================================================================
+// PRODUCT CRUD QUERIES
+// =============================================================================
+
+/**
+ * Get full product details with all related data (for details page)
+ */
+function getProductWithFullDetails(int $id): ?array {
+    global $pdo;
+    $stmt = $pdo->prepare('
+        SELECT p.*, p.stock as stock_quantity, c.name as category_name, 
+               l.langue as langue, d.libelle as discipline, t.libelle as ressource,
+               pi.url as image_url, pi.alt_text as image_alt
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN langue_product l ON p.langue_id = l.id
+        LEFT JOIN discipline d ON p.discipline_id = d.id 
+        LEFT JOIN type_ressource t ON p.id_ressource = t.id
+        LEFT JOIN product_image pi ON p.id = pi.product_id
+        WHERE p.id = ?
+    ');
+    $stmt->execute([$id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ?: null;
+}
+
+/**
+ * Create a new product with all fields
+ */
+function createProduct(array $data): int {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        INSERT INTO product 
+        (name, reference, description, collection, category_id, location, 
+         responsible_id, quantite_totale, stock, langue_id, id_ressource, 
+         discipline_id, is_active) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+    
+    $stmt->execute([
+        $data['name'],
+        $data['reference'] ?? '',
+        $data['description'] ?? '',
+        $data['collection'] ?? '',
+        $data['category_id'],
+        $data['location'] ?? '',
+        $data['responsible_id'] > 0 ? $data['responsible_id'] : null,
+        $data['quantite_totale'] ?? 0,
+        $data['stock'] ?? 0,
+        $data['langue_id'] > 0 ? $data['langue_id'] : null,
+        $data['id_ressource'],
+        $data['discipline_id'] > 0 ? $data['discipline_id'] : null,
+        $data['is_active'] ?? 1
+    ]);
+    
+    return (int)$pdo->lastInsertId();
+}
+
+/**
+ * Update an existing product
+ */
+function updateProduct(int $id, array $data): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        UPDATE product 
+        SET name = ?, description = ?, category_id = ?, location = ?, 
+            responsible_id = ?, quantite_totale = ?, stock = ?, 
+            is_active = ?
+        WHERE id = ?
+    ");
+    
+    $stmt->execute([
+        $data['name'],
+        $data['description'] ?? '',
+        $data['category_id'],
+        $data['location'] ?? '',
+        $data['responsible_id'] ?? null,
+        $data['quantite_totale'] ?? 0,
+        $data['stock'] ?? 0,
+        $data['is_active'] ?? 1,
+        $id
+    ]);
+    
+    return $stmt->rowCount() >= 0;
+}
+
+/**
+ * Create product image record
+ */
+function createProductImage(int $productId, string $url): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("INSERT INTO product_image (product_id, url) VALUES (?, ?)");
+    $stmt->execute([$productId, $url]);
+    return $stmt->rowCount() > 0;
+}
+
+/**
+ * Check if product image exists
+ */
+function productImageExists(int $productId): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id FROM product_image WHERE product_id = ?");
+    $stmt->execute([$productId]);
+    return $stmt->fetch() !== false;
+}
+
+/**
+ * Update existing product image
+ */
+function updateProductImageUrl(int $productId, string $url): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE product_image SET url = ? WHERE product_id = ?");
+    $stmt->execute([$url, $productId]);
+    return $stmt->rowCount() >= 0;
+}
+
+/**
+ * Update or create product image
+ */
+function upsertProductImage(int $productId, string $url): bool {
+    if (productImageExists($productId)) {
+        return updateProductImageUrl($productId, $url);
+    } else {
+        return createProductImage($productId, $url);
+    }
+}
+
+/**
+ * Add modification history entry
+ */
+function addProductModificationHistory(int $productId): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("INSERT INTO historique_modif (product_id, date_modif) VALUES (?, CURDATE())");
+    $stmt->execute([$productId]);
+    return $stmt->rowCount() > 0;
+}
+
+// =============================================================================
+// REQUEST TRACKING QUERIES (demande.php)
+// =============================================================================
+
+/**
+ * Get request by token for tracking page
+ */
+function getRequestByToken(string $token): ?array {
+    global $pdo;
+    $query = $pdo->prepare("
+        SELECT 
+            re.id,
+            t.libelle as status,
+            re.last_name as demandeur_nom,
+            re.email as demandeur_email,
+            re.phone as demandeur_phone,
+            re.request_date as created_at,
+            re.token,
+            rl.quantity,
+            re.establishment_name as demandeur_institution
+        FROM request re
+        JOIN request_line rl ON re.id = rl.request_id
+        JOIN type_status t ON re.status_id = t.id
+        WHERE token = :token
+        LIMIT 1
+    ");
+    $query->execute(['token' => $token]);
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    return $result ?: null;
+}
+
+/**
+ * Get request status history
+ */
+function getRequestStatusHistory(string $token): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT 
+            re.token,
+            h.changed_at,
+            t.libelle
+        FROM request re
+        JOIN historique_etat h ON re.id = h.request_id
+        JOIN type_status t ON h.status_id = t.id
+        WHERE token = :token 
+        ORDER BY h.changed_at DESC
+    ");
+    $stmt->execute(['token' => $token]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Get products in a request (request lines)
+ */
+function getRequestProductsByRequestId(int $requestId): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT rl.*, p.name as product_name, p.reference
+        FROM request_line rl
+        JOIN product p ON p.id = rl.product_id
+        WHERE rl.request_id = :id
+    ");
+    $stmt->execute(['id' => $requestId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// =============================================================================
+// REQUEST SUBMISSION QUERIES (submit_request.php)
+// =============================================================================
+
+/**
+ * Check if a token already exists
+ */
+function tokenExists(string $token): bool {
+    global $pdo;
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM request WHERE token = ?');
+    $stmt->execute([$token]);
+    return $stmt->fetchColumn() > 0;
+}
+
+/**
+ * Create a new request (main record)
+ */
+function createRequest(array $data): int {
+    global $pdo;
+    $stmt = $pdo->prepare('
+        INSERT INTO request 
+        (token, product_id, last_name, first_name, email, phone, 
+         establishment_name, establishment_address, establishment_postal, 
+         establishment_city, request_date, comment, status_id, responsible_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, 1)
+    ');
+    $stmt->execute([
+        $data['token'],
+        $data['product_id'],
+        $data['last_name'],
+        $data['first_name'],
+        $data['email'],
+        $data['phone'],
+        $data['establishment_name'],
+        $data['establishment_address'] ?? '',
+        $data['establishment_postal'] ?? '',
+        $data['establishment_city'] ?? '',
+        $data['comment'] ?? ''
+    ]);
+    return (int)$pdo->lastInsertId();
+}
+
+/**
+ * Create a request line (product in request)
+ */
+function createRequestLine(int $requestId, int $productId, int $quantity, string $comment = ''): bool {
+    global $pdo;
+    $stmt = $pdo->prepare('INSERT INTO request_line (request_id, product_id, quantity, comment) VALUES (?, ?, ?, ?)');
+    $stmt->execute([$requestId, $productId, $quantity, $comment]);
+    return $stmt->rowCount() > 0;
 }
 ?>

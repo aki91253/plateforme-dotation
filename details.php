@@ -1,30 +1,20 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/queries.php';
 
 $product_id = (int) $_GET['id'];
 
-//requête qui récupère toutes les informations d'un produit en fonction de l'id 
-$stmt = $pdo->prepare('
-    SELECT p.*, p.stock as stock_quantity, c.name as category_name, l.langue as langue, d.libelle as discipline, t.libelle as ressource
-    FROM product p
-    LEFT JOIN category c ON p.category_id = c.id
-    LEFT JOIN langue_product l ON p.langue_id = l.id
-    LEFT JOIN discipline d ON p.discipline_id = d.id 
-    LEFT JOIN type_ressource t ON p.id_ressource = t.id
-    WHERE p.id = ?
-');
-$stmt->execute([$product_id]);
-$product = $stmt->fetch();
+// Get product with all details using centralized query
+$product = getProductWithFullDetails($product_id);
 
-if (!$product) {//dans le cas ou un produit n'est pas trouvé on renvoie une erreur 
+if (!$product) {
     die('Produit non trouvé');
 }
 
-$img_stmt = $pdo->prepare('SELECT url, alt_text FROM product_image WHERE product_id = ? LIMIT 1'); // Permet de récupérer l'image du produit (en fonction de l'id)
-$img_stmt->execute([$product_id]);
-$image = $img_stmt->fetch();
+// Image is now included in getProductWithFullDetails()
+$image = $product['image_url'] ? ['url' => $product['image_url'], 'alt_text' => $product['image_alt']] : null;
 
-$total_stock = 100; // Total de stock pour la barre de stock 
+$total_stock = 100;
 $available = $product['stock_quantity'] ?? 0;
 $percentage = ($available / $total_stock) * 100;
 
