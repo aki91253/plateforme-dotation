@@ -6,7 +6,6 @@
         // Update page title based on current page
         const pageTitles = {
             'index': 'Tableau de bord',
-            'products': 'Gestion des dotations',
             'stock': 'Gestion du stock',
             'requests': 'Gestion des demandes'
         };
