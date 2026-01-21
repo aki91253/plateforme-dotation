@@ -173,6 +173,23 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                         </a>
                     </li>
                 </ul>
+
+                <?php if (isSuperAdmin()): ?>
+                <!-- Superadmin Section -->
+                <div class="my-6 mx-6 border-t border-gray-100"></div>
+
+                <p class="px-6 text-xs font-semibold text-amber-600 uppercase tracking-wider mb-3">Super Admin</p>
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <a href="admins.php" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 border-transparent text-gray-600 <?= $currentPage === 'admins' ? 'active' : '' ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13 5.197v-1a6 6 0 00-7-5.916" />
+                            </svg>
+                            <span>Gestion Admins</span>
+                        </a>
+                    </li>
+                </ul>
+                <?php endif; ?>
             </nav>
 
               <!-- Other -->

@@ -24,6 +24,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     }
 }
 
+// Traitement du nettoyage des demandes de plus de 30 jours
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cleanup_old_requests'])) {
+    try {
+        // Les request_line seront supprimées automatiquement grâce à ON DELETE CASCADE
+        $cleanupStmt = $pdo->prepare("
+            DELETE FROM request 
+            WHERE request_date < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        ");
+        $cleanupStmt->execute();
+        $deletedCount = $cleanupStmt->rowCount();
+        header('Location: requests.php?cleanup_success=' . $deletedCount);
+        exit;
+    } catch (PDOException $e) {
+        $error = "Erreur lors du nettoyage: " . $e->getMessage();
+    }
+}
+
 // Récupérer les statistiques
 $statsQuery = $pdo->query("
     SELECT 
@@ -37,6 +54,14 @@ $statsQuery = $pdo->query("
     FROM request
 ");
 $stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
+
+// Compter les demandes de plus de 30 jours
+$oldRequestsQuery = $pdo->query("
+    SELECT COUNT(*) as count 
+    FROM request 
+    WHERE request_date < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+");
+$oldRequestsCount = $oldRequestsQuery->fetch(PDO::FETCH_ASSOC)['count'];
 
 // Récupérer les statuts disponibles
 $statusQuery = $pdo->query("SELECT * FROM type_status ORDER BY id");
@@ -102,11 +127,23 @@ include 'includes/admin_header.php';
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
-            <div>
+                <div>
                     <h1 class="text-2xl font-bold text-gray-900">Gestion des demandes</h1>
                     <p class="text-gray-500 text-sm">Canopé Corse</p>
                 </div>
             </div>
+            
+            <!-- Bouton de nettoyage des anciennes demandes -->
+            <form method="POST" onsubmit="return <?= $oldRequestsCount > 0 ? "confirm('Êtes-vous sûr de vouloir supprimer les " . $oldRequestsCount . " demande(s) de plus de 30 jours ?\\n\\nCette action est irréversible.')" : "false" ?>;">
+                <input type="hidden" name="cleanup_old_requests" value="1">
+                <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 <?= $oldRequestsCount > 0 ? 'bg-red-100 border-2 border-red-300 text-red-700 hover:bg-red-200' : 'bg-gray-100 border-2 border-gray-200 text-gray-400 cursor-not-allowed' ?> font-medium rounded-xl transition-all active:scale-95" <?= $oldRequestsCount == 0 ? 'disabled' : '' ?>>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Nettoyer (+30j)
+                    <span class="<?= $oldRequestsCount > 0 ? 'bg-red-200' : 'bg-gray-200' ?> px-2 py-0.5 rounded-full text-xs"><?= $oldRequestsCount ?></span>
+                </button>
+            </form>
         </div>
 
         <?php if (isset($_GET['success'])): ?>
@@ -115,6 +152,15 @@ include 'includes/admin_header.php';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             Statut mis à jour avec succès
+        </div>
+        <?php endif; ?>
+        
+        <?php if (isset($_GET['cleanup_success'])): ?>
+        <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <?= (int)$_GET['cleanup_success'] ?> demande(s) de plus de 30 jours supprimée(s) avec succès
         </div>
         <?php endif; ?>
         
@@ -168,39 +214,42 @@ include 'includes/admin_header.php';
 
         <!-- Filtres et recherche -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
-            <form method="GET" class="flex flex-wrap gap-4">
-                <!-- Recherche -->
-                <div class="flex-1 min-w-[300px]">
-                    <div class="relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        <input type="text" name="search" value="<?= htmlspecialchars($searchTerm) ?>" 
-                               placeholder="Rechercher par token, établissement, email, nom..." 
-                               class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
+            <div class="flex flex-wrap gap-4 items-center">
+                <form method="GET" class="flex flex-wrap gap-4 flex-1 items-center">
+                    <!-- Recherche -->
+                    <div class="flex-1 min-w-[300px]">
+                        <div class="relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input type="text" name="search" value="<?= htmlspecialchars($searchTerm) ?>" 
+                                   placeholder="Rechercher par token, établissement, email, nom..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
+                        </div>
                     </div>
-                </div>
 
-                <!-- Filtre statut -->
-                <select name="status" class="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
-                    <option value="0">Tous les statuts</option>
-                    <?php foreach ($statuses as $status): ?>
-                        <option value="<?= $status['id'] ?>" <?= $statusFilter == $status['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($status['libelle']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                    <!-- Filtre statut -->
+                    <select name="status" class="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
+                        <option value="0">Tous les statuts</option>
+                        <?php foreach ($statuses as $status): ?>
+                            <option value="<?= $status['id'] ?>" <?= $statusFilter == $status['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($status['libelle']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
 
-                <button type="submit" class="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
-                    Filtrer
-                </button>
+                    <button type="submit" class="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                        Filtrer
+                    </button>
+                    
+                    <?php if (!empty($searchTerm) || $statusFilter > 0): ?>
+                    <a href="requests.php" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
+                        Réinitialiser
+                    </a>
+                    <?php endif; ?>
+                </form>
                 
-                <?php if (!empty($searchTerm) || $statusFilter > 0): ?>
-                <a href="requests.php" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
-                    Réinitialiser
-                </a>
-                <?php endif; ?>
-            </form>
+            </div>
         </div>
 
         <!-- Tableau des demandes -->
