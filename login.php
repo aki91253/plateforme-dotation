@@ -27,7 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = getSqlInjectionErrorMessage('Mot de passe');
     } else {
         // Vérification si c'est un admin (table responsible)
-        $stmt = $pdo->prepare("SELECT id, email_pro, password, first_name, last_name, job_title FROM responsible WHERE email_pro = ?");
+        $stmt = $pdo->prepare("
+            SELECT r.id, r.email_pro, r.password, r.first_name, r.last_name, r.job_title, 
+                   COALESCE(r.role_id, 1) as role_id, COALESCE(ro.libelle, 'Admin') as role_libelle
+            FROM responsible r 
+            LEFT JOIN roles ro ON r.role_id = ro.id 
+            WHERE r.email_pro = ?
+        ");
         $stmt->execute([$email]);
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -38,7 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $admin['email_pro'],
                 $admin['first_name'],
                 $admin['last_name'],
-                $admin['job_title']
+                $admin['job_title'],
+                (int)$admin['role_id'],
+                $admin['role_libelle']
             );
             redirect('admin/index.php');
         } else {
