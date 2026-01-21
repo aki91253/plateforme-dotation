@@ -5,6 +5,7 @@
  */
 require_once 'includes/admin_auth.php';
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once '../includes/security.php';
 
 // Require superadmin access
@@ -13,9 +14,8 @@ requireSuperAdmin();
 $error = '';
 $success = '';
 
-// Fetch available roles
-$rolesStmt = $pdo->query("SELECT id, libelle FROM roles ORDER BY id");
-$roles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch available roles via centralized function
+$roles = getAllRoles();
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,20 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (containsSqlInjectionChars($email) || containsSqlInjectionChars($firstName) || containsSqlInjectionChars($lastName)) {
         $error = 'Caractères non autorisés détectés.';
     } else {
-        // Check if email already exists
-        $checkStmt = $pdo->prepare("SELECT id FROM responsible WHERE email_pro = ?");
-        $checkStmt->execute([$email]);
-        
-        if ($checkStmt->fetch()) {
+        // Check if email already exists using centralized function
+        if (adminEmailExists($email)) {
             $error = 'Un administrateur avec cet email existe déjà.';
         } else {
             try {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("
-                    INSERT INTO responsible (first_name, last_name, email_pro, password, job_title, role_id) 
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ");
-                $stmt->execute([$firstName, $lastName, $email, $hashedPassword, $jobTitle, $roleId]);
+                createAdmin($firstName, $lastName, $email, $hashedPassword, $jobTitle, $roleId);
                 
                 $success = 'Administrateur créé avec succès !';
                 // Clear form

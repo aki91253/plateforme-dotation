@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 requireAdmin();
@@ -11,8 +12,7 @@ $id = $data['id'] ?? 0;
 $isActive = $data['is_active'] ?? false;
 
 if ($id > 0) {
-    $stmt = $pdo->prepare("UPDATE product SET is_active = ? WHERE id = ?");
-    $stmt->execute([$isActive ? 1 : 0, $id]);
+    toggleProductActive($id, $isActive);
     echo json_encode(['success' => true]);
 } else {
     echo json_encode(['success' => false]);

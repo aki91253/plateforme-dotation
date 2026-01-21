@@ -4,53 +4,24 @@
  * Overview with KPI cards and recent activity
  */
 require_once 'includes/admin_auth.php';
+require_once '../includes/db.php';
+require_once '../includes/queries.php';
 requireAdmin();
 
-// Database connection
-try {
-    $pdo = new PDO('mysql:host=localhost;dbname=canope-reseau;charset=utf8mb4', 'root', 'root');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      
-    // Initialiser les variables pour éviter les erreurs
-    $searchTerm = '';
-    $categoryFilter = 0;
-    $showInactive = false;
-    
-    // Récupérer les catégories pour le filtre du graphique
-    $categoriesQuery = $pdo->query("SELECT * FROM category ORDER BY name");
-    $categories = $categoriesQuery->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Get statistics
-    $totalProducts = $pdo->query('SELECT COUNT(*) FROM product WHERE is_active = 1')->fetchColumn();
-    $totalStock = $pdo->query('SELECT SUM(stock) FROM product WHERE is_active = 1')->fetchColumn() ?? 0;
-    $pendingRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id = 1")->fetchColumn();
-    $completedRequests = $pdo->query("SELECT COUNT(*) FROM request WHERE status_id >= 4")->fetchColumn();
-    
-    // Get low stock items (< 20 units)
-    $lowStockQuery = $pdo->query('
-        SELECT name, stock as quantity 
-        FROM product 
-        WHERE is_active = 1 AND stock < 20
-        ORDER BY stock ASC 
-        LIMIT 5
-    ');
-    $lowStockItems = $lowStockQuery->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Get recent requests
-    $recentRequestsQuery = $pdo->query('
-        SELECT r.token as request_number, r.establishment_name, r.status_id, t.libelle as status_label, r.request_date, 
-               CONCAT(resp.first_name, " ", resp.last_name) as responsible_name
-        FROM request r 
-        LEFT JOIN responsible resp ON resp.id = r.responsible_id
-        LEFT JOIN type_status t ON t.id = r.status_id
-        ORDER BY r.request_date DESC 
-        LIMIT 5
-    ');
-    $recentRequests = $recentRequestsQuery->fetchAll(PDO::FETCH_ASSOC);
-    
-} catch (PDOException $e) {
-    die('Erreur de connexion à la base de données: ' . $e->getMessage());
-}
+// Initialiser les variables pour éviter les erreurs
+$searchTerm = '';
+$categoryFilter = 0;
+$showInactive = false;
+
+// Récupérer les données via les fonctions centralisées
+$categories = getAllCategories();
+$dashboardStats = getDashboardStats();
+$totalProducts = $dashboardStats['totalProducts'];
+$totalStock = $dashboardStats['totalStock'];
+$pendingRequests = $dashboardStats['pendingRequests'];
+$completedRequests = $dashboardStats['completedRequests'];
+$lowStockItems = getLowStockItems(20, 5);
+$recentRequests = getRecentRequests(5);
 
 // Récupérer les filtres pour le graphique
 $days = isset($_GET['days']) ? intval($_GET['days']) : 30;
@@ -60,33 +31,8 @@ $category_filter_chart = isset($_GET['category_chart']) ? intval($_GET['category
 // Limiter le nombre de jours entre 7 et 365
 $days = max(7, min(365, $days));
 
-// Construire la requête avec filtres
-$chartQuery = "
-    SELECT DATE(r.request_date) as date, COUNT(*) as total
-    FROM request r
-    LEFT JOIN product p ON r.product_id = p.id
-    WHERE r.request_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
-";
-
-$chartParams = [$days];
-
-// Filtre par statut
-if ($status_filter > 0) {
-    $chartQuery .= " AND r.status_id = ?";
-    $chartParams[] = $status_filter;
-}
-
-// Filtre par catégorie
-if ($category_filter_chart > 0) {
-    $chartQuery .= " AND p.category_id = ?";
-    $chartParams[] = $category_filter_chart;
-}
-
-$chartQuery .= " GROUP BY DATE(r.request_date) ORDER BY date ASC";
-
-$statsStmt = $pdo->prepare($chartQuery);
-$statsStmt->execute($chartParams);
-$dailyStats = $statsStmt->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les statistiques quotidiennes via fonction centralisée
+$dailyStats = getDailyRequestStats($days, $status_filter, $category_filter_chart);
 
 // Préparer les données pour le graphique
 $dates = [];
@@ -110,9 +56,8 @@ for ($i = $days - 1; $i >= 0; $i--) {
     }
 }
 
-// Récupérer les statuts pour le filtre
-$statusQuery = $pdo->query("SELECT * FROM type_status ORDER BY id");
-$statuses = $statusQuery->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer les statuts pour le filtre via fonction centralisée
+$statuses = getAllStatuses();
 
 include 'includes/admin_header.php';
 ?>

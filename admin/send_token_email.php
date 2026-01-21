@@ -4,6 +4,7 @@
  * Permet de renvoyer le token de suivi au demandeur
  */
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 require_once 'includes/admin_auth.php';
 
 // ====================================================
@@ -31,10 +32,8 @@ if ($requestId <= 0) {
 }
 
 try {
-    // Récupérer les informations de la demande
-    $stmt = $pdo->prepare("SELECT token, email, first_name, last_name, establishment_name FROM request WHERE id = ?");
-    $stmt->execute([$requestId]);
-    $request = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Récupérer les informations de la demande via fonction centralisée
+    $request = getRequestForEmail($requestId);
     
     if (!$request) {
         echo json_encode(['success' => false, 'message' => 'Demande non trouvée']);

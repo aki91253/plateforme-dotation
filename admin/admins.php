@@ -5,6 +5,7 @@
  */
 require_once 'includes/admin_auth.php';
 require_once '../includes/db.php';
+require_once '../includes/queries.php';
 
 // Require superadmin access
 requireSuperAdmin();
@@ -19,8 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
         $error = "Vous ne pouvez pas supprimer votre propre compte.";
     } else {
         try {
-            $stmt = $pdo->prepare("DELETE FROM responsible WHERE id = ?");
-            $stmt->execute([$deleteId]);
+            deleteAdmin($deleteId);
             $success = "Administrateur supprimé avec succès.";
         } catch (PDOException $e) {
             $error = "Erreur lors de la suppression: " . $e->getMessage();
@@ -28,16 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     }
 }
 
-// Fetch all admins with their roles
-$stmt = $pdo->query("
-    SELECT r.id, r.first_name, r.last_name, r.email_pro, r.job_title, 
-           COALESCE(ro.libelle, 'Admin') as role_libelle,
-           COALESCE(r.role_id, 1) as role_id
-    FROM responsible r 
-    LEFT JOIN roles ro ON r.role_id = ro.id 
-    ORDER BY r.id
-");
-$admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all admins with their roles via centralized function
+$admins = getAllAdmins();
 
 $currentAdmin = getCurrentAdmin();
 

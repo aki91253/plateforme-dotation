@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/queries.php';
 require_once 'includes/auth.php';
 require_once 'includes/security.php';
 require_once 'admin/includes/admin_auth.php';
@@ -26,16 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (containsSqlInjectionChars($password)) {
         $error = getSqlInjectionErrorMessage('Mot de passe');
     } else {
-        // Vérification si c'est un admin (table responsible)
-        $stmt = $pdo->prepare("
-            SELECT r.id, r.email_pro, r.password, r.first_name, r.last_name, r.job_title, 
-                   COALESCE(r.role_id, 1) as role_id, COALESCE(ro.libelle, 'Admin') as role_libelle
-            FROM responsible r 
-            LEFT JOIN roles ro ON r.role_id = ro.id 
-            WHERE r.email_pro = ?
-        ");
-        $stmt->execute([$email]);
-        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Vérification si c'est un admin via fonction centralisée
+        $admin = getAdminByEmail($email);
         
         if ($admin && !empty($admin['password']) && password_verify($password, $admin['password'])) {
             // Connexion admin réussie
