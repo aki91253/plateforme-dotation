@@ -67,6 +67,7 @@ include 'includes/admin_header.php';
     <!-- KPI Cards Row -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Products Card -->
+         <a href="dotation_create.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -88,8 +89,9 @@ include 'includes/admin_header.php';
                 </span>
             </div>
         </div>
-        
+</a>
         <!-- Total Stock Card -->
+         <a href="stock.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -106,8 +108,9 @@ include 'includes/admin_header.php';
                 <span class="text-gray-500">Total disponible</span>
             </div>
         </div>
-        
+</a>
         <!-- Pending Requests Card -->
+         <a href="requests.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -129,8 +132,9 @@ include 'includes/admin_header.php';
                 </span>
             </div>
         </div>
-        
+</a>
         <!-- Completed Requests Card -->
+         <a href="requests.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -153,7 +157,7 @@ include 'includes/admin_header.php';
             </div>
         </div>
     </div>
-    
+</a>
     <!-- Two Column Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Requests -->
