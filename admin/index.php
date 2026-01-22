@@ -25,14 +25,31 @@ $recentRequests = getRecentRequests(5);
 
 // Récupérer les filtres pour le graphique
 $days = isset($_GET['days']) ? intval($_GET['days']) : 30;
-$status_filter = isset($_GET['status_filter']) ? intval($_GET['status_filter']) : 0;
-$category_filter_chart = isset($_GET['category_chart']) ? intval($_GET['category_chart']) : 0;
+
+// Filtres multi-sélection pour le graphique
+$selectedStatuses = [];
+if (isset($_GET['status_filter'])) {
+    if (is_array($_GET['status_filter'])) {
+        $selectedStatuses = array_map('intval', $_GET['status_filter']);
+    } else {
+        $selectedStatuses = array_map('intval', explode(',', $_GET['status_filter']));
+    }
+}
+
+$selectedCategories = [];
+if (isset($_GET['category_chart'])) {
+    if (is_array($_GET['category_chart'])) {
+        $selectedCategories = array_map('intval', $_GET['category_chart']);
+    } else {
+        $selectedCategories = array_map('intval', explode(',', $_GET['category_chart']));
+    }
+}
 
 // Limiter le nombre de jours entre 7 et 365
 $days = max(7, min(365, $days));
 
 // Récupérer les statistiques quotidiennes via fonction centralisée
-$dailyStats = getDailyRequestStats($days, $status_filter, $category_filter_chart);
+$dailyStats = getDailyRequestStats($days, $selectedStatuses, $selectedCategories);
 
 // Préparer les données pour le graphique
 $dates = [];
@@ -301,26 +318,136 @@ include 'includes/admin_header.php';
     </div>
     
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-    <div class="flex items-center justify-between mb-4">
+    
+    <!-- Filter dropdown styles -->
+    <style>
+        .chart-filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .chart-filter-dropdown-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 14px;
+            min-width: 140px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+        .chart-filter-dropdown-btn:hover {
+            border-color: #3b82f6;
+        }
+        .chart-filter-dropdown-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%);
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        .chart-filter-dropdown-btn svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+        }
+        .chart-filter-dropdown.open .chart-filter-dropdown-btn svg {
+            transform: rotate(180deg);
+        }
+        .chart-filter-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            min-width: 180px;
+            max-height: 250px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            z-index: 50;
+            display: none;
+            padding: 6px;
+        }
+        .chart-filter-dropdown.open .chart-filter-dropdown-menu {
+            display: block;
+            animation: dropdownFade 0.15s ease;
+        }
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chart-filter-menu-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #475569;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+            margin-bottom: 2px;
+        }
+        .chart-filter-menu-item:hover {
+            background: #f1f5f9;
+            color: #1e40af;
+        }
+        .chart-filter-menu-item.selected {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.18) 100%);
+            color: #1e40af;
+            font-weight: 600;
+        }
+        .chart-filter-menu-item.selected::before {
+            content: '✓';
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        .chart-filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.15) 100%);
+            color: #1e40af;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .chart-filter-tag-remove {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .chart-filter-tag-remove:hover {
+            background: #ef4444;
+        }
+        .chart-filter-tag-remove:hover svg {
+            color: white;
+        }
+        .chart-filter-tag-remove svg {
+            width: 10px;
+            height: 10px;
+            color: #1e40af;
+        }
+    </style>
+    
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
         <h3 class="text-lg font-semibold text-gray-900">Demandes sur les derniers jours</h3>
         
         <!-- Filtres du graphique -->
-        <form method="GET" class="flex items-center gap-3">
-            <!-- Conserver les autres filtres de la page -->
-            <?php if (!empty($searchTerm)): ?>
-                <input type="hidden" name="search" value="<?= htmlspecialchars($searchTerm) ?>">
-            <?php endif; ?>
-            <?php if ($categoryFilter > 0): ?>
-                <input type="hidden" name="category" value="<?= $categoryFilter ?>">
-            <?php endif; ?>
-            <?php if ($showInactive): ?>
-                <input type="hidden" name="show_inactive" value="1">
-            <?php endif; ?>
-            
+        <div class="flex flex-wrap items-center gap-3">
             <!-- Nombre de jours -->
             <div class="flex items-center gap-2">
                 <label for="days" class="text-sm text-gray-700 font-medium whitespace-nowrap">Période :</label>
-                <select name="days" id="days" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                <select id="days-select" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                     <option value="7" <?= $days == 7 ? 'selected' : '' ?>>7 jours</option>
                     <option value="14" <?= $days == 14 ? 'selected' : '' ?>>14 jours</option>
                     <option value="30" <?= $days == 30 ? 'selected' : '' ?>>30 jours</option>
@@ -331,45 +458,85 @@ include 'includes/admin_header.php';
                 </select>
             </div>
 
-            <!-- Filtre par statut -->
-            <div class="flex items-center gap-2">
-                <label for="status_filter" class="text-sm text-gray-700 font-medium whitespace-nowrap">Statut :</label>
-                <select name="status_filter" id="status_filter" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <option value="0">Tous les statuts</option>
+            <!-- Filtre par statut (multi-select) -->
+            <div class="chart-filter-dropdown" data-dropdown="status_filter">
+                <button type="button" class="chart-filter-dropdown-btn <?= !empty($selectedStatuses) ? 'active' : '' ?>">
+                    <span>Statut<?= !empty($selectedStatuses) ? ' (' . count($selectedStatuses) . ')' : '' ?></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="chart-filter-dropdown-menu">
                     <?php foreach ($statuses as $status): ?>
-                        <option value="<?= $status['id'] ?>" <?= $status_filter == $status['id'] ? 'selected' : '' ?>>
+                        <div class="chart-filter-menu-item <?= in_array($status['id'], $selectedStatuses) ? 'selected' : '' ?>"
+                             data-filter="status_filter" data-value="<?= $status['id'] ?>">
                             <?= htmlspecialchars($status['libelle']) ?>
-                        </option>
+                        </div>
                     <?php endforeach; ?>
-                </select>
+                </div>
             </div>
 
-            <!-- Filtre par catégorie -->
-            <div class="flex items-center gap-2">
-                <label for="category_chart" class="text-sm text-gray-700 font-medium whitespace-nowrap">Catégorie :</label>
-                <select name="category_chart" id="category_chart" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <option value="0">Toutes catégories</option>
+            <!-- Filtre par catégorie (multi-select) -->
+            <div class="chart-filter-dropdown" data-dropdown="category_chart">
+                <button type="button" class="chart-filter-dropdown-btn <?= !empty($selectedCategories) ? 'active' : '' ?>">
+                    <span>Catégorie<?= !empty($selectedCategories) ? ' (' . count($selectedCategories) . ')' : '' ?></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="chart-filter-dropdown-menu">
                     <?php foreach ($categories as $cat): ?>
-                        <option value="<?= $cat['id'] ?>" <?= $category_filter_chart == $cat['id'] ? 'selected' : '' ?>>
+                        <div class="chart-filter-menu-item <?= in_array($cat['id'], $selectedCategories) ? 'selected' : '' ?>"
+                             data-filter="category_chart" data-value="<?= $cat['id'] ?>">
                             <?= htmlspecialchars($cat['name']) ?>
-                        </option>
+                        </div>
                     <?php endforeach; ?>
-                </select>
+                </div>
             </div>
-
-            <!-- Bouton Appliquer -->
-            <button type="submit" class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap">
-                Actualiser
-            </button>
 
             <!-- Bouton Réinitialiser -->
-            <?php if ($days != 30 || $status_filter > 0 || $category_filter_chart > 0): ?>
-                <a href="?<?= !empty($searchTerm) ? 'search='.urlencode($searchTerm).'&' : '' ?><?= $categoryFilter > 0 ? 'category='.$categoryFilter.'&' : '' ?><?= $showInactive ? 'show_inactive=1' : '' ?>" 
-                   class="px-4 py-1.5 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors font-medium whitespace-nowrap">
-                    Réinitialiser
-                </a>
-            <?php endif; ?>
-        </form>
+            <?php $hasActiveFilters = $days != 30 || !empty($selectedStatuses) || !empty($selectedCategories); ?>
+            <a href="index.php" id="reset-filters-btn" class="px-3 py-1.5 text-sm text-gray-500 hover:text-red-500 font-medium transition-colors" style="<?= $hasActiveFilters ? '' : 'display:none' ?>">
+                ✕ Réinitialiser
+            </a>
+        </div>
+    </div>
+
+    <!-- Tags des filtres actifs -->
+    <div id="filter-tags-container" class="flex flex-wrap items-center gap-2 mb-4 pb-4 border-b border-gray-100 <?= empty($selectedStatuses) && empty($selectedCategories) ? 'hidden' : '' ?>">
+        <span class="text-xs text-gray-500 font-medium">Filtres actifs :</span>
+        
+        <?php foreach ($selectedStatuses as $statusId): 
+            $statusName = '';
+            foreach ($statuses as $s) {
+                if ($s['id'] == $statusId) { $statusName = $s['libelle']; break; }
+            }
+        ?>
+            <span class="chart-filter-tag">
+                <?= htmlspecialchars($statusName) ?>
+                <span class="chart-filter-tag-remove" data-filter="status_filter" data-value="<?= $statusId ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </span>
+            </span>
+        <?php endforeach; ?>
+        
+        <?php foreach ($selectedCategories as $catId): 
+            $catName = '';
+            foreach ($categories as $c) {
+                if ($c['id'] == $catId) { $catName = $c['name']; break; }
+            }
+        ?>
+            <span class="chart-filter-tag">
+                <?= htmlspecialchars($catName) ?>
+                <span class="chart-filter-tag-remove" data-filter="category_chart" data-value="<?= $catId ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </span>
+            </span>
+        <?php endforeach; ?>
     </div>
 
     <!-- Graphique -->
@@ -380,39 +547,17 @@ include 'includes/admin_header.php';
         <div class="flex items-center gap-6">
             <div>
                 <span class="text-gray-500">Total des demandes :</span>
-                <span class="font-bold text-gray-900 ml-1"><?= array_sum($totals) ?></span>
+                <span class="font-bold text-gray-900 ml-1" data-stat="total"><?= array_sum($totals) ?></span>
             </div>
             <div>
                 <span class="text-gray-500">Moyenne par jour :</span>
-                <span class="font-bold text-gray-900 ml-1"><?= $days > 0 ? round(array_sum($totals) / $days, 1) : 0 ?></span>
+                <span class="font-bold text-gray-900 ml-1" data-stat="average"><?= $days > 0 ? round(array_sum($totals) / $days, 1) : 0 ?></span>
             </div>
             <div>
                 <span class="text-gray-500">Pic :</span>
-                <span class="font-bold text-gray-900 ml-1"><?= !empty($totals) ? max($totals) : 0 ?></span>
+                <span class="font-bold text-gray-900 ml-1" data-stat="peak"><?= !empty($totals) ? max($totals) : 0 ?></span>
             </div>
         </div>
-        
-        <?php if ($status_filter > 0 || $category_filter_chart > 0): ?>
-            <div class="flex items-center gap-2 text-xs">
-                <span class="text-gray-500">Filtres actifs :</span>
-                <?php if ($status_filter > 0): ?>
-                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
-                        <?php 
-                        $statusName = array_filter($statuses, fn($s) => $s['id'] == $status_filter);
-                        echo htmlspecialchars(reset($statusName)['libelle'] ?? 'Statut');
-                        ?>
-                    </span>
-                <?php endif; ?>
-                <?php if ($category_filter_chart > 0): ?>
-                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full">
-                        <?php 
-                        $catName = array_filter($categories, fn($c) => $c['id'] == $category_filter_chart);
-                        echo htmlspecialchars(reset($catName)['name'] ?? 'Catégorie');
-                        ?>
-                    </span>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
     </div>
 </div>
 <!-- Chart.js CDN -->
@@ -478,6 +623,216 @@ const demandesChart = new Chart(ctx, {
         }
     }
 });
+
+// Multi-select filter dropdown functionality
+document.querySelectorAll('.chart-filter-dropdown').forEach(dropdown => {
+    const btn = dropdown.querySelector('.chart-filter-dropdown-btn');
+    
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Close other dropdowns
+        document.querySelectorAll('.chart-filter-dropdown').forEach(d => {
+            if (d !== dropdown) d.classList.remove('open');
+        });
+        // Toggle current dropdown
+        dropdown.classList.toggle('open');
+    });
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.chart-filter-dropdown')) {
+        document.querySelectorAll('.chart-filter-dropdown').forEach(d => d.classList.remove('open'));
+    }
+});
+
+// Track current filter state
+let currentFilters = {
+    days: <?= $days ?>,
+    status_filter: <?= json_encode($selectedStatuses) ?>,
+    category_chart: <?= json_encode($selectedCategories) ?>
+};
+
+// Function to update chart via AJAX
+async function updateChartData() {
+    // Build query string
+    const params = new URLSearchParams();
+    params.set('days', currentFilters.days);
+    currentFilters.status_filter.forEach(v => params.append('status_filter[]', v));
+    currentFilters.category_chart.forEach(v => params.append('category_chart[]', v));
+    
+    try {
+        const response = await fetch('ajax_chart_data.php?' + params.toString());
+        const data = await response.json();
+        
+        if (data.success) {
+            // Update chart data
+            demandesChart.data.labels = data.dates;
+            demandesChart.data.datasets[0].data = data.totals;
+            demandesChart.update('none'); // 'none' for no animation, or 'default' for animation
+            
+            // Update summary stats
+            document.querySelector('[data-stat="total"]').textContent = data.summary.total;
+            document.querySelector('[data-stat="average"]').textContent = data.summary.average;
+            document.querySelector('[data-stat="peak"]').textContent = data.summary.peak;
+            
+            // Update URL without reload (for bookmarking/sharing)
+            const newUrl = 'index.php' + (params.toString() ? '?' + params.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+    } catch (error) {
+        console.error('Error fetching chart data:', error);
+    }
+}
+
+// Function to update filter UI (tags, button states)
+function updateFilterUI() {
+    // Update status dropdown button
+    const statusBtn = document.querySelector('[data-dropdown="status_filter"] .chart-filter-dropdown-btn');
+    const statusCount = currentFilters.status_filter.length;
+    statusBtn.querySelector('span').textContent = 'Statut' + (statusCount > 0 ? ' (' + statusCount + ')' : '');
+    statusBtn.classList.toggle('active', statusCount > 0);
+    
+    // Update category dropdown button
+    const catBtn = document.querySelector('[data-dropdown="category_chart"] .chart-filter-dropdown-btn');
+    const catCount = currentFilters.category_chart.length;
+    catBtn.querySelector('span').textContent = 'Catégorie' + (catCount > 0 ? ' (' + catCount + ')' : '');
+    catBtn.classList.toggle('active', catCount > 0);
+    
+    // Update menu item selections
+    document.querySelectorAll('[data-filter="status_filter"]').forEach(item => {
+        item.classList.toggle('selected', currentFilters.status_filter.includes(parseInt(item.dataset.value)));
+    });
+    document.querySelectorAll('[data-filter="category_chart"]').forEach(item => {
+        item.classList.toggle('selected', currentFilters.category_chart.includes(parseInt(item.dataset.value)));
+    });
+    
+    // Update filter tags
+    updateFilterTags();
+    
+    // Show/hide reset button
+    const hasFilters = currentFilters.days !== 30 || statusCount > 0 || catCount > 0;
+    const resetBtn = document.getElementById('reset-filters-btn');
+    if (resetBtn) {
+        resetBtn.style.display = hasFilters ? 'inline' : 'none';
+    }
+}
+
+// Function to update filter tags dynamically
+function updateFilterTags() {
+    const tagsContainer = document.getElementById('filter-tags-container');
+    if (!tagsContainer) return;
+    
+    let tagsHtml = '';
+    
+    // Status tags
+    currentFilters.status_filter.forEach(statusId => {
+        const item = document.querySelector(`[data-filter="status_filter"][data-value="${statusId}"]`);
+        if (item) {
+            const name = item.textContent.trim();
+            tagsHtml += `
+                <span class="chart-filter-tag">
+                    ${name}
+                    <span class="chart-filter-tag-remove" data-filter="status_filter" data-value="${statusId}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </span>
+                </span>
+            `;
+        }
+    });
+    
+    // Category tags
+    currentFilters.category_chart.forEach(catId => {
+        const item = document.querySelector(`[data-filter="category_chart"][data-value="${catId}"]`);
+        if (item) {
+            const name = item.textContent.trim();
+            tagsHtml += `
+                <span class="chart-filter-tag">
+                    ${name}
+                    <span class="chart-filter-tag-remove" data-filter="category_chart" data-value="${catId}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </span>
+                </span>
+            `;
+        }
+    });
+    
+    if (tagsHtml) {
+        tagsContainer.innerHTML = '<span class="text-xs text-gray-500 font-medium">Filtres actifs :</span>' + tagsHtml;
+        tagsContainer.classList.remove('hidden');
+        // Re-attach tag removal listeners
+        attachTagRemoveListeners();
+    } else {
+        tagsContainer.classList.add('hidden');
+    }
+}
+
+// Handle filter item clicks - toggle selection via AJAX
+document.querySelectorAll('.chart-filter-menu-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+        const filterType = item.dataset.filter;
+        const filterValue = parseInt(item.dataset.value);
+        const filterArray = currentFilters[filterType];
+        
+        const index = filterArray.indexOf(filterValue);
+        if (index > -1) {
+            // Remove from array
+            filterArray.splice(index, 1);
+        } else {
+            // Add to array
+            filterArray.push(filterValue);
+        }
+        
+        updateFilterUI();
+        updateChartData();
+    });
+});
+
+// Function to attach tag removal listeners (needed after dynamic update)
+function attachTagRemoveListeners() {
+    document.querySelectorAll('.chart-filter-tag-remove').forEach(removeBtn => {
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const filterType = removeBtn.dataset.filter;
+            const filterValue = parseInt(removeBtn.dataset.value);
+            
+            const filterArray = currentFilters[filterType];
+            const index = filterArray.indexOf(filterValue);
+            if (index > -1) {
+                filterArray.splice(index, 1);
+            }
+            
+            updateFilterUI();
+            updateChartData();
+        });
+    });
+}
+
+// Attach initial tag removal listeners
+attachTagRemoveListeners();
+
+// Handle days select change - update via AJAX
+document.getElementById('days-select').addEventListener('change', (e) => {
+    currentFilters.days = parseInt(e.target.value);
+    updateChartData();
+});
+
+// Handle reset button
+const resetBtn = document.getElementById('reset-filters-btn');
+if (resetBtn) {
+    resetBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentFilters = { days: 30, status_filter: [], category_chart: [] };
+        document.getElementById('days-select').value = '30';
+        updateFilterUI();
+        updateChartData();
+    });
+}
 </script>
 </div>
 

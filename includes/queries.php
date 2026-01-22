@@ -456,27 +456,39 @@ function deleteProduct(int $id): bool {
 
 /**
  * Get daily request statistics for chart
+ * Supports multi-select filters via arrays
  */
-function getDailyRequestStats(int $days, int $statusFilter = 0, int $categoryFilter = 0): array {
+function getDailyRequestStats(int $days, array $statusFilters = [], array $categoryFilters = []): array {
     global $pdo;
     
     $query = "
         SELECT DATE(r.request_date) as date, COUNT(*) as total
         FROM request r
-        LEFT JOIN product p ON r.product_id = p.id
-        WHERE r.request_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+        LEFT JOIN request_line rl ON r.id = rl.request_id
+        LEFT JOIN product p ON rl.product_id = p.id
+        WHERE r.request_date >= DATE_SUB(CURDATE(), INTERVAL :days DAY)
     ";
     
-    $params = [$days];
+    $params = ['days' => $days];
     
-    if ($statusFilter > 0) {
-        $query .= " AND r.status_id = ?";
-        $params[] = $statusFilter;
+    // Status filter (multi-select)
+    if (!empty($statusFilters)) {
+        $placeholders = [];
+        foreach ($statusFilters as $i => $statusId) {
+            $placeholders[] = ":status$i";
+            $params["status$i"] = $statusId;
+        }
+        $query .= " AND r.status_id IN (" . implode(',', $placeholders) . ")";
     }
     
-    if ($categoryFilter > 0) {
-        $query .= " AND p.category_id = ?";
-        $params[] = $categoryFilter;
+    // Category filter (multi-select)
+    if (!empty($categoryFilters)) {
+        $placeholders = [];
+        foreach ($categoryFilters as $i => $catId) {
+            $placeholders[] = ":cat$i";
+            $params["cat$i"] = $catId;
+        }
+        $query .= " AND p.category_id IN (" . implode(',', $placeholders) . ")";
     }
     
     $query .= " GROUP BY DATE(r.request_date) ORDER BY date ASC";
