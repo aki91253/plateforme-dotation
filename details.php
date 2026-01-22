@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/db.php';
 require_once 'includes/queries.php';
+require_once 'admin/maintenance_check.php';
 
 $product_id = (int) $_GET['id'];
 

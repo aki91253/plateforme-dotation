@@ -1,6 +1,6 @@
 <?php
 include 'includes/header.php';
-?>
+require_once 'admin/maintenance_check.php';?>
 
 <div class="max-w-4xl mx-auto px-5 py-12">
     <!-- Header hero -->

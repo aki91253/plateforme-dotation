@@ -7,6 +7,7 @@ $userEmail = '';
 $userEtablissement = '';
 
 include 'includes/header.php';
+require_once 'admin/maintenance_check.php';
 ?>
 
 <!-- section header -->

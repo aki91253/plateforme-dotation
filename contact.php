@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/db.php';
 include 'includes/header.php';
+require_once 'admin/maintenance_check.php';
 
 // Email address to contact
 $contactEmail = "dotations.da-corse@reseau-canope.fr";

@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/db.php';
 include 'includes/header.php';
-?>
+require_once 'admin/maintenance_check.php';?>
 <!-- texte de bienvenue -->
 
 <div class="bg-gradient-to-r from-canope-gray to-canope-teal py-10 px-5">
