@@ -445,7 +445,24 @@ include 'includes/header.php';
                     <?php endforeach; ?>
                 </div>
             </div>
-
+            
+            <!-- Niveau Dropdown -->
+            <div class="filter-dropdown" data-dropdown="niveau">
+                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedCategories) ? 'active' : ''; ?>">
+                    <span>Niveau</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown-menu">
+                    <?php foreach ($categories as $category): ?>
+                        <div class="filter-menu-item <?php echo in_array($category['id'], $selectedCategories) ? 'selected' : ''; ?>"
+                             data-filter="niveau" data-value="<?php echo $category['id']; ?>">
+                            <?php echo htmlspecialchars($category['name']); ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
             <!-- Langue Dropdown -->
             <div class="filter-dropdown" data-dropdown="langue">
                 <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedLanguages) ? 'active' : ''; ?>">
@@ -501,24 +518,6 @@ include 'includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
-            <!-- Niveau Dropdown -->
-            <div class="filter-dropdown" data-dropdown="niveau">
-                <button type="button" class="filter-dropdown-btn <?php echo !empty($selectedCategories) ? 'active' : ''; ?>">
-                    <span>Niveau</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                </button>
-                <div class="filter-dropdown-menu">
-                    <?php foreach ($categories as $category): ?>
-                        <div class="filter-menu-item <?php echo in_array($category['id'], $selectedCategories) ? 'selected' : ''; ?>"
-                             data-filter="niveau" data-value="<?php echo $category['id']; ?>">
-                            <?php echo htmlspecialchars($category['name']); ?>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
 
             <!-- Effacer tout les filtres -->
             <?php if ($hasActiveFilters): ?>
