@@ -51,10 +51,8 @@ $requests = getFilteredRequests($searchTerm, $statusFilter);
 $statusColors = [
     1 => ['bg' => 'bg-amber-100', 'text' => 'text-amber-700', 'dot' => 'bg-amber-500'],
     2 => ['bg' => 'bg-blue-100', 'text' => 'text-blue-700', 'dot' => 'bg-blue-500'],
-    3 => ['bg' => 'bg-indigo-100', 'text' => 'text-indigo-700', 'dot' => 'bg-indigo-500'],
-    4 => ['bg' => 'bg-cyan-100', 'text' => 'text-cyan-700', 'dot' => 'bg-cyan-500'],
-    5 => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-700', 'dot' => 'bg-emerald-500'],
-    6 => ['bg' => 'bg-red-100', 'text' => 'text-red-700', 'dot' => 'bg-red-500']
+    3 => ['bg' => 'bg-green-100', 'text' => 'text-green-700', 'dot' => 'bg-green-500'],
+    4 => ['bg' => 'bg-red-100', 'text' => 'text-red-700', 'dot' => 'bg-red-500']
 ];
 
 include 'includes/admin_header.php';
@@ -114,8 +112,8 @@ include 'includes/admin_header.php';
                 <p class="text-2xl font-bold text-blue-600"><?= $stats['en_preparation'] ?></p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <p class="text-indigo-600 text-xs mb-1">Traitées</p>
-                <p class="text-2xl font-bold text-indigo-600"><?= $stats['traitees'] ?></p>
+                <p class="text-green-600 text-xs mb-1">Traitées</p>
+                <p class="text-2xl font-bold text-green-600"><?= $stats['traitees'] ?></p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <p class="text-red-600 text-xs mb-1">Refusées</p>

@@ -818,28 +818,35 @@ function addProductModificationHistory(int $productId): bool {
 /**
  * Get request by token for tracking page
  */
-function getRequestByToken(string $token): ?array {
+function getRequestByToken($token) {
     global $pdo;
-    $query = $pdo->prepare("
-        SELECT 
-            re.id,
-            t.libelle as status,
-            re.last_name as demandeur_nom,
-            re.email as demandeur_email,
-            re.phone as demandeur_phone,
-            re.request_date as created_at,
-            re.token,
-            rl.quantity,
-            re.establishment_name as demandeur_institution
-        FROM request re
-        JOIN request_line rl ON re.id = rl.request_id
-        JOIN type_status t ON re.status_id = t.id
-        WHERE token = :token
-        LIMIT 1
-    ");
-    $query->execute(['token' => $token]);
-    $result = $query->fetch(PDO::FETCH_ASSOC);
-    return $result ?: null;
+    
+    $sql = "SELECT 
+                r.id,
+                r.token,
+                r.product_id,
+                CONCAT(r.last_name, ' ', r.first_name) AS demandeur_nom,
+                r.email AS demandeur_email,
+                r.phone AS demandeur_phone,
+                r.establishment_name AS demandeur_institution,
+                r.request_date,
+                r.comment,
+                r.status_id,
+                ts.libelle AS status,
+                r.responsible_id,
+                CONCAT(resp.last_name, ' ', resp.first_name) AS responsable_nom,
+                resp.email_pro AS responsable_email,
+                resp.job_title AS responsable_fonction
+            FROM request r
+            LEFT JOIN type_status ts ON r.status_id = ts.id
+            LEFT JOIN responsible resp ON r.responsible_id = resp.id
+            WHERE r.token = :token";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+    $stmt->execute();
+    
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 /**
