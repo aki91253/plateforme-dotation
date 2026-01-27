@@ -84,12 +84,11 @@ include 'includes/admin_header.php';
     <!-- KPI Cards Row -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Products Card -->
-         <a href="dotation_create.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-3xl font-bold text-gray-800"><?= number_format($totalProducts) ?></p>
-                    <p class="text-gray-500 text-sm mt-1">Dotations disponibles</p>
+                    <p class="text-gray-500 text-sm mt-1">Références disponibles</p>
                 </div>
                 <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -106,9 +105,7 @@ include 'includes/admin_header.php';
                 </span>
             </div>
         </div>
-</a>
         <!-- Total Stock Card -->
-         <a href="stock.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -125,9 +122,7 @@ include 'includes/admin_header.php';
                 <span class="text-gray-500">Total disponible</span>
             </div>
         </div>
-</a>
         <!-- Pending Requests Card -->
-         <a href="requests.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -149,9 +144,7 @@ include 'includes/admin_header.php';
                 </span>
             </div>
         </div>
-</a>
         <!-- Completed Requests Card -->
-         <a href="requests.php">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -174,7 +167,6 @@ include 'includes/admin_header.php';
             </div>
         </div>
     </div>
-</a>
     <!-- Two Column Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Requests -->
@@ -286,8 +278,8 @@ include 'includes/admin_header.php';
                     </svg>
                 </div>
                 <div>
-                    <p class="font-semibold text-lg">Gérer les dotations</p>
-                    <p class="text-blue-100 text-sm">Ajouter ou modifier</p>
+                    <p class="font-semibold text-lg">Gérer les références</p>
+                    <p class="text-blue-100 text-sm">Ajouter une référence</p>
                 </div>
             </div>
         </a>

@@ -55,7 +55,7 @@ include 'includes/admin_header.php';
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Gestion des dotations</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">Gestion des références</h1>
                     <p class="text-gray-500 text-sm">Canopé Corse</p>
                 </div>
             </div>
@@ -63,7 +63,7 @@ include 'includes/admin_header.php';
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Nouvelle dotation
+                Nouvelle référence
             </a>
         </div>
 
@@ -148,13 +148,13 @@ include 'includes/admin_header.php';
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                         <input type="text" name="search" value="<?= htmlspecialchars($searchTerm) ?>" 
-                               placeholder="Rechercher une dotation..." 
+                               placeholder="Rechercher une référence..." 
                                class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                     </div>
                 </div>
 
                 <select name="category" class="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <option value="0">Toutes catégories</option>
+                    <option value="0">Tout niveau</option>
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat['id'] ?>" <?= $categoryFilter == $cat['id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($cat['name']) ?>

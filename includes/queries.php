@@ -180,6 +180,7 @@ function getRecentRequests(int $limit = 5): array {
         FROM request r 
         LEFT JOIN responsible resp ON resp.id = r.responsible_id
         LEFT JOIN type_status t ON t.id = r.status_id
+        WHERE t.libelle = 'En attente'
         ORDER BY r.request_date DESC 
         LIMIT $limit";
     $stmt = $pdo->query($sql);
