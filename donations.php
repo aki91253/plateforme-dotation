@@ -684,7 +684,7 @@ include 'includes/header.php';
     <div class="ml-12 flex justify-between items-center mb-6">
             <p class="text-gray-600 text-lg">
                 <span class="font-bold text-canope-teal text-2xl"><?= $totalProducts ?></span> 
-                <span class="text-canope-dark">produit<?= $totalProducts > 1 ? 's' : '' ?> disponible<?= $totalProducts > 1 ? 's' : '' ?></span>
+                <span class="text-gray-500">Produit<?= $totalProducts == 1 ? '' : 's' ?> disponible<?= $totalProducts == 1 ? '' : 's' ?></span>
             </p>
     </div>
 
