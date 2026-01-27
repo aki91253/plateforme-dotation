@@ -100,9 +100,16 @@ require_once 'admin/maintenance_check.php';
                 </div>
                 
                 <div id="cart-items" class="space-y-3">
-                <!-- Les items du panier seront insérés ici -->
+                    <!-- Les items du panier seront insérés ici -->
                 </div>
-                
+
+                <div id="add-more-container" class="hidden text-center mt-4">
+                    <a href="donations.php"
+                    class="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-canope-slate text-canope-slate font-medium hover:bg-canope-slate hover:text-white transition">
+                        ➕ Ajouter d’autres dotations
+                    </a>
+                </div>
+
                 <div id="cart-empty" class="text-center py-8 hidden">
                     <span class="text-4xl mb-3 block">📋</span>
                     <p class="text-gray-500">Aucune dotation sélectionnée</p>
@@ -258,18 +265,22 @@ function displayCart() {
     const recapItems = document.getElementById('recap-items');
     const recapEmpty = document.getElementById('recap-empty');
     const selectionWarning = document.getElementById('selection-warning');
+    const addMoreContainer = document.getElementById('add-more-container');
+
     
     if (cart.length === 0) {
-        cartEmpty.classList.remove('hidden');
-        cartItemsContainer.innerHTML = '';
-        recapItems.innerHTML = '<p id="recap-empty" class="text-gray-400 text-sm text-center py-4">Aucune dotation sélectionnée</p>';
-        selectionWarning.classList.remove('hidden');
-        return;
-    }
+    cartEmpty.classList.remove('hidden');
+    cartItemsContainer.innerHTML = '';
+    recapItems.innerHTML = '<p id="recap-empty" class="text-gray-400 text-sm text-center py-4">Aucune dotation sélectionnée</p>';
+    selectionWarning.classList.remove('hidden');
+
+    addMoreContainer.classList.add('hidden'); 
+    return;
+}
     
     cartEmpty.classList.add('hidden');
     selectionWarning.classList.add('hidden');
-    
+    addMoreContainer.classList.remove('hidden');
     // Affichage des éléments du panier (colonne de gauche)
     let cartHtml = '';
     cart.forEach(item => {
