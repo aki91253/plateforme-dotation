@@ -222,6 +222,16 @@ function getAdminByEmail(string $email): ?array {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result ?: null;
 }
+/**
+ * Get admin by ID
+ */
+function getAdminById(int $id): ?array {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM responsible WHERE id = ?");
+    $stmt->execute([$id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ?: null;
+}
 
 /**
  * Check if admin email exists
