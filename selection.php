@@ -5,6 +5,7 @@ require_once 'includes/auth.php';
 // Plus de système de compte utilisateur - les champs seront remplis manuellement
 $userEmail = '';
 $userEtablissement = '';
+$etablissementAddress = '';
 
 include 'includes/header.php';
 require_once 'admin/maintenance_check.php';
@@ -59,6 +60,13 @@ require_once 'admin/maintenance_check.php';
                         <label class="block text-sm font-medium text-gray-700 mb-1">Établissement <span class="text-red-500">*</span></label>
                         <input type="text" name="establishment_name" required placeholder="École Primaire de..."
                                value="<?= $userEtablissement ?>"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Adresse de l'établissement <span class="text-red-500">*</span></label>
+                        <input type="text" name="establishment_address" required placeholder="3 avenue Napoléon..."
+                               value="<?= $etablissementAddress ?>"
                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-canope-slate focus:border-transparent transition-all">
                     </div>
                     
