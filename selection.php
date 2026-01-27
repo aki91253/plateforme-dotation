@@ -106,7 +106,7 @@ require_once 'admin/maintenance_check.php';
                 <div id="add-more-container" class="hidden text-center mt-4">
                     <a href="donations.php"
                     class="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-canope-slate text-canope-slate font-medium hover:bg-canope-slate hover:text-white transition">
-                        ➕ Ajouter d’autres dotations
+                        + Ajouter d’autres dotations
                     </a>
                 </div>
 
