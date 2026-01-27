@@ -679,7 +679,14 @@ include 'includes/header.php';
             });
         }
     </script>
-
+    
+    <!--Nombre de produits disponibles-->
+    <div class="ml-12 flex justify-between items-center mb-6">
+            <p class="text-gray-600 text-lg">
+                <span class="font-bold text-canope-teal text-2xl"><?= $totalProducts ?></span> 
+                <span class="text-canope-dark">produit<?= $totalProducts > 1 ? 's' : '' ?> disponible<?= $totalProducts > 1 ? 's' : '' ?></span>
+            </p>
+    </div>
 
     <?php if (count($products) > 0): ?>
         <div class="max-w-7xl mx-auto px-8 lg:px-16 py-8">
