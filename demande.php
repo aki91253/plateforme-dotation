@@ -93,10 +93,8 @@ include 'includes/header.php';
                 <?php 
                     $statuts = [
                         'pending' => 'En attente',
-                        'verified' => 'Vérifiée',
-                        'approved' => 'Approuvée',
-                        'sent' => 'Envoyée',
-                        'delivered' => 'Livrée',
+                        'in_preparation' => 'En préparation',
+                        'processed' => 'Traitées',
                         'rejected' => 'Rejetée'
                     ];
                     echo $statuts[$demande['status']] ?? htmlspecialchars($demande['status']);
@@ -142,6 +140,52 @@ include 'includes/header.php';
             </div>
         </div>
 
+        <!-- Responsable -->
+        <?php if (!empty($demande['responsable_nom']) || !empty($demande['responsible_id'])): ?>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Responsable du traitement</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="flex items-center gap-2 text-gray-600 mb-3">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path>
+                        </svg>
+                        <span class="font-medium">
+                            <?php 
+                                if (!empty($demande['responsable_nom'])) {
+                                    echo htmlspecialchars($demande['responsable_nom']);
+                                } else {
+                                    echo 'Non assigné';
+                                }
+                            ?>
+                        </span>
+                    </div>
+                    <?php if (!empty($demande['responsable_email'])): ?>
+                    <div class="flex items-center gap-2 text-gray-600">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                        </svg>
+                        <span><?php echo htmlspecialchars($demande['responsable_email']); ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                
+                <?php if (!empty($demande['responsable_fonction'])): ?>
+                <div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                        <svg fill="#3B556D" class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                        </svg>
+                        <span><?php echo htmlspecialchars($demande['responsable_fonction']); ?></span>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Dotations demandées -->
         <?php if (!empty($demande['produits'])): ?>
         <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
@@ -183,10 +227,8 @@ include 'includes/header.php';
                                 <?php 
                                     $statusColor = [
                                         'pending' => 'bg-amber-100 text-amber-700',
-                                        'verified' => 'bg-blue-100 text-blue-700',
-                                        'approved' => 'bg-green-100 text-green-700',
-                                        'sent' => 'bg-purple-100 text-purple-700',
-                                        'delivered' => 'bg-green-100 text-green-700',
+                                        'in_preparation' => 'bg-blue-100 text-blue-700',
+                                        'processed' => 'bg-green-100 text-green-700',
                                         'rejected' => 'bg-red-100 text-red-700'
                                     ];
                                     echo $statusColor[$event['libelle']] ?? 'bg-gray-100 text-gray-700';
