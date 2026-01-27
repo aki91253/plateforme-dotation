@@ -127,11 +127,9 @@ function getRequestStats(): array {
         SELECT 
             COUNT(*) as total,
             SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) as en_attente,
-            SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as verifiees,
-            SUM(CASE WHEN status_id = 3 THEN 1 ELSE 0 END) as approuvees,
-            SUM(CASE WHEN status_id = 4 THEN 1 ELSE 0 END) as envoyees,
-            SUM(CASE WHEN status_id = 5 THEN 1 ELSE 0 END) as livrees,
-            SUM(CASE WHEN status_id = 6 THEN 1 ELSE 0 END) as refusees
+            SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as en_preparation,
+            SUM(CASE WHEN status_id = 3 THEN 1 ELSE 0 END) as traitees,
+            SUM(CASE WHEN status_id = 4 THEN 1 ELSE 0 END) as refusees
         FROM request
     ");
     return $statsQuery->fetch(PDO::FETCH_ASSOC);
