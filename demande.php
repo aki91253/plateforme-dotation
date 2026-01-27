@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['token'])) {
             $demande = getRequestByToken($searchToken);
             
             if (!$demande) {
-                $erreur = "Demande non trouvée. Vérifiez votre token.";
+                $erreur = "Demande non trouvée. Vérifiez votre numéro de suivi.";
             }
         } catch (Exception $e) {
             $erreur = $e->getMessage();
         }
     } else {
-        $erreur = "Veuillez entrer un token.";
+        $erreur = "Veuillez entrer un numéro de suivi.";
     }
 }
 
@@ -47,7 +47,7 @@ include 'includes/header.php';
             </div>
             <h1 class="text-3xl font-semibold text-white">Suivre ma demande</h1>
         </div>
-        <p class="text-white/80 text-sm ml-13">Entrez votre token reçu par mail dans la barre de recherche pour suivre votre demande </p>
+        <p class="text-white/80 text-sm ml-13">Entrez votre numéro de suivi reçu par mail dans la barre de recherche pour suivre votre demande </p>
     </div>
 </div>
 
@@ -59,7 +59,7 @@ include 'includes/header.php';
                 type="text" 
                 name="search_token" 
                 value="<?php echo htmlspecialchars($_POST['search_token'] ?? $_GET['token'] ?? ''); ?>"
-                placeholder="Entrez votre token de demande"
+                placeholder="Entrez votre numéro de demande"
                 class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-canope-green"
             />
             <!-- From Uiverse.io by Javierrocadev --> 
@@ -216,8 +216,8 @@ include 'includes/header.php';
             <svg class="w-16 h-16 mx-auto text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h2 class="text-2xl font-semibold text-gray-900 mb-2">Entrez votre identifiant de demande</h2>
-            <p class="text-gray-600">Vous trouverez votre identifiant ou token dans l'email de confirmation de votre demande.</p>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-2">Entrez votre numéro de demande</h2>
+            <p class="text-gray-600">Vous trouverez votre numéro de demande dans l'email de confirmation de votre demande.</p>
         </div>
     <?php endif; ?>
 </div>

@@ -215,14 +215,14 @@ require_once 'admin/maintenance_check.php';
         
         <!-- Token Display -->
         <div class="bg-gray-50 border-2 border-dashed border-canope-gray/30 rounded-xl p-4 mb-6">
-            <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Token de suivi</p>
+            <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Numéro de suivi</p>
             <p id="request-token" class="text-lg font-mono font-bold text-canope-slate break-all"></p>
         </div>
         
-        <p class="text-sm text-gray-500 mb-6">Conservez ce token pour suivre l'état de votre demande.</p>
+        <p class="text-sm text-gray-500 mb-6">Conservez ce numéro de suivi pour suivre l'état de votre demande.</p>
         
-        <a href="donations.php" class="inline-block bg-canope-gray text-white px-6 py-3 rounded-xl font-semibold hover:bg-canope-slate transition-colors">
-            Découvrir d'autres dotations
+        <a href="demande.php" class="inline-block bg-canope-gray text-white px-6 py-3 rounded-xl font-semibold hover:bg-canope-slate transition-colors">
+            Suivre ma demande
         </a>
     </div>
 </div>
