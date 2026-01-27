@@ -80,18 +80,6 @@ include 'includes/admin_header.php';
                     <p class="text-gray-500 text-sm">Canopé Corse</p>
                 </div>
             </div>
-            
-            <!-- Bouton de nettoyage des anciennes demandes -->
-            <form method="POST" onsubmit="return <?= $oldRequestsCount > 0 ? "confirm('Êtes-vous sûr de vouloir supprimer les " . $oldRequestsCount . " demande(s) de plus de 30 jours ?\\n\\nCette action est irréversible.')" : "false" ?>;">
-                <input type="hidden" name="cleanup_old_requests" value="1">
-                <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 <?= $oldRequestsCount > 0 ? 'bg-red-100 border-2 border-red-300 text-red-700 hover:bg-red-200' : 'bg-gray-100 border-2 border-gray-200 text-gray-400 cursor-not-allowed' ?> font-medium rounded-xl transition-all active:scale-95" <?= $oldRequestsCount == 0 ? 'disabled' : '' ?>>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Nettoyer (+30j)
-                    <span class="<?= $oldRequestsCount > 0 ? 'bg-red-200' : 'bg-gray-200' ?> px-2 py-0.5 rounded-full text-xs"><?= $oldRequestsCount ?></span>
-                </button>
-            </form>
         </div>
 
         <?php if (isset($_GET['success'])): ?>
@@ -103,29 +91,12 @@ include 'includes/admin_header.php';
         </div>
         <?php endif; ?>
         
-        <?php if (isset($_GET['cleanup_success'])): ?>
-        <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            <?= (int)$_GET['cleanup_success'] ?> demande(s) de plus de 30 jours supprimée(s) avec succès
-        </div>
-        <?php endif; ?>
-        
         <!-- Notification pour email envoyé -->
         <div id="emailNotification" class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl items-center gap-2 hidden">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             <span id="emailNotificationText"></span>
-        </div>
-        
-        <!-- Notification pour nettoyage -->
-        <div id="cleanupNotification" class="mb-6 px-4 py-3 rounded-xl items-center gap-2 hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            <span id="cleanupNotificationText"></span>
         </div>
 
         <!-- Statistiques -->
@@ -139,20 +110,12 @@ include 'includes/admin_header.php';
                 <p class="text-2xl font-bold text-amber-600"><?= $stats['en_attente'] ?></p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <p class="text-blue-600 text-xs mb-1">Vérifiées</p>
-                <p class="text-2xl font-bold text-blue-600"><?= $stats['verifiees'] ?></p>
+                <p class="text-blue-600 text-xs mb-1">En préparation</p>
+                <p class="text-2xl font-bold text-blue-600"><?= $stats['en_preparation'] ?></p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <p class="text-indigo-600 text-xs mb-1">Approuvées</p>
-                <p class="text-2xl font-bold text-indigo-600"><?= $stats['approuvees'] ?></p>
-            </div>
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <p class="text-cyan-600 text-xs mb-1">Envoyées</p>
-                <p class="text-2xl font-bold text-cyan-600"><?= $stats['envoyees'] ?></p>
-            </div>
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <p class="text-emerald-600 text-xs mb-1">Livrées</p>
-                <p class="text-2xl font-bold text-emerald-600"><?= $stats['livrees'] ?></p>
+                <p class="text-indigo-600 text-xs mb-1">Traitées</p>
+                <p class="text-2xl font-bold text-indigo-600"><?= $stats['traitees'] ?></p>
             </div>
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                 <p class="text-red-600 text-xs mb-1">Refusées</p>
