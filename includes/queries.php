@@ -836,8 +836,10 @@ function getRequestByToken($token) {
                 r.responsible_id,
                 CONCAT(resp.last_name, ' ', resp.first_name) AS responsable_nom,
                 resp.email_pro AS responsable_email,
-                resp.job_title AS responsable_fonction
+                resp.job_title AS responsable_fonction,
+                rl.quantity
             FROM request r
+            JOIN request_line rl ON r.id = rl.request_id
             LEFT JOIN type_status ts ON r.status_id = ts.id
             LEFT JOIN responsible resp ON r.responsible_id = resp.id
             WHERE r.token = :token";
