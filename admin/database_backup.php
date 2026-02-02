@@ -21,9 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
                 // Lire le contenu du fichier SQL
                 $sqlContent = file_get_contents($file['tmp_name']);
                 
-                // Créer une connexion avec root pour avoir tous les privilèges
-                $importPdo = new PDO('mysql:host=localhost;dbname=canope-reseau;charset=utf8mb4', 'root', 'root');
+                // Créer une connexion sans base de données spécifique pour pouvoir la supprimer/créer
+                $importPdo = new PDO('mysql:host=localhost;charset=utf8mb4', 'root', 'root');
                 $importPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                
+                // Supprimer la base de données si elle existe
+                $importPdo->exec('DROP DATABASE IF EXISTS `canope-reseau`');
+                
+                // Recréer la base de données
+                $importPdo->exec('CREATE DATABASE `canope-reseau` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+                
+                // Se connecter à la nouvelle base de données
+                $importPdo->exec('USE `canope-reseau`');
                 
                 // Désactiver les clés étrangères
                 $importPdo->exec('SET FOREIGN_KEY_CHECKS = 0');
@@ -110,9 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['sql_file'])) {
                 $importPdo->exec('SET FOREIGN_KEY_CHECKS = 1');
                 
                 if (empty($errors)) {
-                    $success = "Base de données importée avec succès ! ($executed requêtes exécutées)";
+                    $success = "Base de données recréée et importée avec succès ! ($executed requêtes exécutées)";
                 } else {
-                    $success = "Import terminé avec $executed requêtes exécutées. " . count($errors) . " erreurs ignorées.";
+                    $success = "Base de données recréée. Import terminé avec $executed requêtes exécutées. " . count($errors) . " erreurs ignorées.";
                     // Optionnel : afficher les erreurs pour debug
                     // $error = implode("<br>", array_slice($errors, 0, 5)); // Afficher les 5 premières erreurs
                 }
@@ -305,7 +314,7 @@ include 'includes/admin_header.php';
                             </svg>
                             <div>
                                 <p class="text-sm font-semibold text-red-800 mb-1">⚠️ Attention</p>
-                                <p class="text-xs text-red-700">Cette action remplacera toutes les données actuelles. Créez une sauvegarde avant d'importer.</p>
+                                <p class="text-xs text-red-700">Cette action supprimera complètement la base de données actuelle et la recréera. Toutes les données seront définitivement perdues.</p>
                             </div>
                         </div>
                     </div>
@@ -325,7 +334,7 @@ include 'includes/admin_header.php';
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                                 </svg>
-                                Importer et restaurer
+                                Supprimer et importer
                             </span>
                         </button>
                     </form>
