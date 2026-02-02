@@ -739,7 +739,7 @@ function updateProduct(int $id, array $data): bool {
     global $pdo;
     $stmt = $pdo->prepare("
         UPDATE product 
-        SET name = ?, description = ?, category_id = ?, location = ?, 
+        SET name = ?, description = ?, category_id = ?, location = ?, langue_id = ?,
             responsible_id = ?, quantite_totale = ?, stock = ?, 
             is_active = ?
         WHERE id = ?
@@ -750,6 +750,7 @@ function updateProduct(int $id, array $data): bool {
         $data['description'] ?? '',
         $data['category_id'],
         $data['location'] ?? '',
+        $data['langue_id'] ?? '',
         $data['responsible_id'] ?? null,
         $data['quantite_totale'] ?? 0,
         $data['stock'] ?? 0,
