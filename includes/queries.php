@@ -739,7 +739,7 @@ function updateProduct(int $id, array $data): bool {
     global $pdo;
     $stmt = $pdo->prepare("
         UPDATE product 
-        SET name = ?, description = ?, category_id = ?, location = ?, 
+        SET name = ?, description = ?, category_id = ?, location = ?, langue_id = ?,
             responsible_id = ?, quantite_totale = ?, stock = ?, 
             is_active = ?
         WHERE id = ?
@@ -750,6 +750,7 @@ function updateProduct(int $id, array $data): bool {
         $data['description'] ?? '',
         $data['category_id'],
         $data['location'] ?? '',
+        $data['langue_id'] ?? '',
         $data['responsible_id'] ?? null,
         $data['quantite_totale'] ?? 0,
         $data['stock'] ?? 0,
@@ -836,8 +837,10 @@ function getRequestByToken($token) {
                 r.responsible_id,
                 CONCAT(resp.last_name, ' ', resp.first_name) AS responsable_nom,
                 resp.email_pro AS responsable_email,
-                resp.job_title AS responsable_fonction
+                resp.job_title AS responsable_fonction,
+                rl.quantity
             FROM request r
+            JOIN request_line rl ON r.id = rl.request_id
             LEFT JOIN type_status ts ON r.status_id = ts.id
             LEFT JOIN responsible resp ON r.responsible_id = resp.id
             WHERE r.token = :token";

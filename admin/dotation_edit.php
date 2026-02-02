@@ -26,6 +26,7 @@ if (!$product) {
 $categories = getAllCategories();
 $responsibles = getAllResponsibles();
 $locations = getDistinctLocations();
+$langues = getAllLangues();
 
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -33,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = trim($_POST['description'] ?? '');
     $category_id = intval($_POST['category_id'] ?? 0);
     $location = trim($_POST['location'] ?? '');
+    $langue_id = intval($_POST['langue_id']?? 0);
     $responsible_id = intval($_POST['responsible_id'] ?? 0);
     $stock_initial = intval($_POST['stock_initial'] ?? 0);
     $stock = intval($_POST['stock'] ?? 0);
@@ -78,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'description' => $description,
                 'category_id' => $category_id,
                 'location' => $location,
+                'langue_id' => $langue_id,
                 'responsible_id' => $responsible_id,
                 'quantite_totale' => $stock_initial,
                 'stock' => $stock,
@@ -188,7 +191,21 @@ include 'includes/admin_header.php';
                     </datalist>
                 </div>
             </div>
-
+                <!-- Langue -->
+                    <div>
+                        <label for="langue_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Langue
+                        </label>
+                        <select id="langue_id" name="langue_id"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                            <option value="">Sélectionnez une langue</option>
+                            <?php foreach ($langues as $lang): ?>
+                                <option value="<?= $lang['id'] ?>" <?= (isset($_POST['langue_id']) && $_POST['langue_id'] == $lang['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($lang['langue']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
             <!-- Responsable -->
             <div>
                 <label for="responsible_id" class="block text-sm font-semibold text-gray-700 mb-2">
