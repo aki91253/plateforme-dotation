@@ -104,6 +104,23 @@ include 'includes/header.php';
               </div>
             </div>
 
+            <!-- Description -->
+            <div class="flex gap-4">
+              <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
+                📋
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Description</p>
+                <p class="text-gray-900 font-medium">
+                  <?php
+                    if(!empty($product['description'])){
+                      echo htmlspecialchars($product['description']);
+                    }
+                  ?>
+                </p>
+              </div>
+            </div>
+
             <!-- Niveau -->
             <div class="flex gap-4">
               <div class="w-6 h-6 text-teal-600 flex-shrink-0 mt-1">
