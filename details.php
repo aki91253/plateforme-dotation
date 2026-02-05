@@ -186,7 +186,6 @@ include 'includes/header.php';
                   </svg>
                 </button>
               </div>
-              <span class="text-sm text-gray-500">(<?php echo $product['stock_quantity']; ?> disponible<?php echo $product['stock_quantity'] > 1 ? 's' : ''; ?>)</span>
             </div>
 
           <!-- CTA Button -->
