@@ -61,7 +61,7 @@ include 'includes/header.php';
               <img src="<?php echo htmlspecialchars($image['url']); ?>" alt="<?php echo htmlspecialchars($image['alt_text'] ?? $product['name']); ?>" class="w-full h-full object-cover">
             <?php else: ?>
               <div class="w-full h-full flex items-center justify-center text-gray-400">
-                <span>Image non disponible</span>
+                <img src="./assets/img/logov1.jpg" class="w-full h-full object-cover">
               </div>
             <?php endif; ?>
           </div>
