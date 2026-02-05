@@ -32,10 +32,10 @@ function getCurrentAdmin(): ?array {
     }
     return [
         'id' => $_SESSION['admin_id'],
-        'email' => $_SESSION['admin_email'],
-        'first_name' => $_SESSION['admin_first_name'],
-        'last_name' => $_SESSION['admin_last_name'],
-        'job_title' => $_SESSION['admin_job_title'],
+        'email' => $_SESSION['admin_email'] ?? '',
+        'first_name' => $_SESSION['admin_first_name'] ?? '',
+        'last_name' => $_SESSION['admin_last_name'] ?? '',
+        'job_title' => $_SESSION['admin_job_title'] ?? '',
         'role_id' => $_SESSION['admin_role_id'] ?? 1,
         'role_libelle' => $_SESSION['admin_role_libelle'] ?? 'Admin'
     ];
