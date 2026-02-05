@@ -700,7 +700,7 @@ include 'includes/header.php';
                          alt="<?php echo htmlspecialchars($product['image_alt'] ?? $product['name']); ?>"
                          class="w-full h-full object-cover">
                 <?php else: ?>
-                    <span class="text-3xl">📦</span>
+                    <img src="./assets/img/logov1.jpg" class="w-full h-full object-cover"> 
                 <?php endif; ?>
             </div>
             
