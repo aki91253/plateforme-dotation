@@ -911,7 +911,7 @@ function createRequest(array $data): int {
         (token, product_id, last_name, first_name, email, phone, 
          establishment_name, establishment_address, establishment_postal, 
          establishment_city, request_date, comment, status_id, responsible_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, 1)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, 1, NULL)
     ');
     $stmt->execute([
         $data['token'],
