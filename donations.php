@@ -723,7 +723,7 @@ include 'includes/header.php';
                             Détails →
                         </button>
                     </a>
-                    <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes(htmlspecialchars($product['name'])); ?>')"
+                    <button onclick="addToCart(<?php echo $product['id']; ?>, <?php echo htmlspecialchars(json_encode($product['name']), ENT_QUOTES, 'UTF-8'); ?>)"
                         class="flex-1 px-3 py-1.5 bg-blue-900 text-white text-xs font-medium rounded-lg hover:-translate-y-0.5 active:translate-y-0 transition-transform duration-200 shadow-sm hover:shadow-md">
                         Demander
                     </button>

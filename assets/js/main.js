@@ -93,5 +93,4 @@ function showNotification(message) {
 // ====================
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
-    updateFavCount();
 });
