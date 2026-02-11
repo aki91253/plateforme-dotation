@@ -1,9 +1,9 @@
 <?php
 // Configuration de la base de données
 $host = 'localhost';
-$dbname = 'canope-reseau';
-$username = 'user_canope';
-$password = 'Fghijkl1234*';
+$dbname = 'unitaredotation';
+$username = 'unitaredotation';
+$password = 'Hx9hgFY3Uzwnc3G';
 $port = 3306; // Port standard MySQL
 
 try {
